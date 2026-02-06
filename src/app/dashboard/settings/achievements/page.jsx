@@ -1,0 +1,480 @@
+'use client';
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { API_URL } from '../../../../../config/api';
+
+const AchievementsPage = () => {
+    const [achievements, setAchievements] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        date: '',
+        category: 'Academic',
+        image: '',
+        achievements: [],
+        isActive: true
+    });
+    const [editingAchievement, setEditingAchievement] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterCategory, setFilterCategory] = useState('all');
+    const [currentSubAchievement, setCurrentSubAchievement] = useState('');
+
+    // Achievement categories with enhanced styling
+    const categories = [
+        { value: 'Academic', label: 'Academic Excellence', icon: '🎓', color: 'bg-blue-500', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700' },
+        { value: 'Sports', label: 'Sports Achievements', icon: '⚽', color: 'bg-green-500', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700' },
+        { value: 'Cultural', label: 'Cultural Events', icon: '🎭', color: 'bg-purple-500', bgColor: 'bg-purple-50', borderColor: 'border-purple-200', textColor: 'text-purple-700' },
+        { value: 'Science', label: 'Science & Research', icon: '🔬', color: 'bg-orange-500', bgColor: 'bg-orange-50', borderColor: 'border-orange-200', textColor: 'text-orange-700' },
+        { value: 'Arts', label: 'Arts & Creativity', icon: '🎨', color: 'bg-pink-500', bgColor: 'bg-pink-50', borderColor: 'border-pink-200', textColor: 'text-pink-700' },
+        { value: 'Technology', label: 'Technology & Innovation', icon: '💻', color: 'bg-indigo-500', bgColor: 'bg-indigo-50', borderColor: 'border-indigo-200', textColor: 'text-indigo-700' }
+    ];
+
+    useEffect(() => {
+        fetchAchievements();
+    }, []);
+
+    const fetchAchievements = async () => {
+        try {
+            const response = await fetch(`${API_URL}/api/achievements`);
+            const data = await response.json();
+            if (data.success) {
+                setAchievements(data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching achievements:', error);
+            Swal.fire('Error', 'Failed to fetch achievements', 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        try {
+            const url = editingAchievement
+                ? `${API_URL}/api/achievements/${editingAchievement._id}`
+                : `${API_URL}/api/achievements`;
+
+            const method = editingAchievement ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: editingAchievement ? 'Updated!' : 'Created!',
+                    text: `Achievement ${editingAchievement ? 'updated' : 'created'} successfully`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                fetchAchievements();
+                resetForm();
+                setShowModal(false);
+            } else {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            console.error('Error saving achievement:', error);
+            Swal.fire('Error', error.message || 'Failed to save achievement', 'error');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleEdit = (achievement) => {
+        setEditingAchievement(achievement);
+        setFormData({
+            title: achievement.title,
+            description: achievement.description,
+            date: new Date(achievement.date).toISOString().split('T')[0],
+            category: achievement.category,
+            image: achievement.image || '',
+            achievements: achievement.achievements || [],
+            isActive: achievement.isActive
+        });
+        setShowModal(true);
+    };
+
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`${API_URL}/api/achievements/${id}`, {
+                    method: 'DELETE',
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire('Deleted!', 'Achievement has been deleted.', 'success');
+                    fetchAchievements();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Error deleting achievement:', error);
+                Swal.fire('Error', 'Failed to delete achievement', 'error');
+            }
+        }
+    };
+
+    const resetForm = () => {
+        setFormData({
+            title: '',
+            description: '',
+            date: '',
+            category: 'Academic',
+            image: '',
+            achievements: [],
+            isActive: true
+        });
+        setEditingAchievement(null);
+        setCurrentSubAchievement('');
+    };
+
+    const addSubAchievement = () => {
+        if (currentSubAchievement.trim()) {
+            setFormData(prev => ({
+                ...prev,
+                achievements: [...prev.achievements, currentSubAchievement.trim()]
+            }));
+            setCurrentSubAchievement('');
+        }
+    };
+
+    const removeSubAchievement = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            achievements: prev.achievements.filter((_, i) => i !== index)
+        }));
+    };
+
+    const filteredAchievements = achievements.filter(achievement => {
+        const matchesSearch = achievement.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            achievement.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = filterCategory === 'all' || achievement.category === filterCategory;
+        return matchesSearch && matchesCategory;
+    });
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
+                <div className="max-w-7xl mx-auto">
+                    <div className="animate-pulse">
+                        <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
+                        <div className="h-12 bg-gray-300 rounded mb-8"></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[...Array(6)].map((_, i) => (
+                                <div key={i} className="bg-white rounded-xl p-6 shadow-lg">
+                                    <div className="h-6 bg-gray-300 rounded mb-4"></div>
+                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
+            <div className="container mx-auto">
+                {/* Header */}
+                <div className="mb-8">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div>
+                            <h1 className="text-4xl font-black text-gray-900 mb-2">Achievements Management</h1>
+                            <p className="text-gray-600">Manage school achievements and recognitions</p>
+                        </div>
+                        <button
+                            onClick={() => {
+                                resetForm();
+                                setShowModal(true);
+                            }}
+                            className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                        >
+                            <span className="text-xl">+</span>
+                            Add Achievement
+                        </button>
+                    </div>
+                </div>
+
+                {/* Filters */}
+                <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 mb-8">
+                    <div className="flex flex-col lg:flex-row gap-4">
+                        <div className="flex-1">
+                            <input
+                                type="text"
+                                placeholder="Search achievements..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                            />
+                        </div>
+                        <div className="lg:w-64">
+                            <select
+                                value={filterCategory}
+                                onChange={(e) => setFilterCategory(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                            >
+                                <option value="all">All Categories</option>
+                                {categories.map(category => (
+                                    <option key={category.value} value={category.value}>{category.label}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Achievements Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    {filteredAchievements.map((achievement) => {
+                        const category = categories.find(cat => cat.value === achievement.category);
+                        return (
+                            <div key={achievement._id} className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300">
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className={`w-12 h-12 rounded-xl ${category?.bgColor} flex items-center justify-center text-2xl border ${category?.borderColor}`}>
+                                        {category?.icon}
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleEdit(achievement)}
+                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                        >
+                                            ✏️
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(achievement._id)}
+                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                                        >
+                                            🗑️
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">{achievement.title}</h3>
+                                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{achievement.description}</p>
+
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${category?.bgColor} ${category?.textColor} border ${category?.borderColor}`}>
+                                        {achievement.category}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                        {new Date(achievement.date).toLocaleDateString()}
+                                    </span>
+                                </div>
+
+                                {achievement.achievements && achievement.achievements.length > 0 && (
+                                    <div className="mt-4">
+                                        <h4 className="text-sm font-bold text-gray-900 mb-2">Highlights:</h4>
+                                        <ul className="space-y-1">
+                                            {achievement.achievements.slice(0, 2).map((item, idx) => (
+                                                <li key={idx} className="text-xs text-gray-600 flex items-center gap-2">
+                                                    <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                                                    {item}
+                                                </li>
+                                            ))}
+                                            {achievement.achievements.length > 2 && (
+                                                <li className="text-xs text-gray-500">+{achievement.achievements.length - 2} more</li>
+                                            )}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                <div className="mt-4 flex items-center justify-between">
+                                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${achievement.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                        {achievement.isActive ? 'Active' : 'Inactive'}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {filteredAchievements.length === 0 && (
+                    <div className="text-center py-12">
+                        <div className="text-6xl mb-4">🏆</div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">No achievements found</h3>
+                        <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+                    </div>
+                )}
+
+                {/* Modal */}
+                {showModal && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                            <div className="p-8">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-3xl font-black text-gray-900">
+                                        {editingAchievement ? 'Edit Achievement' : 'Add New Achievement'}
+                                    </h2>
+                                    <button
+                                        onClick={() => setShowModal(false)}
+                                        className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-900 mb-2">Title *</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.title}
+                                                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                placeholder="Achievement title"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-900 mb-2">Category *</label>
+                                            <select
+                                                required
+                                                value={formData.category}
+                                                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                            >
+                                                {categories.map(category => (
+                                                    <option key={category.value} value={category.value}>
+                                                        {category.icon} {category.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-900 mb-2">Date *</label>
+                                        <input
+                                            type="date"
+                                            required
+                                            value={formData.date}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-900 mb-2">Description *</label>
+                                        <textarea
+                                            required
+                                            rows={4}
+                                            value={formData.description}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 resize-none"
+                                            placeholder="Describe the achievement"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-900 mb-2">Image URL (Optional)</label>
+                                        <input
+                                            type="url"
+                                            value={formData.image}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                            placeholder="https://example.com/image.jpg"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-900 mb-2">Sub-Achievements</label>
+                                        <div className="flex gap-2 mb-3">
+                                            <input
+                                                type="text"
+                                                value={currentSubAchievement}
+                                                onChange={(e) => setCurrentSubAchievement(e.target.value)}
+                                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSubAchievement())}
+                                                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                placeholder="Add a highlight or sub-achievement"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={addSubAchievement}
+                                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                                            >
+                                                Add
+                                            </button>
+                                        </div>
+                                        <div className="space-y-2 max-h-32 overflow-y-auto">
+                                            {formData.achievements.map((item, index) => (
+                                                <div key={index} className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
+                                                    <span className="flex-1 text-sm">{item}</span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeSubAchievement(index)}
+                                                        className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3">
+                                        <input
+                                            type="checkbox"
+                                            id="isActive"
+                                            checked={formData.isActive}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
+                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                        />
+                                        <label htmlFor="isActive" className="text-sm font-bold text-gray-900">Active</label>
+                                    </div>
+
+                                    <div className="flex gap-4 pt-6">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowModal(false)}
+                                            className="flex-1 px-6 py-3 bg-gray-100 text-gray-900 font-bold rounded-xl hover:bg-gray-200 transition-colors duration-300"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            disabled={submitting}
+                                            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {submitting ? 'Saving...' : (editingAchievement ? 'Update' : 'Create')}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default AchievementsPage;
