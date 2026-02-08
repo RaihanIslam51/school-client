@@ -180,51 +180,40 @@ const AchievementsPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
-                <div className="max-w-7xl mx-auto">
-                    <div className="animate-pulse">
-                        <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
-                        <div className="h-12 bg-gray-300 rounded mb-8"></div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[...Array(6)].map((_, i) => (
-                                <div key={i} className="bg-white rounded-xl p-6 shadow-lg">
-                                    <div className="h-6 bg-gray-300 rounded mb-4"></div>
-                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-900 text-lg">Loading...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
+        <div className="min-h-screen bg-white">
             <div className="container mx-auto">
                 {/* Header */}
                 <div className="mb-8">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div>
-                            <h1 className="text-4xl font-black text-gray-900 mb-2">Achievements Management</h1>
-                            <p className="text-gray-600">Manage school achievements and recognitions</p>
+                            <h1 className="text-3xl font-bold text-blue-900 mb-2">Achievements Management</h1>
+                            <p className="text-gray-900">Manage school achievements and recognitions</p>
                         </div>
+
                         <button
                             onClick={() => {
                                 resetForm();
                                 setShowModal(true);
                             }}
-                            className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                            className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
-                            <span className="text-xl">+</span>
                             Add Achievement
                         </button>
                     </div>
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 mb-8">
+                <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
                     <div className="flex flex-col lg:flex-row gap-4">
                         <div className="flex-1">
                             <input
@@ -232,14 +221,14 @@ const AchievementsPage = () => {
                                 placeholder="Search achievements..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                             />
                         </div>
                         <div className="lg:w-64">
                             <select
                                 value={filterCategory}
                                 onChange={(e) => setFilterCategory(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                             >
                                 <option value="all">All Categories</option>
                                 {categories.map(category => (
@@ -255,9 +244,9 @@ const AchievementsPage = () => {
                     {filteredAchievements.map((achievement) => {
                         const category = categories.find(cat => cat.value === achievement.category);
                         return (
-                            <div key={achievement._id} className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300">
+                            <div key={achievement._id} className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
                                 <div className="flex items-start justify-between mb-4">
-                                    <div className={`w-12 h-12 rounded-xl ${category?.bgColor} flex items-center justify-center text-2xl border ${category?.borderColor}`}>
+                                    <div className="w-12 h-12 rounded-xl bg-blue-900 flex items-center justify-center text-2xl text-white">
                                         {category?.icon}
                                     </div>
                                     <div className="flex gap-2">
@@ -280,10 +269,10 @@ const AchievementsPage = () => {
                                 <p className="text-gray-600 text-sm mb-3 line-clamp-2">{achievement.description}</p>
 
                                 <div className="flex items-center gap-2 mb-3">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${category?.bgColor} ${category?.textColor} border ${category?.borderColor}`}>
+                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-900">
                                         {achievement.category}
                                     </span>
-                                    <span className="text-xs text-gray-500">
+                                    <span className="text-xs text-gray-900">
                                         {new Date(achievement.date).toLocaleDateString()}
                                     </span>
                                 </div>
@@ -293,8 +282,8 @@ const AchievementsPage = () => {
                                         <h4 className="text-sm font-bold text-gray-900 mb-2">Highlights:</h4>
                                         <ul className="space-y-1">
                                             {achievement.achievements.slice(0, 2).map((item, idx) => (
-                                                <li key={idx} className="text-xs text-gray-600 flex items-center gap-2">
-                                                    <div className="w-1 h-1 bg-blue-500 rounded-full"></div>
+                                                <li key={idx} className="text-xs text-gray-900 flex items-center gap-2">
+                                                    <div className="w-1 h-1 bg-gray-900 rounded-full"></div>
                                                     {item}
                                                 </li>
                                             ))}
@@ -306,7 +295,7 @@ const AchievementsPage = () => {
                                 )}
 
                                 <div className="mt-4 flex items-center justify-between">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${achievement.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                    <span className="px-2 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-900">
                                         {achievement.isActive ? 'Active' : 'Inactive'}
                                     </span>
                                 </div>
@@ -325,16 +314,16 @@ const AchievementsPage = () => {
 
                 {/* Modal */}
                 {showModal && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-3xl font-black text-gray-900">
+                                    <h2 className="text-2xl font-bold text-blue-900">
                                         {editingAchievement ? 'Edit Achievement' : 'Add New Achievement'}
                                     </h2>
                                     <button
                                         onClick={() => setShowModal(false)}
-                                        className="p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                                     >
                                         ✕
                                     </button>
@@ -343,24 +332,24 @@ const AchievementsPage = () => {
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-900 mb-2">Title *</label>
+                                            <label className="block text-sm font-semibold text-gray-900 mb-2">Title *</label>
                                             <input
                                                 type="text"
                                                 required
                                                 value={formData.title}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                                 placeholder="Achievement title"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-900 mb-2">Category *</label>
+                                            <label className="block text-sm font-semibold text-gray-900 mb-2">Category *</label>
                                             <select
                                                 required
                                                 value={formData.category}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                             >
                                                 {categories.map(category => (
                                                     <option key={category.value} value={category.value}>
@@ -372,54 +361,54 @@ const AchievementsPage = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-900 mb-2">Date *</label>
+                                        <label className="block text-sm font-semibold text-gray-900 mb-2">Date *</label>
                                         <input
                                             type="date"
                                             required
                                             value={formData.date}
                                             onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-900 mb-2">Description *</label>
+                                        <label className="block text-sm font-semibold text-gray-900 mb-2">Description *</label>
                                         <textarea
                                             required
                                             rows={4}
                                             value={formData.description}
                                             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 resize-none"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 resize-none"
                                             placeholder="Describe the achievement"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-900 mb-2">Image URL (Optional)</label>
+                                        <label className="block text-sm font-semibold text-gray-900 mb-2">Image URL (Optional)</label>
                                         <input
                                             type="url"
                                             value={formData.image}
                                             onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                             placeholder="https://example.com/image.jpg"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-900 mb-2">Sub-Achievements</label>
+                                        <label className="block text-sm font-semibold text-gray-900 mb-2">Sub-Achievements</label>
                                         <div className="flex gap-2 mb-3">
                                             <input
                                                 type="text"
                                                 value={currentSubAchievement}
                                                 onChange={(e) => setCurrentSubAchievement(e.target.value)}
                                                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSubAchievement())}
-                                                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                                 placeholder="Add a highlight or sub-achievement"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={addSubAchievement}
-                                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                                                className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors"
                                             >
                                                 Add
                                             </button>
@@ -448,21 +437,21 @@ const AchievementsPage = () => {
                                             onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
                                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                                         />
-                                        <label htmlFor="isActive" className="text-sm font-bold text-gray-900">Active</label>
+                                        <label htmlFor="isActive" className="text-sm font-semibold text-gray-900">Active</label>
                                     </div>
 
                                     <div className="flex gap-4 pt-6">
                                         <button
                                             type="button"
                                             onClick={() => setShowModal(false)}
-                                            className="flex-1 px-6 py-3 bg-gray-100 text-gray-900 font-bold rounded-xl hover:bg-gray-200 transition-colors duration-300"
+                                            className="flex-1 px-6 py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex-1 px-6 py-3 bg-blue-900 text-white font-semibold rounded-lg hover:bg-blue-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {submitting ? 'Saving...' : (editingAchievement ? 'Update' : 'Create')}
                                         </button>

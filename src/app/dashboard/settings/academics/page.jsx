@@ -13,7 +13,6 @@ const AcademicsPage = () => {
         level: '',
         grades: [],
         icon: '🎓',
-        gradient: 'from-blue-500 to-cyan-500',
         ageGroup: '',
         details: [],
         medium: 'english',
@@ -39,18 +38,6 @@ const AcademicsPage = () => {
     const mediumOptions = [
         { value: 'english', label: 'English Medium', icon: '🇺🇸' },
         { value: 'bangla', label: 'Bangla Medium', icon: '🇧🇩' }
-    ];
-
-    // Gradient options
-    const gradientOptions = [
-        { value: 'from-blue-500 to-cyan-500', label: 'Blue to Cyan', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
-        { value: 'from-purple-500 to-pink-500', label: 'Purple to Pink', preview: 'bg-gradient-to-r from-purple-500 to-pink-500' },
-        { value: 'from-green-500 to-emerald-500', label: 'Green to Emerald', preview: 'bg-gradient-to-r from-green-500 to-emerald-500' },
-        { value: 'from-orange-500 to-red-500', label: 'Orange to Red', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
-        { value: 'from-teal-500 to-blue-500', label: 'Teal to Blue', preview: 'bg-gradient-to-r from-teal-500 to-blue-500' },
-        { value: 'from-yellow-500 to-orange-500', label: 'Yellow to Orange', preview: 'bg-gradient-to-r from-yellow-500 to-orange-500' },
-        { value: 'from-indigo-500 to-purple-500', label: 'Indigo to Purple', preview: 'bg-gradient-to-r from-indigo-500 to-purple-500' },
-        { value: 'from-pink-500 to-rose-500', label: 'Pink to Rose', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' }
     ];
 
     // Icon options by type
@@ -191,7 +178,6 @@ const AcademicsPage = () => {
             level: '',
             grades: [],
             icon: '🎓',
-            gradient: 'from-blue-500 to-cyan-500',
             ageGroup: '',
             details: [],
             medium: 'english',
@@ -214,7 +200,6 @@ const AcademicsPage = () => {
             level: '',
             grades: [],
             icon: '🎓',
-            gradient: 'from-blue-500 to-cyan-500',
             ageGroup: '',
             details: [],
             medium: 'english',
@@ -239,7 +224,6 @@ const AcademicsPage = () => {
             level: academic.level || '',
             grades: academic.grades || [],
             icon: academic.icon || '🎓',
-            gradient: academic.gradient || 'from-blue-500 to-cyan-500',
             ageGroup: academic.ageGroup || '',
             details: academic.details || [],
             medium: academic.medium || 'english',
@@ -314,45 +298,45 @@ const AcademicsPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="animate-pulse space-y-8">
-                        <div className="flex items-center justify-between">
-                            <div className="h-10 bg-gray-300 rounded-lg w-80"></div>
-                            <div className="h-12 bg-gray-300 rounded-xl w-32"></div>
-                        </div>
-                        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                            <div className="xl:col-span-1">
-                                <div className="h-96 bg-gray-300 rounded-2xl"></div>
-                            </div>
-                            <div className="xl:col-span-2">
-                                <div className="h-96 bg-gray-300 rounded-2xl"></div>
-                            </div>
-                        </div>
-                    </div>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-900 text-lg">Loading...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
-            <div className="container mx-auto">
+        <div className="min-h-screen bg-white">
+            <div className="container mx-auto ">
                 {/* Header */}
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
-                    <div>
-                        <h1 className="text-4xl font-bold text-gray-800 mb-2">Academics Management</h1>
-                        <p className="text-gray-600">Manage academic programs, subjects, and activities</p>
+                <div className="mb-8">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-blue-900 mb-2">Academics Management</h1>
+                            <p className="text-gray-900">Manage academic programs, subjects, and activities</p>
+                        </div>
+                    
+                    {/* Filters */}
+                    <div className="flex flex-wrap gap-3">
+                        <select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                        >
+                            <option value="all">All Types</option>
+                            <option value="class">Class Level</option>
+                            <option value="subject">Subject</option>
+                            <option value="activity">Activity</option>
+                        </select>
+                        <button
+                            onClick={openCreateModal}
+                            className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                            Add Academic Entry
+                        </button>
                     </div>
-                    <button
-                        onClick={openCreateModal}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                        </svg>
-                        Add Academic Entry
-                    </button>
                 </div>
 
                 {/* Search and Filter */}
@@ -426,7 +410,7 @@ const AcademicsPage = () => {
                                     >
                                         <div className="flex items-start gap-4">
                                             {/* Academic Icon */}
-                                            <div className={`flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${academic.gradient} flex items-center justify-center text-3xl shadow-lg`}>
+                                            <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-blue-900 flex items-center justify-center text-3xl text-white">
                                                 {academic.icon}
                                             </div>
 
@@ -450,7 +434,7 @@ const AcademicsPage = () => {
                                                         {academic.type === 'class' && academic.grades && academic.grades.length > 0 && (
                                                             <div className="flex flex-wrap gap-2 mb-3">
                                                                 {academic.grades.slice(0, 3).map((grade, idx) => (
-                                                                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                                                                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-full">
                                                                         {grade}
                                                                     </span>
                                                                 ))}
@@ -465,7 +449,7 @@ const AcademicsPage = () => {
                                                         {academic.type === 'activity' && academic.details && academic.details.length > 0 && (
                                                             <div className="flex flex-wrap gap-2 mb-3">
                                                                 {academic.details.slice(0, 2).map((detail, idx) => (
-                                                                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                                                                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-full">
                                                                         {detail}
                                                                     </span>
                                                                 ))}
@@ -478,8 +462,8 @@ const AcademicsPage = () => {
                                                         )}
 
                                                         {/* Meta Information */}
-                                                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                                                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${typeInfo.color} text-white`}>
+                                                        <div className="flex items-center gap-4 text-sm text-gray-900">
+                                                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-900">
                                                                 {typeInfo.icon} {typeInfo.label}
                                                             </span>
                                                             {academic.medium && (
@@ -591,8 +575,8 @@ const AcademicsPage = () => {
                                                         key={type.value}
                                                         className={`flex items-center p-3 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
                                                             formData.type === type.value
-                                                                ? `${type.borderColor} ${type.bgColor} shadow-lg ring-2 ring-opacity-50 ring-blue-300`
-                                                                : 'border-gray-200 hover:border-gray-300 bg-gray-50'
+                                                                ? 'border-blue-900 bg-blue-50 shadow-lg'
+                                                                : 'border-gray-200 hover:border-gray-300 bg-white'
                                                         }`}
                                                     >
                                                         <input
@@ -603,11 +587,11 @@ const AcademicsPage = () => {
                                                             onChange={handleChange}
                                                             className="sr-only"
                                                         />
-                                                        <div className={`w-10 h-10 rounded-lg ${type.color} flex items-center justify-center text-white text-lg mr-3 shadow-md`}>
+                                                        <div className="w-10 h-10 rounded-lg bg-blue-900 flex items-center justify-center text-white text-lg mr-3">
                                                             {type.icon}
                                                         </div>
                                                         <div className="flex-1">
-                                                            <div className="font-semibold text-gray-800">{type.label}</div>
+                                                            <div className="font-semibold text-gray-900">{type.label}</div>
                                                         </div>
                                                         {formData.type === type.value && (
                                                             <div className="ml-3">
@@ -709,35 +693,11 @@ const AcademicsPage = () => {
                                                         onClick={() => setFormData(prev => ({ ...prev, icon }))}
                                                         className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center text-2xl transition-all hover:scale-110 ${
                                                             formData.icon === icon
-                                                                ? 'border-blue-500 bg-blue-50 shadow-lg'
-                                                                : 'border-gray-200 hover:border-gray-300 bg-gray-50'
+                                                                ? 'border-blue-900 bg-blue-50 shadow-lg'
+                                                                : 'border-gray-200 hover:border-gray-300 bg-white'
                                                         }`}
                                                     >
                                                         {icon}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Gradient Selection */}
-                                        <div className="lg:col-span-2">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Gradient Theme
-                                            </label>
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                                {gradientOptions.map((gradient) => (
-                                                    <button
-                                                        key={gradient.value}
-                                                        type="button"
-                                                        onClick={() => setFormData(prev => ({ ...prev, gradient: gradient.value }))}
-                                                        className={`p-3 rounded-xl border-2 transition-all hover:scale-105 ${
-                                                            formData.gradient === gradient.value
-                                                                ? 'border-blue-500 shadow-lg ring-2 ring-blue-200'
-                                                                : 'border-gray-200 hover:border-gray-300'
-                                                        }`}
-                                                    >
-                                                        <div className={`w-full h-8 rounded-lg ${gradient.preview} mb-2`}></div>
-                                                        <div className="text-xs font-medium text-gray-700">{gradient.label}</div>
                                                     </button>
                                                 ))}
                                             </div>
@@ -770,12 +730,12 @@ const AcademicsPage = () => {
                                                     {formData.grades.length > 0 && (
                                                         <div className="flex flex-wrap gap-2">
                                                             {formData.grades.map((grade, idx) => (
-                                                                <span key={idx} className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
+                                                                <span key={idx} className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-900 text-sm font-medium rounded-full">
                                                                     {grade}
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => removeGrade(grade)}
-                                                                        className="hover:bg-blue-200 rounded-full p-1"
+                                                                        className="hover:bg-gray-200 rounded-full p-1"
                                                                     >
                                                                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -816,12 +776,12 @@ const AcademicsPage = () => {
                                                     {formData.details.length > 0 && (
                                                         <div className="flex flex-wrap gap-2">
                                                             {formData.details.map((detail, idx) => (
-                                                                <span key={idx} className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full">
+                                                                <span key={idx} className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-900 text-sm font-medium rounded-full">
                                                                     {detail}
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => removeDetail(detail)}
-                                                                        className="hover:bg-green-200 rounded-full p-1"
+                                                                        className="hover:bg-gray-200 rounded-full p-1"
                                                                     >
                                                                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -878,7 +838,7 @@ const AcademicsPage = () => {
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {submitting ? (
                                                 <div className="flex items-center gap-2">
@@ -896,6 +856,7 @@ const AcademicsPage = () => {
                     </div>
                 )}
             </div>
+        </div>
         </div>
     );
 };

@@ -23,14 +23,14 @@ const GalleryPage = () => {
     const [filterCategory, setFilterCategory] = useState('all');
     const [currentImageUrl, setCurrentImageUrl] = useState('');
 
-    // Gallery categories with enhanced styling
+    // Gallery categories with professional styling
     const categories = [
-        { value: 'Events', label: 'School Events', icon: '🎉', color: 'bg-blue-500', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700' },
-        { value: 'Sports', label: 'Sports Activities', icon: '⚽', color: 'bg-green-500', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700' },
-        { value: 'Cultural', label: 'Cultural Programs', icon: '🎭', color: 'bg-purple-500', bgColor: 'bg-purple-50', borderColor: 'border-purple-200', textColor: 'text-purple-700' },
-        { value: 'Academic', label: 'Academic Events', icon: '🎓', color: 'bg-orange-500', bgColor: 'bg-orange-50', borderColor: 'border-orange-200', textColor: 'text-orange-700' },
-        { value: 'Infrastructure', label: 'School Infrastructure', icon: '🏗️', color: 'bg-gray-500', bgColor: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-700' },
-        { value: 'Achievements', label: 'Achievement Gallery', icon: '🏆', color: 'bg-yellow-500', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', textColor: 'text-yellow-700' }
+        { value: 'Events', label: 'School Events', icon: '🎉', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'Sports', label: 'Sports Activities', icon: '⚽', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'Cultural', label: 'Cultural Programs', icon: '🎭', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'Academic', label: 'Academic Events', icon: '🎓', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'Infrastructure', label: 'School Infrastructure', icon: '🏗️', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'Achievements', label: 'Achievement Gallery', icon: '🏆', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' }
     ];
 
     useEffect(() => {
@@ -196,14 +196,14 @@ const GalleryPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
+            <div className="min-h-screen bg-white p-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="animate-pulse">
                         <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
                         <div className="h-12 bg-gray-300 rounded mb-8"></div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="bg-white rounded-xl p-6 shadow-lg">
+                                <div key={i} className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
                                     <div className="w-full h-48 bg-gray-300 rounded-lg mb-4"></div>
                                     <div className="h-6 bg-gray-300 rounded mb-2"></div>
                                     <div className="h-4 bg-gray-300 rounded w-3/4"></div>
@@ -217,13 +217,13 @@ const GalleryPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
+        <div className="min-h-screen bg-white p-8">
             <div className="container mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div>
-                            <h1 className="text-4xl font-black text-gray-900 mb-2">Gallery Management</h1>
+                            <h1 className="text-4xl font-bold text-blue-900 mb-2">Gallery Management</h1>
                             <p className="text-gray-600">Manage school photo galleries and images</p>
                         </div>
                         <button
@@ -231,7 +231,7 @@ const GalleryPage = () => {
                                 resetForm();
                                 setShowModal(true);
                             }}
-                            className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                            className="inline-flex items-center gap-3 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
                             <span className="text-xl">+</span>
                             Add Gallery
@@ -240,7 +240,7 @@ const GalleryPage = () => {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 mb-8">
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 mb-8">
                     <div className="flex flex-col lg:flex-row gap-4">
                         <div className="flex-1">
                             <input
@@ -271,7 +271,7 @@ const GalleryPage = () => {
                     {filteredGalleries.map((gallery) => {
                         const category = categories.find(cat => cat.value === gallery.category);
                         return (
-                            <div key={gallery._id} className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300">
+                            <div key={gallery._id} className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
                                 {/* Gallery Images Preview */}
                                 <div className="relative mb-4">
                                     {gallery.images && gallery.images.length > 0 ? (
@@ -295,14 +295,14 @@ const GalleryPage = () => {
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="aspect-video bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
+                                        <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
                                             <span className="text-gray-500 text-4xl">📷</span>
                                         </div>
                                     )}
 
                                     {/* Featured Badge */}
                                     {gallery.featured && (
-                                        <div className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                                        <div className="absolute top-2 left-2 bg-blue-900 text-white px-2 py-1 rounded-full text-xs font-bold">
                                             ⭐ Featured
                                         </div>
                                     )}
@@ -343,7 +343,7 @@ const GalleryPage = () => {
                                         <span className="text-xs text-gray-500">Images:</span>
                                         <span className="text-sm font-bold text-gray-900">{gallery.images?.length || 0}</span>
                                     </div>
-                                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${gallery.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${gallery.isActive ? 'bg-blue-100 text-blue-900' : 'bg-gray-100 text-gray-900'}`}>
                                         {gallery.isActive ? 'Active' : 'Inactive'}
                                     </span>
                                 </div>
@@ -366,7 +366,7 @@ const GalleryPage = () => {
                         <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
                             <div className="p-8">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-3xl font-black text-gray-900">
+                                    <h2 className="text-3xl font-bold text-blue-900">
                                         {editingGallery ? 'Edit Gallery' : 'Add New Gallery'}
                                     </h2>
                                     <button
@@ -447,7 +447,7 @@ const GalleryPage = () => {
                                             <button
                                                 type="button"
                                                 onClick={addImage}
-                                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                                                className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg transition-colors duration-200"
                                             >
                                                 Add URL
                                             </button>
@@ -544,7 +544,7 @@ const GalleryPage = () => {
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex-1 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {submitting ? 'Saving...' : (editingGallery ? 'Update' : 'Create')}
                                         </button>

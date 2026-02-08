@@ -389,7 +389,7 @@ export default function AttendanceManagement() {
     };
 
     return (
-        <div className="p-4 lg:p-8">
+        <div className="min-h-screen bg-white">
             <style jsx global>{`
                 @media print {
                     @page {
@@ -464,11 +464,12 @@ export default function AttendanceManagement() {
                     }
                 }
             `}</style>
-            <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8">
+            <div className="container mx-auto p-4 sm:p-6">
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                 {/* Header */}
                 <div className="mb-6 no-print">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2 flex items-center">
-                        <svg className="w-8 h-8 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h2 className="text-2xl font-bold text-blue-900 mb-2 flex items-center">
+                        <svg className="w-6 h-6 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
                         Attendance Management System
@@ -477,9 +478,9 @@ export default function AttendanceManagement() {
                 </div>
 
                 {/* Selection Form */}
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200 mb-6 no-print">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-white border border-gray-200 p-6 rounded-lg mb-6 no-print">
+                    <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+                        <svg className="w-5 h-5 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                         </svg>
                         Select Class Details
@@ -490,7 +491,7 @@ export default function AttendanceManagement() {
                             <select
                                 value={selectedClass}
                                 onChange={(e) => setSelectedClass(e.target.value)}
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="">Select Class</option>
                                 <option value="Play">Play</option>
@@ -514,7 +515,7 @@ export default function AttendanceManagement() {
                             <select
                                 value={selectedSection}
                                 onChange={(e) => setSelectedSection(e.target.value)}
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                                 <option value="">Select Section</option>
                                 <option value="A">A</option>
@@ -530,7 +531,7 @@ export default function AttendanceManagement() {
                                 type="month"
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
 
@@ -538,7 +539,7 @@ export default function AttendanceManagement() {
                             <button
                                 onClick={fetchStudents}
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2.5 rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 font-medium"
+                                className="w-full bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors disabled:opacity-50 font-medium"
                             >
                                 {loading ? (
                                     <span className="flex items-center justify-center">
@@ -575,7 +576,7 @@ export default function AttendanceManagement() {
                         </div>
 
                         {/* Action Bar */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-gray-50 to-slate-50 p-4 rounded-xl border-2 border-gray-200 no-print">
+                        <div className="flex flex-wrap items-center justify-between gap-4 bg-white border border-gray-200 p-4 rounded no-print">
                             <div className="flex-1 min-w-[250px]">
                                 <div className="relative">
                                     <input
@@ -583,7 +584,7 @@ export default function AttendanceManagement() {
                                         placeholder="Search by name or roll number..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-11 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                        className="w-full pl-11 pr-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     />
                                     <svg className="absolute left-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -602,7 +603,7 @@ export default function AttendanceManagement() {
                                 </button>
                                 <button
                                     onClick={downloadCSV}
-                                    className="px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-semibold flex items-center gap-2"
+                                    className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors font-medium flex items-center gap-2"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -614,40 +615,40 @@ export default function AttendanceManagement() {
 
                         {/* Stats */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 no-print">
-                            <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-5 rounded-xl border-2 border-green-200 shadow-sm">
+                            <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-green-700">Total Present</p>
-                                        <p className="text-3xl font-bold text-green-900">{stats.totalPresent}</p>
+                                        <p className="text-sm font-medium text-gray-600">Total Present</p>
+                                        <p className="text-2xl font-bold text-gray-900">{stats.totalPresent}</p>
                                     </div>
-                                    <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-gradient-to-br from-red-50 to-rose-100 p-5 rounded-xl border-2 border-red-200 shadow-sm">
+                            <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-red-700">Total Absent</p>
-                                        <p className="text-3xl font-bold text-red-900">{stats.totalAbsent}</p>
+                                        <p className="text-sm font-medium text-gray-600">Total Absent</p>
+                                        <p className="text-2xl font-bold text-gray-900">{stats.totalAbsent}</p>
                                     </div>
-                                    <div className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
-                                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
-                            <div className="bg-gradient-to-br from-gray-50 to-slate-100 p-5 rounded-xl border-2 border-gray-200 shadow-sm">
+                            <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-700">Not Marked</p>
-                                        <p className="text-3xl font-bold text-gray-900">{stats.totalNotMarked}</p>
+                                        <p className="text-sm font-medium text-gray-600">Not Marked</p>
+                                        <p className="text-2xl font-bold text-gray-900">{stats.totalNotMarked}</p>
                                     </div>
-                                    <div className="w-14 h-14 bg-gray-400 rounded-full flex items-center justify-center shadow-lg">
-                                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
@@ -657,16 +658,16 @@ export default function AttendanceManagement() {
 
                         {/* Excel-Style Attendance Sheet */}
                         <div className="bg-white rounded-xl border-2 border-gray-300 overflow-hidden shadow-xl">
-                            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 no-print">
+                            <div className="bg-blue-900 text-white p-4 no-print">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-xl font-bold">
                                         {selectedClass} - Section {selectedSection} | {new Date(selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                     </h3>
                                     <div className="flex items-center space-x-2 text-sm">
-                                        <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                                        <span className="bg-white text-black bg-opacity-20 px-3 py-1 rounded-full">
                                             {students.length} Students
                                         </span>
-                                        <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                                        <span className="bg-white text-black bg-opacity-20 px-3 py-1 rounded-full">
                                             {dates.length} Days
                                         </span>
                                     </div>
@@ -689,7 +690,7 @@ export default function AttendanceManagement() {
                                             {dates.map((date) => {
                                                 const { day, weekday } = formatDate(date);
                                                 return (
-                                                    <th key={date} className="px-2 py-2 text-center border-r border-gray-200 min-w-[80px] bg-gradient-to-b from-gray-100 to-gray-50">
+                                                    <th key={date} className="px-2 py-2 text-center border-r border-gray-200 min-w-[80px] bg-gray-50">
                                                         <div className="flex flex-col items-center">
                                                             <span className="text-xs font-semibold text-gray-900">{day}</span>
                                                             <span className="text-[10px] text-gray-600">{weekday}</span>
@@ -819,7 +820,7 @@ export default function AttendanceManagement() {
                                 </button>
                                 <button
                                     onClick={submitAttendance}
-                                    className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold flex items-center space-x-2"
+                                    className="px-8 py-3 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-200 font-semibold flex items-center space-x-2"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
@@ -856,7 +857,7 @@ export default function AttendanceManagement() {
                                 return (
                                     <div 
                                         key={idx}
-                                        className="bg-gradient-to-br from-white to-blue-50 border-2 border-blue-200 rounded-2xl p-6 hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer group"
+                                        className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-300 cursor-pointer group"
                                         onClick={() => loadSavedSheet(sheet)}
                                     >
                                         <div className="flex items-start justify-between mb-4">
@@ -868,25 +869,25 @@ export default function AttendanceManagement() {
                                                     {new Date(sheet.month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                                 </p>
                                             </div>
-                                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                                <svg className="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
                                             </div>
                                         </div>
 
                                         <div className="grid grid-cols-3 gap-3 mb-4">
-                                            <div className="bg-green-100 rounded-xl p-3 text-center border border-green-200">
-                                                <p className="text-xs text-green-700 font-medium mb-1">Present</p>
-                                                <p className="text-2xl font-bold text-green-900">{presentCount}</p>
+                                            <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
+                                                <p className="text-xs text-gray-600 font-medium mb-1">Present</p>
+                                                <p className="text-2xl font-bold text-gray-900">{presentCount}</p>
                                             </div>
-                                            <div className="bg-red-100 rounded-xl p-3 text-center border border-red-200">
-                                                <p className="text-xs text-red-700 font-medium mb-1">Absent</p>
-                                                <p className="text-2xl font-bold text-red-900">{absentCount}</p>
+                                            <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
+                                                <p className="text-xs text-gray-600 font-medium mb-1">Absent</p>
+                                                <p className="text-2xl font-bold text-gray-900">{absentCount}</p>
                                             </div>
-                                            <div className="bg-blue-100 rounded-xl p-3 text-center border border-blue-200">
-                                                <p className="text-xs text-blue-700 font-medium mb-1">Rate</p>
-                                                <p className="text-2xl font-bold text-blue-900">{attendanceRate}%</p>
+                                            <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
+                                                <p className="text-xs text-gray-600 font-medium mb-1">Rate</p>
+                                                <p className="text-2xl font-bold text-gray-900">{attendanceRate}%</p>
                                             </div>
                                         </div>
 
@@ -941,6 +942,7 @@ export default function AttendanceManagement() {
                         <p className="text-gray-600 mb-6">Start by creating your first attendance sheet above</p>
                     </div>
                 )}
+                </div>
             </div>
         </div>
     );

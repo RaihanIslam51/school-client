@@ -13,12 +13,12 @@ export default function PortalLayout({ children }) {
         { name: 'Portal Home', path: '/portal', icon: '🏠' },
         { name: 'My Profile', path: '/portal/profile', icon: '👤' },
         { name: 'Academic Records', path: '/portal/academics', icon: '📚' },
-        { name: 'Attendance', path: '/portal/attendance', icon: '📅' },
+        { name: 'Messages', path: '/portal/messages', icon: '📅' },
         { name: 'Assignments', path: '/portal/assignments', icon: '📝' },
-        { name: 'Exam Schedule', path: '/portal/exams', icon: '📊' },
-        { name: 'Results', path: '/portal/results', icon: '📈' },
-        { name: 'Notices', path: '/portal/notices', icon: '📢' },
-        { name: 'Library', path: '/portal/library', icon: '📖' },
+        // { name: 'Exam Schedule', path: '/portal/exams', icon: '📊' },
+        // { name: 'Results', path: '/portal/results', icon: '📈' },
+        // { name: 'Notices', path: '/portal/notices', icon: '📢' },
+        // { name: 'Library', path: '/portal/library', icon: '📖' },
         { name: 'Fees', path: '/portal/fees', icon: '💰' },
     ];
 
@@ -41,8 +41,8 @@ export default function PortalLayout({ children }) {
 
     if (!user) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900"></div>
             </div>
         );
     }
@@ -53,21 +53,21 @@ export default function PortalLayout({ children }) {
         <div className="min-h-screen bg-white">
             <div className="flex h-screen overflow-hidden">
                 {/* Sidebar - Left Side */}
-                <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-black transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     {/* Sidebar Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-black">
+                    <div className="flex items-center justify-between p-6 border-b border-gray-200">
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-green-600 to-blue-600 rounded flex items-center justify-center">
+                            <div className="w-10 h-10 bg-blue-900 rounded flex items-center justify-center">
                                 <span className="text-white font-bold text-lg">🎓</span>
                             </div>
                             <div>
-                                <h2 className="text-green-700 font-bold text-lg">Student Portal</h2>
-                                <p className="text-black text-xs">Sunlight School</p>
+                                <h2 className="text-blue-900 font-bold text-lg">Student Portal</h2>
+                                <p className="text-gray-600 text-xs">Sunlight School</p>
                             </div>
                         </div>
                         <button
                             onClick={() => setIsSidebarOpen(false)}
-                            className="lg:hidden text-black hover:text-green-700"
+                            className="lg:hidden text-gray-600 hover:text-blue-900"
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -76,14 +76,14 @@ export default function PortalLayout({ children }) {
                     </div>
 
                     {/* User Info */}
-                    <div className="p-4 border-b border-black">
-                        <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded">
-                            <div className="w-12 h-12 bg-gradient-to-r from-green-600 to-blue-600 rounded flex items-center justify-center">
+                    <div className="p-4 border-b border-gray-200">
+                        <div className="flex items-center space-x-3 p-3 bg-white border border-gray-200 rounded">
+                            <div className="w-12 h-12 bg-blue-900 rounded flex items-center justify-center">
                                 <span className="text-white font-bold text-lg">{user.name.charAt(0)}</span>
                             </div>
                             <div className="flex-1">
-                                <p className="text-black font-semibold text-sm">{user.name}</p>
-                                <p className="text-green-700 text-xs">Student ID: {user.studentId}</p>
+                                <p className="text-gray-900 font-semibold text-sm">{user.name}</p>
+                                <p className="text-blue-900 text-xs">Student ID: {user.studentId}</p>
                                 <p className="text-gray-600 text-xs">Class {user.class} - {user.section}</p>
                             </div>
                         </div>
@@ -98,8 +98,8 @@ export default function PortalLayout({ children }) {
                                 onClick={() => setIsSidebarOpen(false)}
                                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded transition-colors duration-200 ${
                                     pathname === item.path
-                                        ? 'bg-gradient-to-r from-green-600 to-blue-600 text-white'
-                                        : 'text-black hover:bg-gradient-to-r hover:from-green-600 hover:to-blue-600 hover:text-white'
+                                        ? 'bg-blue-900 text-white'
+                                        : 'text-gray-900 hover:bg-blue-900 hover:text-white'
                                 }`}
                             >
                                 <span className="text-xl">{item.icon}</span>
@@ -112,10 +112,10 @@ export default function PortalLayout({ children }) {
                     </nav>
 
                     {/* Back to Home Button */}
-                    <div className="p-4 border-t border-black">
+                    <div className="p-4 border-t border-gray-200">
                         <Link
                             href="/"
-                            className="flex items-center space-x-3 px-4 py-3 rounded text-black hover:bg-gradient-to-r hover:from-green-600 hover:to-blue-600 hover:text-white transition-colors duration-200 border border-black"
+                            className="flex items-center space-x-3 px-4 py-3 rounded text-gray-900 hover:bg-blue-900 hover:text-white transition-colors duration-200 border border-gray-200"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -136,25 +136,25 @@ export default function PortalLayout({ children }) {
                 {/* Main Content - Right Side */}
                 <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Top Bar */}
-                    <header className="bg-white border-b border-black z-10">
+                    <header className="bg-white border-b border-gray-200 z-10">
                         <div className="flex items-center justify-between px-4 py-4">
                             <button
                                 onClick={() => setIsSidebarOpen(true)}
-                                className="lg:hidden text-black hover:text-green-700"
+                                className="lg:hidden text-gray-600 hover:text-blue-900"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                                 </svg>
                             </button>
-                            <h1 className="text-xl font-bold text-green-700">
+                            <h1 className="text-xl font-bold text-blue-900">
                                 {currentMenuItem ? currentMenuItem.name : 'Student Portal'}
                             </h1>
                             <div className="flex items-center space-x-4">
-                                <button className="relative text-black hover:text-green-700">
+                                <button className="relative text-gray-600 hover:text-blue-900">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                     </svg>
-                                    <span className="absolute top-0 right-0 w-2 h-2 bg-green-600 rounded-full"></span>
+                                    <span className="absolute top-0 right-0 w-2 h-2 bg-blue-900 rounded-full"></span>
                                 </button>
                             </div>
                         </div>

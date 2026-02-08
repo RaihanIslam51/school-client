@@ -71,9 +71,17 @@ const Hero = () => {
     }, []);
 
     const activeBanners = banners.length > 0 ? banners : defaultBanners;
-    const slides = useMemo(() => activeBanners.flatMap(banner =>
-        banner.images.map(image => ({ image, banner }))
-    ), [activeBanners]);
+    const slides = useMemo(() => {
+        const allSlides = activeBanners.flatMap(banner => {
+            // Filter out banners with empty images array
+            if (!banner.images || banner.images.length === 0) {
+                return [];
+            }
+            return banner.images.map(image => ({ image, banner }));
+        });
+        // If no slides generated, use default
+        return allSlides.length > 0 ? allSlides : [{ image: '/school1.jpg', banner: defaultBanners[0] }];
+    }, [activeBanners]);
 
     // Simple auto-slide
     useEffect(() => {
@@ -172,7 +180,7 @@ const Hero = () => {
     return (
         <section
             ref={sectionRef}
-            className="relative bg-white container mx-auto p-8 md:min-h-[80vh] lg:h-[600px] flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden"
+            className="relative w-full min-h-screen md:min-h-[80vh] lg:h-[600px] flex items-center justify-center overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -180,23 +188,26 @@ const Hero = () => {
             aria-label="Hero section"
         >
             {/* Clean Background Image */}
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 w-full h-full">
                 {slides.map((slide, index) => (
                     <div
                         key={index}
                         className={`absolute inset-0 transition-opacity duration-1000 ${
                             index === currentSlide ? 'opacity-100' : 'opacity-0'
                         }`}
+                        style={{ width: '100%', height: '100%' }}
                     >
                         <Image
                             src={slide.image}
                             alt={slide.banner.alt || 'School banner'}
                             fill
-                            className="w-full h-full object-cover"
+                            style={{ objectFit: 'cover' }}
                             priority={index === 0}
+                            sizes="100vw"
+                            unoptimized={slide.image.includes('i.ibb.co')}
                         />
                         {/* Simple overlay */}
-                        <div className="absolute inset-0 bg-black/40"></div>
+                        <div className="absolute inset-0 bg-black/40 z-10"></div>
                     </div>
                 ))}
             </div>

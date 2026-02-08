@@ -588,72 +588,72 @@ const ExpensesManagementPage = () => {
     // Get status color
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Paid': return 'bg-green-100 text-green-800';
-            case 'Approved': return 'bg-blue-100 text-blue-800';
-            case 'Pending': return 'bg-yellow-100 text-yellow-800';
-            case 'Rejected': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'Paid': return 'bg-[#1a202c] text-white';
+            case 'Approved': return 'bg-[#1a202c] text-white';
+            case 'Pending': return 'bg-gray-400 text-white';
+            case 'Rejected': return 'bg-red-600 text-white';
+            default: return 'bg-gray-300 text-black';
         }
     };
 
     // Get priority color
     const getPriorityColor = (priority) => {
         switch (priority) {
-            case 'Low': return 'bg-green-100 text-green-800';
-            case 'Normal': return 'bg-blue-100 text-blue-800';
-            case 'High': return 'bg-orange-100 text-orange-800';
-            case 'Urgent': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'Low': return 'bg-[#1a202c] text-white';
+            case 'Normal': return 'bg-[#1a202c] text-white';
+            case 'High': return 'bg-gray-600 text-white';
+            case 'Urgent': return 'bg-red-600 text-white';
+            default: return 'bg-gray-300 text-black';
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            <div className="container mx-auto py-8 conatiner">
+        <div className="min-h-screen bg-white">
+            <div className="container mx-auto pt-2">
                 {/* Professional Header */}
-                <div className="bg-white rounded-3xl shadow-2xl p-8 mb-8 border border-slate-200">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                <div className="bg-white border border-gray-200 rounded p-4 sm:p-6 mb-4 sm:mb-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6">
                         <div className="space-y-2">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center">
-                                    <span className="text-white text-xl">💰</span>
+                                <div className="w-10 sm:w-12 h-10 sm:h-12 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-white text-lg sm:text-xl">💰</span>
                                 </div>
                                 <div>
-                                    <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1a202c]">
                                         Expense Management
                                     </h1>
-                                    <p className="text-slate-600 font-medium">Professional expense tracking & approval system</p>
+                                    <p className="text-black text-sm sm:text-base">Professional expense tracking & approval system</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-2 sm:gap-3">
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                                className={`px-4 sm:px-6 py-2 sm:py-3 rounded font-semibold transition-all ${
                                     viewMode === 'list'
-                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/25'
-                                        : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-blue-300 hover:shadow-lg'
+                                        ? 'bg-blue-900 text-white'
+                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                 }`}
                             >
                                 📋 List View
                             </button>
                             <button
                                 onClick={() => setViewMode('cards')}
-                                className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                                className={`px-4 sm:px-6 py-2 sm:py-3 rounded font-semibold transition-all ${
                                     viewMode === 'cards'
-                                        ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xl shadow-emerald-500/25'
-                                        : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-emerald-300 hover:shadow-lg'
+                                        ? 'bg-blue-900 text-white'
+                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                 }`}
                             >
                                 🎴 Cards View
                             </button>
                             <button
                                 onClick={() => setViewMode('analytics')}
-                                className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                                className={`px-4 sm:px-6 py-2 sm:py-3 rounded font-semibold transition-all ${
                                     viewMode === 'analytics'
-                                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/25'
-                                        : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-purple-300 hover:shadow-lg'
+                                        ? 'bg-blue-900 text-white'
+                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                 }`}
                             >
                                 📊 Analytics
@@ -664,67 +664,67 @@ const ExpensesManagementPage = () => {
 
                 {/* Enhanced Statistics Cards */}
                 {statistics && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div className="bg-white rounded-3xl shadow-xl p-6 border border-slate-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
-                                    <p className="text-slate-600 font-medium text-sm uppercase tracking-wide">Total Expenses</p>
-                                    <p className="text-3xl font-bold text-slate-800">৳{statistics.totalAmount.toLocaleString()}</p>
+                                    <p className="text-black text-xs sm:text-sm font-semibold uppercase">Total Expenses</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c]">৳{statistics.totalAmount.toLocaleString()}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                        <span className="text-xs text-slate-500">All time</span>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
+                                        <span className="text-xs text-black">All time</span>
                                     </div>
                                 </div>
-                                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <span className="text-white text-2xl">💵</span>
+                                <div className="w-12 sm:w-16 h-12 sm:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-white text-xl sm:text-2xl">💵</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-3xl shadow-xl p-6 border border-slate-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
-                                    <p className="text-slate-600 font-medium text-sm uppercase tracking-wide">Paid Amount</p>
-                                    <p className="text-3xl font-bold text-emerald-600">৳{statistics.paidAmount.toLocaleString()}</p>
+                                    <p className="text-black text-xs sm:text-sm font-semibold uppercase">Paid Amount</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c]">৳{statistics.paidAmount.toLocaleString()}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                        <span className="text-xs text-slate-500">Completed</span>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
+                                        <span className="text-xs text-black">Completed</span>
                                     </div>
                                 </div>
-                                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <span className="text-white text-2xl">✅</span>
+                                <div className="w-12 sm:w-16 h-12 sm:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-white text-xl sm:text-2xl">✅</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-3xl shadow-xl p-6 border border-slate-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
-                                    <p className="text-slate-600 font-medium text-sm uppercase tracking-wide">Pending Amount</p>
-                                    <p className="text-3xl font-bold text-amber-600">৳{statistics.pendingAmount.toLocaleString()}</p>
+                                    <p className="text-black text-xs sm:text-sm font-semibold uppercase">Pending Amount</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c]">৳{statistics.pendingAmount.toLocaleString()}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
-                                        <span className="text-xs text-slate-500">Awaiting approval</span>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
+                                        <span className="text-xs text-black">Awaiting approval</span>
                                     </div>
                                 </div>
-                                <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <span className="text-white text-2xl">⏳</span>
+                                <div className="w-12 sm:w-16 h-12 sm:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-white text-xl sm:text-2xl">⏳</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-3xl shadow-xl p-6 border border-slate-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
-                                    <p className="text-slate-600 font-medium text-sm uppercase tracking-wide">Total Records</p>
-                                    <p className="text-3xl font-bold text-slate-800">{statistics.totalRecords}</p>
+                                    <p className="text-black text-xs sm:text-sm font-semibold uppercase">Total Records</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c]">{statistics.totalRecords}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-slate-500 rounded-full"></div>
-                                        <span className="text-xs text-slate-500">All entries</span>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
+                                        <span className="text-xs text-black">All entries</span>
                                     </div>
                                 </div>
-                                <div className="w-16 h-16 bg-gradient-to-br from-slate-500 to-gray-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <span className="text-white text-2xl">📊</span>
+                                <div className="w-12 sm:w-16 h-12 sm:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-white text-xl sm:text-2xl">📊</span>
                                 </div>
                             </div>
                         </div>
@@ -732,53 +732,53 @@ const ExpensesManagementPage = () => {
                 )}
 
                 {/* Professional Filters Section */}
-                <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-slate-200">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+                <div className="bg-white border border-gray-200 rounded p-4 sm:p-6 mb-4 sm:mb-6">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center">
-                                <span className="text-white text-lg">🔍</span>
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                <span className="text-white text-base sm:text-lg">🔍</span>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-slate-800">Advanced Filters</h2>
-                                <p className="text-slate-600 text-sm">Filter and search expenses with precision</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Advanced Filters</h2>
+                                <p className="text-black text-xs sm:text-sm">Filter and search expenses with precision</p>
                             </div>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex gap-2 sm:gap-3">
                             <button
                                 onClick={applyFilters}
-                                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25"
+                                className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all"
                             >
                                 🔍 Apply Filters
                             </button>
                             <button
                                 onClick={clearFilters}
-                                className="px-6 py-3 bg-white text-slate-700 border-2 border-slate-200 rounded-2xl font-semibold hover:border-slate-300 hover:shadow-lg transition-all duration-300"
+                                className="px-4 sm:px-6 py-2 sm:py-3 bg-white text-black border border-gray-300 rounded font-semibold hover:border-[#1a202c] transition-all"
                             >
                                 🗑️ Clear All
                             </button>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                         {/* Search */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Search</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Search</label>
                             <input
                                 type="text"
                                 value={filters.search}
                                 onChange={(e) => handleFilterChange('search', e.target.value)}
                                 placeholder="Search expenses..."
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             />
                         </div>
 
                         {/* Category */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Category</label>
                             <select
                                 value={filters.category}
                                 onChange={(e) => handleFilterChange('category', e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             >
                                 <option value="">All Categories</option>
                                 {categories.map((category, index) => (
@@ -789,11 +789,11 @@ const ExpensesManagementPage = () => {
 
                         {/* Status */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Status</label>
                             <select
                                 value={filters.status}
                                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             >
                                 <option value="">All Status</option>
                                 <option value="Pending">Pending</option>
@@ -805,11 +805,11 @@ const ExpensesManagementPage = () => {
 
                         {/* Department */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Department</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Department</label>
                             <select
                                 value={filters.department}
                                 onChange={(e) => handleFilterChange('department', e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             >
                                 <option value="">All Departments</option>
                                 {departments.map((dept, index) => (
@@ -820,23 +820,23 @@ const ExpensesManagementPage = () => {
 
                         {/* Academic Year */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Academic Year</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Academic Year</label>
                             <input
                                 type="text"
                                 value={filters.academicYear}
                                 onChange={(e) => handleFilterChange('academicYear', e.target.value)}
                                 placeholder="2026"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             />
                         </div>
 
                         {/* Month */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Month</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Month</label>
                             <select
                                 value={filters.month}
                                 onChange={(e) => handleFilterChange('month', e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             >
                                 <option value="">All Months</option>
                                 {Array.from({ length: 12 }, (_, i) => (
@@ -849,35 +849,35 @@ const ExpensesManagementPage = () => {
 
                         {/* Start Date */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Start Date</label>
                             <input
                                 type="date"
                                 value={filters.startDate}
                                 onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             />
                         </div>
 
                         {/* End Date */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">End Date</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">End Date</label>
                             <input
                                 type="date"
                                 value={filters.endDate}
                                 onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             />
                         </div>
                     </div>
                 </div>
 
                 {/* Professional Action Buttons */}
-                <div className="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-slate-200">
-                    <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
-                        <div className="flex flex-wrap gap-4">
+                <div className="bg-white border border-gray-200 rounded p-4 sm:p-6 mb-4 sm:mb-6">
+                    <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 justify-between items-start lg:items-center">
+                        <div className="flex flex-wrap gap-3 sm:gap-4">
                             <button
                                 onClick={() => setShowForm(true)}
-                                className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-emerald-500/25 flex items-center gap-2"
+                                className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all flex items-center gap-2"
                             >
                                 <span>➕</span>
                                 <span>Add Expense</span>
@@ -887,24 +887,24 @@ const ExpensesManagementPage = () => {
                                 <>
                                     <button
                                         onClick={() => setShowBulkActions(!showBulkActions)}
-                                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25 flex items-center gap-2"
+                                        className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all flex items-center gap-2"
                                     >
                                         <span>⚡</span>
                                         <span>Bulk Actions ({selectedExpenses.length})</span>
                                     </button>
                                     
                                     {showBulkActions && (
-                                        <div className="flex gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                                        <div className="flex gap-2 sm:gap-3 p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded">
                                             <button
                                                 onClick={bulkApprove}
-                                                className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-all duration-300 flex items-center gap-1"
+                                                className="px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all flex items-center gap-1"
                                             >
                                                 <span>✅</span>
                                                 <span>Approve All</span>
                                             </button>
                                             <button
                                                 onClick={bulkDelete}
-                                                className="px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-all duration-300 flex items-center gap-1"
+                                                className="px-3 sm:px-4 py-2 bg-red-600 text-white rounded text-sm font-semibold hover:bg-red-700 transition-all flex items-center gap-1"
                                             >
                                                 <span>🗑️</span>
                                                 <span>Delete All</span>
@@ -915,17 +915,17 @@ const ExpensesManagementPage = () => {
                             )}
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex gap-2 sm:gap-3">
                             <button
                                 onClick={exportToExcel}
-                                className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-emerald-500/25 flex items-center gap-2"
+                                className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all flex items-center gap-2"
                             >
                                 <span>📊</span>
                                 <span>Export Excel</span>
                             </button>
                             <button
                                 onClick={exportToPDF}
-                                className="px-6 py-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-rose-500/25 flex items-center gap-2"
+                                className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all flex items-center gap-2"
                             >
                                 <span>📄</span>
                                 <span>Export PDF</span>
@@ -936,21 +936,21 @@ const ExpensesManagementPage = () => {
 
                 {/* Professional Add/Edit Form Modal */}
                 {showForm && (
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md bg-black/20">
-                        <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-slate-200">
-                            <div className="p-8">
-                                <div className="flex items-center justify-between mb-8">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center">
-                                            <span className="text-white text-xl">
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
+                        <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200">
+                            <div className="p-4 sm:p-6 lg:p-8">
+                                <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
+                                    <div className="flex items-center gap-3 sm:gap-4">
+                                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                            <span className="text-white text-lg sm:text-xl">
                                                 {editingExpense ? '✏️' : '➕'}
                                             </span>
                                         </div>
                                         <div>
-                                            <h2 className="text-3xl font-bold text-slate-800">
+                                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">
                                                 {editingExpense ? 'Edit Expense' : 'Add New Expense'}
                                             </h2>
-                                            <p className="text-slate-600 mt-1">
+                                            <p className="text-black text-sm sm:text-base mt-1">
                                                 {editingExpense ? 'Update expense details' : 'Create a new expense entry'}
                                             </p>
                                         </div>
@@ -961,24 +961,24 @@ const ExpensesManagementPage = () => {
                                             setEditingExpense(null);
                                             resetForm();
                                         }}
-                                        className="w-10 h-10 bg-slate-100 hover:bg-slate-200 rounded-2xl flex items-center justify-center text-slate-600 hover:text-slate-800 transition-all duration-300"
+                                        className="w-8 sm:w-10 h-8 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 hover:text-gray-800 transition-all"
                                     >
-                                        <span className="text-xl">×</span>
+                                        <span className="text-lg sm:text-xl">×</span>
                                     </button>
                                 </div>
 
-                                <form onSubmit={handleSubmit} className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                         {/* Title */}
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Title *
                                             </label>
                                             <input
                                                 type="text"
                                                 value={formData.title}
                                                 onChange={(e) => setFormData({...formData, title: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 placeholder="Expense title"
                                                 required
                                             />
@@ -986,13 +986,13 @@ const ExpensesManagementPage = () => {
 
                                         {/* Category */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Category *
                                             </label>
                                             <select
                                                 value={formData.category}
                                                 onChange={(e) => setFormData({...formData, category: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 required
                                             >
                                                 <option value="">Select Category</option>
@@ -1004,14 +1004,14 @@ const ExpensesManagementPage = () => {
 
                                         {/* Amount */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Amount (৳) *
                                             </label>
                                             <input
                                                 type="number"
                                                 value={formData.amount}
                                                 onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 placeholder="0.00"
                                                 step="0.01"
                                                 min="0"
@@ -1021,26 +1021,26 @@ const ExpensesManagementPage = () => {
 
                                         {/* Expense Date */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Expense Date
                                             </label>
                                             <input
                                                 type="date"
                                                 value={formData.expenseDate}
                                                 onChange={(e) => setFormData({...formData, expenseDate: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             />
                                         </div>
 
                                         {/* Payment Method */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Payment Method
                                             </label>
                                             <select
                                                 value={formData.paymentMethod}
                                                 onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             >
                                                 {paymentMethods.map((method, index) => (
                                                     <option key={index} value={method}>{method}</option>
@@ -1050,27 +1050,27 @@ const ExpensesManagementPage = () => {
 
                                         {/* Vendor */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Vendor/Supplier
                                             </label>
                                             <input
                                                 type="text"
                                                 value={formData.vendor}
                                                 onChange={(e) => setFormData({...formData, vendor: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 placeholder="Vendor name"
                                             />
                                         </div>
 
                                         {/* Department */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Department
                                             </label>
                                             <select
                                                 value={formData.department}
                                                 onChange={(e) => setFormData({...formData, department: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             >
                                                 {departmentOptions.map((dept, index) => (
                                                     <option key={index} value={dept}>{dept}</option>
@@ -1080,13 +1080,13 @@ const ExpensesManagementPage = () => {
 
                                         {/* Priority */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Priority
                                             </label>
                                             <select
                                                 value={formData.priority}
                                                 onChange={(e) => setFormData({...formData, priority: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             >
                                                 {priorityLevels.map((priority, index) => (
                                                     <option key={index} value={priority.value}>{priority.value}</option>
@@ -1096,27 +1096,27 @@ const ExpensesManagementPage = () => {
 
                                         {/* Invoice Number */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Invoice/Bill Number
                                             </label>
                                             <input
                                                 type="text"
                                                 value={formData.invoiceNumber}
                                                 onChange={(e) => setFormData({...formData, invoiceNumber: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 placeholder="Invoice number"
                                             />
                                         </div>
 
                                         {/* Description */}
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">
                                                 Description
                                             </label>
                                             <textarea
                                                 value={formData.description}
                                                 onChange={(e) => setFormData({...formData, description: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 rows="3"
                                                 placeholder="Expense description..."
                                             ></textarea>
@@ -1124,7 +1124,7 @@ const ExpensesManagementPage = () => {
                                     </div>
 
                                     {/* Professional Submit Buttons */}
-                                    <div className="flex gap-4 justify-end pt-8 border-t border-slate-200">
+                                    <div className="flex gap-3 sm:gap-4 justify-end pt-6 sm:pt-8 border-t border-gray-200">
                                         <button
                                             type="button"
                                             onClick={() => {
@@ -1132,17 +1132,17 @@ const ExpensesManagementPage = () => {
                                                 setEditingExpense(null);
                                                 resetForm();
                                             }}
-                                            className="px-8 py-3 bg-slate-100 text-slate-700 rounded-2xl font-semibold hover:bg-slate-200 transition-all duration-300"
+                                            className="px-6 sm:px-8 py-2 sm:py-3 bg-gray-100 text-black rounded font-semibold hover:bg-gray-200 transition-all"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={loading}
-                                            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:transform-none shadow-lg shadow-blue-500/25 flex items-center gap-2"
+                                            className="px-6 sm:px-8 py-2 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all disabled:opacity-50 flex items-center gap-2"
                                         >
                                             {loading && (
-                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                <div className="w-3 sm:w-4 h-3 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                             )}
                                             <span>{loading ? 'Saving...' : (editingExpense ? 'Update Expense' : 'Add Expense')}</span>
                                         </button>
@@ -1155,23 +1155,23 @@ const ExpensesManagementPage = () => {
 
                 {/* Professional Expenses List View */}
                 {viewMode === 'list' && (
-                    <div className="bg-white rounded-3xl shadow-xl p-8 border border-slate-200">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center">
-                                <span className="text-white text-lg">📋</span>
+                    <div className="bg-white border border-gray-200 rounded p-4 sm:p-6 lg:p-8">
+                        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                <span className="text-white text-base sm:text-lg">📋</span>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-slate-800">Expenses List</h2>
-                                <p className="text-slate-600 text-sm">{expenses.length} total expenses</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Expenses List</h2>
+                                <p className="text-black text-xs sm:text-sm">{expenses.length} total expenses</p>
                             </div>
                         </div>
                         
                         {expenses.length > 0 ? (
-                            <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                            <div className="overflow-x-auto rounded-lg border border-gray-200">
                                 <table id="expenses-table" className="w-full">
-                                    <thead className="bg-gradient-to-r from-slate-50 to-slate-100">
+                                    <thead className="bg-[#1a202c] text-white">
                                         <tr>
-                                            <th className="px-6 py-4 text-left">
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm">
                                                 <input
                                                     type="checkbox"
                                                     onChange={(e) => {
@@ -1182,26 +1182,26 @@ const ExpensesManagementPage = () => {
                                                         }
                                                     }}
                                                     checked={selectedExpenses.length === expenses.length && expenses.length > 0}
-                                                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                                    className="w-3 sm:w-4 h-3 sm:h-4 border-white rounded focus:ring-white"
                                                 />
                                             </th>
-                                            <th className="px-6 py-4 text-left font-semibold text-slate-700">Expense ID</th>
-                                            <th className="px-6 py-4 text-left font-semibold text-slate-700">Title</th>
-                                            <th className="px-6 py-4 text-left font-semibold text-slate-700">Category</th>
-                                            <th className="px-6 py-4 text-left font-semibold text-slate-700">Vendor</th>
-                                            <th className="px-6 py-4 text-right font-semibold text-slate-700">Amount (৳)</th>
-                                            <th className="px-6 py-4 text-center font-semibold text-slate-700">Date</th>
-                                            <th className="px-6 py-4 text-center font-semibold text-slate-700">Status</th>
-                                            <th className="px-6 py-4 text-center font-semibold text-slate-700">Priority</th>
-                                            <th className="px-6 py-4 text-center font-semibold text-slate-700">Actions</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-left font-semibold text-xs sm:text-sm">Expense ID</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-left font-semibold text-xs sm:text-sm">Title</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-left font-semibold text-xs sm:text-sm">Category</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-left font-semibold text-xs sm:text-sm">Vendor</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-right font-semibold text-xs sm:text-sm">Amount (৳)</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-center font-semibold text-xs sm:text-sm">Date</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-center font-semibold text-xs sm:text-sm">Status</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-center font-semibold text-xs sm:text-sm">Priority</th>
+                                            <th className="px-3 sm:px-6 py-3 sm:py-4 text-center font-semibold text-xs sm:text-sm">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {expenses.map((expense, index) => (
-                                            <tr key={expense._id} className={`border-b border-slate-100 hover:bg-slate-50 transition-all duration-200 ${
-                                                selectedExpenses.includes(expense._id) ? 'bg-blue-50' : ''
+                                            <tr key={expense._id} className={`border-b border-gray-200 hover:bg-gray-50 transition-all ${
+                                                selectedExpenses.includes(expense._id) ? 'bg-gray-100' : ''
                                             }`}>
-                                                <td className="px-6 py-4">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4">
                                                     <input
                                                         type="checkbox"
                                                         checked={selectedExpenses.includes(expense._id)}
@@ -1212,43 +1212,43 @@ const ExpensesManagementPage = () => {
                                                                 setSelectedExpenses(selectedExpenses.filter(id => id !== expense._id));
                                                             }
                                                         }}
-                                                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                                        className="w-3 sm:w-4 h-3 sm:h-4 border-gray-300 rounded focus:ring-[#1a202c]"
                                                     />
                                                 </td>
-                                                <td className="px-6 py-4 font-mono text-sm text-slate-600 font-medium">{expense.expenseId}</td>
-                                                <td className="px-6 py-4">
-                                                    <div className="font-semibold text-slate-800">{expense.title}</div>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 font-mono text-xs sm:text-sm text-black font-medium">{expense.expenseId}</td>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                                    <div className="font-semibold text-black text-sm sm:text-base">{expense.title}</div>
                                                     {expense.description && (
-                                                        <div className="text-xs text-slate-500 mt-1 line-clamp-1">{expense.description}</div>
+                                                        <div className="text-xs text-black mt-1 line-clamp-1">{expense.description}</div>
                                                     )}
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                                                    <span className="px-2 sm:px-3 py-1 bg-gray-100 text-black rounded-full text-xs sm:text-sm font-medium">
                                                         {expense.category}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-slate-700">{expense.vendor || '-'}</td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <span className="font-bold text-lg text-emerald-600">৳{expense.amount.toFixed(2)}</span>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-black text-sm sm:text-base">{expense.vendor || '-'}</td>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                                                    <span className="font-bold text-sm sm:text-lg text-black">৳{expense.amount.toFixed(2)}</span>
                                                 </td>
-                                                <td className="px-6 py-4 text-center text-sm text-slate-600">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm text-black">
                                                     {new Date(expense.expenseDate).toLocaleDateString()}
                                                 </td>
-                                                <td className="px-6 py-4 text-center">
-                                                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${getStatusColor(expense.status)}`}>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
+                                                    <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold ${getStatusColor(expense.status)}`}>
                                                         {expense.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-center">
-                                                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${getPriorityColor(expense.priority)}`}>
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
+                                                    <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold ${getPriorityColor(expense.priority)}`}>
                                                         {expense.priority}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-center">
+                                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
                                                     <div className="flex gap-1 justify-center">
                                                         <button
                                                             onClick={() => editExpense(expense)}
-                                                            className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-all duration-200"
+                                                            className="p-1 sm:p-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-sm"
                                                             title="Edit"
                                                         >
                                                             ✏️
@@ -1258,14 +1258,14 @@ const ExpensesManagementPage = () => {
                                                             <>
                                                                 <button
                                                                     onClick={() => approveExpense(expense._id)}
-                                                                    className="p-2 bg-emerald-100 text-emerald-600 rounded-lg hover:bg-emerald-200 transition-all duration-200"
+                                                                    className="p-1 sm:p-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-sm"
                                                                     title="Approve"
                                                                 >
                                                                     ✅
                                                                 </button>
                                                                 <button
                                                                     onClick={() => rejectExpense(expense._id)}
-                                                                    className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all duration-200"
+                                                                    className="p-1 sm:p-2 bg-red-600 text-white rounded hover:bg-red-700 transition-all text-sm"
                                                                     title="Reject"
                                                                 >
                                                                     ❌
@@ -1276,7 +1276,7 @@ const ExpensesManagementPage = () => {
                                                         {expense.status === 'Approved' && (
                                                             <button
                                                                 onClick={() => markAsPaid(expense._id)}
-                                                                className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-all duration-200"
+                                                                className="p-1 sm:p-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-sm"
                                                                 title="Mark as Paid"
                                                             >
                                                                 💰
@@ -1285,7 +1285,7 @@ const ExpensesManagementPage = () => {
                                                         
                                                         <button
                                                             onClick={() => deleteExpense(expense._id)}
-                                                            className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all duration-200"
+                                                            className="p-1 sm:p-2 bg-red-600 text-white rounded hover:bg-red-700 transition-all text-sm"
                                                             title="Delete"
                                                         >
                                                             🗑️
@@ -1308,65 +1308,65 @@ const ExpensesManagementPage = () => {
 
                 {/* Professional Cards View */}
                 {viewMode === 'cards' && (
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl flex items-center justify-center">
-                                <span className="text-white text-lg">🎴</span>
+                    <div className="space-y-4 sm:space-y-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                <span className="text-white text-base sm:text-lg">🎴</span>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-slate-800">Expense Cards</h2>
-                                <p className="text-slate-600 text-sm">{expenses.length} expenses in card view</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Expense Cards</h2>
+                                <p className="text-black text-xs sm:text-sm">{expenses.length} expenses in card view</p>
                             </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             {expenses.map((expense) => (
-                                <div key={expense._id} className="bg-white rounded-3xl shadow-xl border border-slate-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-                                    <div className="p-6">
-                                        <div className="flex items-start justify-between mb-4">
+                                <div key={expense._id} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                                    <div className="p-4 sm:p-6">
+                                        <div className="flex items-start justify-between mb-3 sm:mb-4">
                                             <div className="space-y-2">
-                                                <h3 className="font-bold text-lg text-slate-800 line-clamp-1">{expense.title}</h3>
-                                                <p className="text-sm text-slate-500 font-mono">{expense.expenseId}</p>
+                                                <h3 className="font-bold text-base sm:text-lg text-[#1a202c] line-clamp-1">{expense.title}</h3>
+                                                <p className="text-xs sm:text-sm text-black font-mono">{expense.expenseId}</p>
                                             </div>
-                                            <div className="flex gap-2">
-                                                <span className={`px-3 py-1 rounded-full text-sm font-bold ${getStatusColor(expense.status)}`}>
+                                            <div className="flex gap-1 sm:gap-2">
+                                                <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold ${getStatusColor(expense.status)}`}>
                                                     {expense.status}
                                                 </span>
-                                                <span className={`px-3 py-1 rounded-full text-sm font-bold ${getPriorityColor(expense.priority)}`}>
+                                                <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold ${getPriorityColor(expense.priority)}`}>
                                                     {expense.priority}
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <div className="space-y-3 mb-6">
+                                        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-slate-600 font-medium">Category:</span>
-                                                <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium">{expense.category}</span>
+                                                <span className="text-black text-sm font-medium">Category:</span>
+                                                <span className="px-2 sm:px-3 py-1 bg-gray-100 text-black rounded-full text-xs sm:text-sm font-medium">{expense.category}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-slate-600 font-medium">Amount:</span>
-                                                <span className="font-bold text-xl text-emerald-600">৳{expense.amount.toFixed(2)}</span>
+                                                <span className="text-black text-sm font-medium">Amount:</span>
+                                                <span className="font-bold text-lg sm:text-xl text-[#1a202c]">৳{expense.amount.toFixed(2)}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-slate-600 font-medium">Date:</span>
-                                                <span className="text-sm text-slate-700">{new Date(expense.expenseDate).toLocaleDateString()}</span>
+                                                <span className="text-black text-sm font-medium">Date:</span>
+                                                <span className="text-xs sm:text-sm text-black">{new Date(expense.expenseDate).toLocaleDateString()}</span>
                                             </div>
                                             {expense.vendor && (
                                                 <div className="flex justify-between items-center">
-                                                    <span className="text-slate-600 font-medium">Vendor:</span>
-                                                    <span className="text-sm text-slate-700">{expense.vendor}</span>
+                                                    <span className="text-black text-sm font-medium">Vendor:</span>
+                                                    <span className="text-xs sm:text-sm text-black">{expense.vendor}</span>
                                                 </div>
                                             )}
                                             <div className="flex justify-between items-center">
-                                                <span className="text-slate-600 font-medium">Department:</span>
-                                                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-medium">{expense.department}</span>
+                                                <span className="text-black text-sm font-medium">Department:</span>
+                                                <span className="px-2 py-1 bg-[#1a202c] text-white rounded-lg text-xs font-medium">{expense.department}</span>
                                             </div>
                                         </div>
 
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => editExpense(expense)}
-                                                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-2xl text-sm font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25"
+                                                className="flex-1 px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
                                             >
                                                 ✏️ Edit
                                             </button>
@@ -1375,13 +1375,13 @@ const ExpensesManagementPage = () => {
                                                 <>
                                                     <button
                                                         onClick={() => approveExpense(expense._id)}
-                                                        className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-2xl text-sm font-semibold hover:bg-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-emerald-500/25"
+                                                        className="flex-1 px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
                                                     >
                                                         ✅ Approve
                                                     </button>
                                                     <button
                                                         onClick={() => rejectExpense(expense._id)}
-                                                        className="flex-1 px-4 py-2 bg-red-600 text-white rounded-2xl text-sm font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-red-500/25"
+                                                        className="flex-1 px-3 sm:px-4 py-2 bg-red-600 text-white rounded text-sm font-semibold hover:bg-red-700 transition-all"
                                                     >
                                                         ❌ Reject
                                                     </button>
@@ -1391,7 +1391,7 @@ const ExpensesManagementPage = () => {
                                             {expense.status === 'Approved' && (
                                                 <button
                                                     onClick={() => markAsPaid(expense._id)}
-                                                    className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-2xl text-sm font-semibold hover:bg-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/25"
+                                                    className="flex-1 px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
                                                 >
                                                     💰 Mark Paid
                                                 </button>
@@ -1402,19 +1402,19 @@ const ExpensesManagementPage = () => {
                             ))}
                         
                         {expenses.length === 0 && (
-                            <div className="col-span-full text-center py-16">
-                                <div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                                    <span className="text-4xl">🎴</span>
+                            <div className="col-span-full text-center py-12 sm:py-16">
+                                <div className="w-16 sm:w-24 h-16 sm:h-24 bg-[#1a202c] rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                                    <span className="text-2xl sm:text-4xl text-white">🎴</span>
                                 </div>
-                                <h3 className="text-2xl font-bold text-slate-800 mb-2">No Expenses Found</h3>
-                                <p className="text-slate-600 mb-8 max-w-md mx-auto">
+                                <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Expenses Found</h3>
+                                <p className="text-black text-sm sm:text-base mb-6 sm:mb-8 max-w-md mx-auto">
                                     {searchTerm || filters.category || filters.status || filters.priority || filters.department
                                         ? "No expenses match your current filters. Try adjusting your search criteria."
                                         : "Start by adding your first expense to track your organization's spending."}
                                 </p>
                                 <button
                                     onClick={() => setShowForm(true)}
-                                    className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-3xl font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 shadow-xl shadow-emerald-500/25"
+                                    className="px-6 sm:px-8 py-3 sm:py-4 bg-blue-900 text-white rounded font-bold text-base sm:text-lg hover:bg-blue-800 transition-all"
                                 >
                                     ➕ Add First Expense
                                 </button>
@@ -1426,54 +1426,54 @@ const ExpensesManagementPage = () => {
 
                 {/* Professional Analytics View */}
                 {viewMode === 'analytics' && statistics && (
-                    <div className="space-y-8">
+                    <div className="space-y-6 sm:space-y-8">
                         {/* Analytics Header */}
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center">
-                                <span className="text-white text-lg">📊</span>
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                <span className="text-white text-base sm:text-lg">📊</span>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-slate-800">Expense Analytics</h2>
-                                <p className="text-slate-600 text-sm">Comprehensive insights into your expense data</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Expense Analytics</h2>
+                                <p className="text-black text-xs sm:text-sm">Comprehensive insights into your expense data</p>
                             </div>
                         </div>
 
                         {/* Status Breakdown */}
-                        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-                            <div className="p-8">
-                                <div className="flex items-center gap-3 mb-8">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
-                                        <span className="text-white text-sm">📈</span>
+                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="p-4 sm:p-8">
+                                <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                                    <div className="w-6 sm:w-8 h-6 sm:h-8 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                        <span className="text-white text-xs sm:text-sm">📈</span>
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-800">Status Breakdown</h3>
+                                    <h3 className="text-lg sm:text-xl font-bold text-[#1a202c]">Status Breakdown</h3>
                                 </div>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                    <div className="text-center p-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200 hover:shadow-lg transition-all duration-300">
-                                        <div className="text-3xl font-bold text-amber-600 mb-2">{statistics.statusCounts.pending}</div>
-                                        <div className="text-slate-600 font-medium">Pending</div>
-                                        <div className="w-full bg-amber-200 rounded-full h-2 mt-3">
-                                            <div className="bg-amber-500 h-2 rounded-full" style={{width: `${(statistics.statusCounts.pending / Math.max(expenses.length, 1)) * 100}%`}}></div>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                                    <div className="text-center p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg">
+                                        <div className="text-2xl sm:text-3xl font-bold text-[#1a202c] mb-2">{statistics.statusCounts.pending}</div>
+                                        <div className="text-black text-sm sm:text-base font-medium">Pending</div>
+                                        <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+                                            <div className="bg-[#1a202c] h-2 rounded-full" style={{width: `${(statistics.statusCounts.pending / Math.max(expenses.length, 1)) * 100}%`}}></div>
                                         </div>
                                     </div>
-                                    <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 hover:shadow-lg transition-all duration-300">
-                                        <div className="text-3xl font-bold text-blue-600 mb-2">{statistics.statusCounts.approved}</div>
-                                        <div className="text-slate-600 font-medium">Approved</div>
-                                        <div className="w-full bg-blue-200 rounded-full h-2 mt-3">
-                                            <div className="bg-blue-500 h-2 rounded-full" style={{width: `${(statistics.statusCounts.approved / Math.max(expenses.length, 1)) * 100}%`}}></div>
+                                    <div className="text-center p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg">
+                                        <div className="text-2xl sm:text-3xl font-bold text-[#1a202c] mb-2">{statistics.statusCounts.approved}</div>
+                                        <div className="text-black text-sm sm:text-base font-medium">Approved</div>
+                                        <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+                                            <div className="bg-[#1a202c] h-2 rounded-full" style={{width: `${(statistics.statusCounts.approved / Math.max(expenses.length, 1)) * 100}%`}}></div>
                                         </div>
                                     </div>
-                                    <div className="text-center p-6 bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl border border-red-200 hover:shadow-lg transition-all duration-300">
-                                        <div className="text-3xl font-bold text-red-600 mb-2">{statistics.statusCounts.rejected}</div>
-                                        <div className="text-slate-600 font-medium">Rejected</div>
-                                        <div className="w-full bg-red-200 rounded-full h-2 mt-3">
-                                            <div className="bg-red-500 h-2 rounded-full" style={{width: `${(statistics.statusCounts.rejected / Math.max(expenses.length, 1)) * 100}%`}}></div>
+                                    <div className="text-center p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg">
+                                        <div className="text-2xl sm:text-3xl font-bold text-[#1a202c] mb-2">{statistics.statusCounts.rejected}</div>
+                                        <div className="text-black text-sm sm:text-base font-medium">Rejected</div>
+                                        <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+                                            <div className="bg-red-600 h-2 rounded-full" style={{width: `${(statistics.statusCounts.rejected / Math.max(expenses.length, 1)) * 100}%`}}></div>
                                         </div>
                                     </div>
-                                    <div className="text-center p-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 hover:shadow-lg transition-all duration-300">
-                                        <div className="text-3xl font-bold text-emerald-600 mb-2">{statistics.statusCounts.paid}</div>
-                                        <div className="text-slate-600 font-medium">Paid</div>
-                                        <div className="w-full bg-emerald-200 rounded-full h-2 mt-3">
-                                            <div className="bg-emerald-500 h-2 rounded-full" style={{width: `${(statistics.statusCounts.paid / Math.max(expenses.length, 1)) * 100}%`}}></div>
+                                    <div className="text-center p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg">
+                                        <div className="text-2xl sm:text-3xl font-bold text-[#1a202c] mb-2">{statistics.statusCounts.paid}</div>
+                                        <div className="text-black text-sm sm:text-base font-medium">Paid</div>
+                                        <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+                                            <div className="bg-[#1a202c] h-2 rounded-full" style={{width: `${(statistics.statusCounts.paid / Math.max(expenses.length, 1)) * 100}%`}}></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1482,22 +1482,22 @@ const ExpensesManagementPage = () => {
 
                         {/* Category Breakdown */}
                         {statistics.categoryBreakdown && Object.keys(statistics.categoryBreakdown).length > 0 && (
-                            <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-                                <div className="p-8">
-                                    <div className="flex items-center gap-3 mb-8">
-                                        <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
-                                            <span className="text-white text-sm">📊</span>
+                            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                                <div className="p-4 sm:p-8">
+                                    <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                                        <div className="w-6 sm:w-8 h-6 sm:h-8 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                            <span className="text-white text-xs sm:text-sm">📊</span>
                                         </div>
-                                        <h3 className="text-xl font-bold text-slate-800">Category Breakdown</h3>
+                                        <h3 className="text-lg sm:text-xl font-bold text-[#1a202c]">Category Breakdown</h3>
                                     </div>
-                                    <div className="space-y-4">
+                                    <div className="space-y-3 sm:space-y-4">
                                         {Object.entries(statistics.categoryBreakdown).map(([category, amount]) => (
-                                            <div key={category} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all duration-300">
+                                            <div key={category} className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-all">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"></div>
-                                                    <span className="font-semibold text-slate-700">{category}</span>
+                                                    <div className="w-3 h-3 bg-[#1a202c] rounded-full"></div>
+                                                    <span className="font-semibold text-black text-sm sm:text-base">{category}</span>
                                                 </div>
-                                                <span className="font-bold text-xl text-emerald-600">৳{amount.toFixed(2)}</span>
+                                                <span className="font-bold text-lg sm:text-xl text-[#1a202c]">৳{amount.toFixed(2)}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -1507,22 +1507,22 @@ const ExpensesManagementPage = () => {
 
                         {/* Monthly Trends */}
                         {statistics.monthlyTrends && Object.keys(statistics.monthlyTrends).length > 0 && (
-                            <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-                                <div className="p-8">
-                                    <div className="flex items-center gap-3 mb-8">
-                                        <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center">
-                                            <span className="text-white text-sm">📅</span>
+                            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                                <div className="p-4 sm:p-8">
+                                    <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                                        <div className="w-6 sm:w-8 h-6 sm:h-8 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                            <span className="text-white text-xs sm:text-sm">📅</span>
                                         </div>
-                                        <h3 className="text-xl font-bold text-slate-800">Monthly Trends</h3>
+                                        <h3 className="text-lg sm:text-xl font-bold text-[#1a202c]">Monthly Trends</h3>
                                     </div>
-                                    <div className="space-y-4">
+                                    <div className="space-y-3 sm:space-y-4">
                                         {Object.entries(statistics.monthlyTrends).map(([month, amount]) => (
-                                            <div key={month} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all duration-300">
+                                            <div key={month} className="flex items-center justify-between p-3 sm:p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-all">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-3 h-3 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full"></div>
-                                                    <span className="font-semibold text-slate-700">{month}</span>
+                                                    <div className="w-3 h-3 bg-[#1a202c] rounded-full"></div>
+                                                    <span className="font-semibold text-black text-sm sm:text-base">{month}</span>
                                                 </div>
-                                                <span className="font-bold text-xl text-violet-600">৳{amount.toFixed(2)}</span>
+                                                <span className="font-bold text-lg sm:text-xl text-[#1a202c]">৳{amount.toFixed(2)}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -1534,14 +1534,14 @@ const ExpensesManagementPage = () => {
 
                 {/* Professional Loading State */}
                 {loading && (
-                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md bg-black/20">
-                        <div className="bg-white rounded-3xl shadow-2xl p-8 text-center border border-slate-200">
-                            <div className="relative mb-6">
-                                <div className="w-16 h-16 border-4 border-slate-200 rounded-full animate-spin mx-auto"></div>
-                                <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-emerald-600 rounded-full animate-spin mx-auto"></div>
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
+                        <div className="bg-white rounded-lg shadow-xl p-6 sm:p-8 text-center border border-gray-200">
+                            <div className="relative mb-4 sm:mb-6">
+                                <div className="w-12 sm:w-16 h-12 sm:h-16 border-4 border-gray-200 rounded-full animate-spin mx-auto"></div>
+                                <div className="absolute inset-0 w-12 sm:w-16 h-12 sm:h-16 border-4 border-transparent border-t-[#1a202c] rounded-full animate-spin mx-auto"></div>
                             </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-2">Loading Expenses</h3>
-                            <p className="text-slate-600">Please wait while we fetch your data...</p>
+                            <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-2">Loading Expenses</h3>
+                            <p className="text-black text-sm sm:text-base">Please wait while we fetch your data...</p>
                         </div>
                     </div>
                 )}

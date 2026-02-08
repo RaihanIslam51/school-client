@@ -216,10 +216,20 @@ const CertificateManagementPage = () => {
 
             const method = editingCertificate ? 'PUT' : 'POST';
 
+            // Prepare data for submission - remove empty optional fields
+            const submitData = { ...formData };
+            if (!submitData.teacherId || submitData.teacherId === '') {
+                delete submitData.teacherId;
+                delete submitData.teacherName;
+            }
+            if (!submitData.studentId || submitData.studentId === '') {
+                delete submitData.studentId;
+            }
+
             const response = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(submitData)
             });
 
             const data = await response.json();
@@ -928,58 +938,58 @@ const CertificateManagementPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
-            <div className="container mx-auto">
+        <div className="min-h-screen bg-white">
+            <div className="container mx-auto ">
                 {/* Header */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-800 mb-2">Certificate Management</h1>
-                            <p className="text-gray-600">Create and manage professional certificates for students</p>
-                        </div>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setViewMode('templates')}
-                                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                    viewMode === 'templates'
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                            >
-                                Templates
-                            </button>
-                            <button
-                                onClick={() => setViewMode('cards')}
-                                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                    viewMode === 'cards'
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                            >
-                                Cards View
-                            </button>
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                    viewMode === 'list'
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                            >
-                                List View
-                            </button>
-                            <button
-                                onClick={() => setShowForm(true)}
-                                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                            >
-                                + New Certificate
-                            </button>
-                        </div>
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Certificate Management</h1>
+                    <p className="text-gray-600">Create and manage professional certificates for students</p>
+                </div>
+                {/* View Mode Buttons */}
+                <div className="mb-6">
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            onClick={() => setViewMode('templates')}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                                viewMode === 'templates'
+                                    ? 'bg-blue-900 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                        >
+                            Templates
+                        </button>
+                        <button
+                            onClick={() => setViewMode('cards')}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                                viewMode === 'cards'
+                                    ? 'bg-blue-900 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                        >
+                            Cards View
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                                viewMode === 'list'
+                                    ? 'bg-blue-900 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                        >
+                            List View
+                        </button>
+                        <button
+                            onClick={() => setShowForm(true)}
+                            className="bg-blue-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-800 transition-colors"
+                        >
+                            + New Certificate
+                        </button>
                     </div>
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                         <select
                             value={filters.type}
@@ -1023,7 +1033,7 @@ const CertificateManagementPage = () => {
                     <div className="flex gap-3">
                         <button
                             onClick={applyFilters}
-                            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                            className="bg-blue-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-800 transition-colors"
                         >
                             Apply Filters
                         </button>
@@ -1042,7 +1052,7 @@ const CertificateManagementPage = () => {
                         {certificateTemplates.map(template => (
                             <div
                                 key={template.id}
-                                className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-transparent hover:border-blue-300"
+                                className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer border-2 border-transparent hover:border-blue-900"
                                 onClick={() => {
                                     setSelectedTemplate(template);
                                     setFormData(prev => ({ ...prev, templateId: template.id }));
@@ -1051,9 +1061,9 @@ const CertificateManagementPage = () => {
                             >
                                 <div className="text-center">
                                     <div className="text-6xl mb-4">{template.preview}</div>
-                                    <h3 className="text-xl font-bold text-gray-800 mb-2">{template.name}</h3>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-2">{template.name}</h3>
                                     <p className="text-gray-600 text-sm">{template.description}</p>
-                                    <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    <button className="mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors">
                                         Use Template
                                     </button>
                                 </div>
@@ -1067,22 +1077,22 @@ const CertificateManagementPage = () => {
                 {viewMode === 'cards' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {certificates.length === 0 ? (
-                            <div className="col-span-full bg-white rounded-3xl shadow-xl border border-slate-200 p-12 text-center">
-                                <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full mx-auto mb-6 flex items-center justify-center">
+                            <div className="col-span-full bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+                                <div className="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center">
                                     <span className="text-5xl">🎓</span>
                                 </div>
-                                <h3 className="text-2xl font-bold text-slate-800 mb-3">No Certificates Found</h3>
-                                <p className="text-slate-600 mb-6">Start by creating your first professional certificate for students</p>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-3">No Certificates Found</h3>
+                                <p className="text-gray-600 mb-6">Start by creating your first professional certificate for students</p>
                                 <button
                                     onClick={() => setShowForm(true)}
-                                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-2xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                                    className="bg-blue-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-800 transition-all duration-300"
                                 >
                                     + Create First Certificate
                                 </button>
                             </div>
                         ) : (
                             certificates.map(certificate => (
-                            <div key={certificate._id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            <div key={certificate._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                                 {/* Compact Certificate Preview */}
                                 <div
                                     id={`certificate-${certificate._id}`}
@@ -1094,19 +1104,19 @@ const CertificateManagementPage = () => {
                                 >
                                     {/* School Header */}
                                     <div className="mb-4">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full mx-auto mb-2 flex items-center justify-center shadow-lg">
+                                        <div className="w-12 h-12 bg-gray-100 rounded-full mx-auto mb-2 flex items-center justify-center shadow-sm">
                                             <span className="text-white text-xl">🎓</span>
                                         </div>
-                                        <h1 className="text-lg font-bold text-slate-800 mb-1">Sunlight School</h1>
-                                        <p className="text-xs text-slate-600">Excellence in Education</p>
+                                        <h1 className="text-lg font-bold text-gray-900 mb-1">Sunlight School</h1>
+                                        <p className="text-xs text-gray-600">Excellence in Education</p>
                                     </div>
 
                                     {/* Certificate Title */}
                                     <div className="mb-4">
-                                        <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                                        <h2 className="text-xl font-bold text-blue-900 mb-2">
                                             Certificate of {certificate.certificateType}
                                         </h2>
-                                        <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 mx-auto rounded-full"></div>
+                                        <div className="w-16 h-1 bg-blue-900 mx-auto rounded-full"></div>
                                     </div>
 
                                     {/* Certificate ID */}
@@ -1118,15 +1128,15 @@ const CertificateManagementPage = () => {
 
                                     {/* Recipient Information */}
                                     <div className="mb-4">
-                                        <p className="text-sm text-slate-600 mb-2">Presented to</p>
-                                        <h3 className="text-lg font-bold text-slate-800 mb-2 border-b border-blue-200 pb-1 inline-block px-4">
+                                        <p className="text-sm text-gray-600 mb-2">Presented to</p>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2 border-b border-blue-200 pb-1 inline-block px-4">
                                             {certificate.studentName}
                                         </h3>
                                         <div className="flex items-center justify-center gap-3 mt-2">
-                                            <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                                            <span className="px-2 py-1 bg-blue-100 text-blue-900 rounded-full text-xs font-medium">
                                                 Class: {certificate.studentClass}
                                             </span>
-                                            <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
+                                            <span className="px-2 py-1 bg-gray-100 text-gray-900 rounded-full text-xs font-medium">
                                                 Roll: {certificate.studentRoll}
                                             </span>
                                         </div>
@@ -1134,15 +1144,15 @@ const CertificateManagementPage = () => {
 
                                     {/* Achievement Details */}
                                     <div className="mb-4 max-w-full mx-auto">
-                                        <p className="text-sm text-slate-700 font-semibold mb-2">{certificate.title}</p>
+                                        <p className="text-sm text-gray-700 font-semibold mb-2">{certificate.title}</p>
                                         {certificate.achievement && (
-                                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-2 border-blue-600 p-2 rounded mt-2">
-                                                <p className="text-blue-700 font-bold text-sm">{certificate.achievement}</p>
+                                            <div className="bg-blue-50 border-l-2 border-blue-900 p-2 rounded mt-2">
+                                                <p className="text-blue-900 font-bold text-sm">{certificate.achievement}</p>
                                             </div>
                                         )}
                                         {certificate.grade && (
                                             <div className="mt-2">
-                                                <span className="px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full text-sm font-bold">
+                                                <span className="px-3 py-1 bg-green-100 text-green-900 rounded-full text-sm font-bold">
                                                     {certificate.grade}
                                                 </span>
                                             </div>
@@ -1173,12 +1183,12 @@ const CertificateManagementPage = () => {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="p-3 bg-gray-50 border-t">
+                                <div className="p-3 bg-gray-50 border-t border-gray-200">
                                     <div className="flex justify-between items-center">
                                         <div className="flex gap-1">
                                             <button
                                                 onClick={() => editCertificate(certificate)}
-                                                className="text-blue-600 hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 transition-colors"
+                                                className="text-blue-900 hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50 transition-colors"
                                                 title="Edit"
                                             >
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1223,7 +1233,7 @@ const CertificateManagementPage = () => {
 
                 {/* List View */}
                 {viewMode === 'list' && (
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead className="bg-gray-50">
@@ -1240,14 +1250,14 @@ const CertificateManagementPage = () => {
                                         <tr>
                                             <td colSpan="5" className="px-6 py-12 text-center">
                                                 <div className="flex flex-col items-center justify-center">
-                                                    <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full mb-4 flex items-center justify-center">
+                                                    <div className="w-20 h-20 bg-gray-100 rounded-full mb-4 flex items-center justify-center">
                                                         <span className="text-4xl">🎓</span>
                                                     </div>
-                                                    <h3 className="text-xl font-bold text-slate-800 mb-2">No Certificates Found</h3>
-                                                    <p className="text-slate-600 mb-4">Create your first certificate to get started</p>
+                                                    <h3 className="text-xl font-bold text-gray-900 mb-2">No Certificates Found</h3>
+                                                    <p className="text-gray-600 mb-4">Create your first certificate to get started</p>
                                                     <button
                                                         onClick={() => setShowForm(true)}
-                                                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                                                        className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
                                                     >
                                                         + Create Certificate
                                                     </button>
@@ -1264,7 +1274,7 @@ const CertificateManagementPage = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-900">
                                                     {certificate.certificateType}
                                                 </span>
                                             </td>
@@ -1276,7 +1286,7 @@ const CertificateManagementPage = () => {
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => editCertificate(certificate)}
-                                                        className="text-blue-600 hover:text-blue-800"
+                                                        className="text-blue-900 hover:text-blue-800"
                                                     >
                                                         Edit
                                                     </button>
@@ -1306,10 +1316,10 @@ const CertificateManagementPage = () => {
                 {/* Certificate Form Modal */}
                 {showForm && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                            <div className="p-6 border-b">
+                        <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                            <div className="p-6 border-b border-gray-200">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-gray-800">
+                                    <h2 className="text-2xl font-bold text-gray-900">
                                         {editingCertificate ? 'Edit Certificate' : 'Create New Certificate'}
                                     </h2>
                                     <button
@@ -1629,7 +1639,7 @@ const CertificateManagementPage = () => {
                                 </div>
 
                                 {/* Form Actions */}
-                                <div className="flex justify-end gap-3 pt-6 border-t">
+                                <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -1644,7 +1654,7 @@ const CertificateManagementPage = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {loading ? 'Saving...' : (editingCertificate ? 'Update Certificate' : 'Create Certificate')}
                                     </button>

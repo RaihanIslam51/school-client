@@ -27,6 +27,7 @@ const MarksResultsPage = () => {
     const [loading, setLoading] = useState(false);
     const [viewMode, setViewMode] = useState('entry'); // 'entry' or 'view'
 
+
     // Load classes on mount
     useEffect(() => {
         // Classes are now static
@@ -583,13 +584,13 @@ const MarksResultsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+        <div className="min-h-screen bg-white p-4 sm:p-6">
             <div className="container mx-auto">
                 {/* Header */}
-                <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <h1 className="text-2xl font-bold text-blue-900">
                                 📊 Marks & Results Management
                             </h1>
                             <p className="text-gray-600 mt-2">Professional examination results management system</p>
@@ -599,8 +600,8 @@ const MarksResultsPage = () => {
                                 onClick={() => setViewMode('entry')}
                                 className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                                     viewMode === 'entry'
-                                        ? 'bg-blue-600 text-white shadow-lg'
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        ? 'bg-blue-900 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                             >
                                 📝 Entry Mode
@@ -613,8 +614,8 @@ const MarksResultsPage = () => {
                                 }}
                                 className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                                     viewMode === 'view'
-                                        ? 'bg-purple-600 text-white shadow-lg'
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        ? 'bg-blue-900 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                             >
                                 👁️ View Results
@@ -624,8 +625,8 @@ const MarksResultsPage = () => {
                 </div>
 
                 {/* Filters Section */}
-                <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6">🎯 Selection Criteria</h2>
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6">
+                    <h2 className="text-xl font-bold text-blue-900 mb-6">🎯 Selection Criteria</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {/* Class Selection */}
                         <div>
@@ -708,13 +709,13 @@ const MarksResultsPage = () => {
 
                         {/* Marks Entry Table */}
                         {students.length > 0 && (
-                            <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-gray-800">✍️ Marks Entry</h2>
+                                    <h2 className="text-xl font-bold text-blue-900">✍️ Marks Entry</h2>
                                     <button
                                         onClick={saveResults}
                                         disabled={loading}
-                                        className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+                                        className="px-8 py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all disabled:opacity-50"
                                     >
                                         {loading ? 'Saving...' : '💾 Save Results'}
                                     </button>
@@ -723,7 +724,7 @@ const MarksResultsPage = () => {
                                 <div className="overflow-x-auto">
                                     <table className="w-full border-collapse">
                                         <thead>
-                                            <tr className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                                            <tr className="bg-blue-900 text-white">
                                                 <th className="px-4 py-3 text-left">Roll</th>
                                                 <th className="px-4 py-3 text-left">Student Name</th>
                                                 <th className="px-4 py-3 text-center">Subject Name</th>
@@ -803,12 +804,12 @@ const MarksResultsPage = () => {
                     <>
                         {!selectedCard ? (
                             // Class/Section Cards View
-                            <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
+                            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-gray-800">📚 Class & Section Results</h2>
+                                    <h2 className="text-xl font-bold text-blue-900">📚 Class & Section Results</h2>
                                     <button
                                         onClick={() => fetchResults()}
-                                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                                        className="px-6 py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all"
                                     >
                                         🔍 View All Results
                                     </button>
@@ -820,10 +821,10 @@ const MarksResultsPage = () => {
                                             <div
                                                 key={index}
                                                 onClick={() => handleCardClick(card)}
-                                                className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl p-6 cursor-pointer hover:shadow-lg transition-all hover:border-blue-400"
+                                                className="bg-white border border-gray-200 rounded-lg p-6 cursor-pointer hover:shadow-lg transition-all hover:border-blue-400"
                                             >
                                                 <div className="flex items-center justify-between mb-4">
-                                                    <h3 className="text-xl font-bold text-gray-800">
+                                                    <h3 className="text-xl font-bold text-blue-900">
                                                         {card.class} - {card.section}
                                                     </h3>
                                                     <div className="text-2xl">📊</div>
@@ -849,7 +850,7 @@ const MarksResultsPage = () => {
                                                 </div>
                                                 
                                                 <div className="mt-4 text-center">
-                                                    <span className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                                                    <span className="inline-block px-4 py-2 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors">
                                                         View Details →
                                                     </span>
                                                 </div>
@@ -868,36 +869,36 @@ const MarksResultsPage = () => {
                             // Detailed Results View with Edit Capability
                             <>
                                 {/* Back Button */}
-                                <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6">
                                     <button
                                         onClick={() => setSelectedCard(null)}
-                                        className="px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                                        className="px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition-all"
                                     >
                                         ← Back to Overview
                                     </button>
-                                    <h2 className="text-2xl font-bold text-gray-800 mt-4">
+                                    <h2 className="text-xl font-bold text-blue-900 mt-4">
                                         📋 Results for {selectedCard.class} - {selectedCard.section} ({selectedCard.examName})
                                     </h2>
                                 </div>
 
                                 {/* Action Buttons */}
-                                <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
+                                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6">
                                     <div className="flex flex-wrap gap-4 justify-center">
                                         <button
                                             onClick={exportToExcel}
-                                            className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                                            className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all"
                                         >
                                             📊 Export to Excel
                                         </button>
                                         <button
                                             onClick={downloadPDF}
-                                            className="px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                                            className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all"
                                         >
                                             📄 Download PDF
                                         </button>
                                         <button
                                             onClick={printResults}
-                                            className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                                            className="px-6 py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all"
                                         >
                                             🖨️ Print Results
                                         </button>
@@ -906,60 +907,68 @@ const MarksResultsPage = () => {
 
                                 {/* Statistics Cards */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl p-6 text-white">
+                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-blue-100 text-sm">Total Students</p>
-                                                <p className="text-4xl font-bold mt-2">{results.length}</p>
+                                                <p className="text-gray-600 text-sm">Total Students</p>
+                                                <p className="text-2xl font-bold text-gray-900 mt-2">{results.length}</p>
                                             </div>
-                                            <div className="text-5xl opacity-20">👥</div>
+                                            <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                                                <span className="text-blue-900 text-xl">👥</span>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-xl p-6 text-white">
+                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-green-100 text-sm">Passed</p>
-                                                <p className="text-4xl font-bold mt-2">
+                                                <p className="text-gray-600 text-sm">Passed</p>
+                                                <p className="text-2xl font-bold text-gray-900 mt-2">
                                                     {results.filter(r => r.status === 'Pass').length}
                                                 </p>
                                             </div>
-                                            <div className="text-5xl opacity-20">✅</div>
+                                            <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                                                <span className="text-blue-900 text-xl">✅</span>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white">
+                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-red-100 text-sm">Failed</p>
-                                                <p className="text-4xl font-bold mt-2">
+                                                <p className="text-gray-600 text-sm">Failed</p>
+                                                <p className="text-2xl font-bold text-gray-900 mt-2">
                                                     {results.filter(r => r.status === 'Fail').length}
                                                 </p>
                                             </div>
-                                            <div className="text-5xl opacity-20">❌</div>
+                                            <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                                                <span className="text-blue-900 text-xl">❌</span>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white">
+                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-purple-100 text-sm">Average %</p>
-                                                <p className="text-4xl font-bold mt-2">
+                                                <p className="text-gray-600 text-sm">Average %</p>
+                                                <p className="text-2xl font-bold text-gray-900 mt-2">
                                                     {(results.reduce((sum, r) => sum + r.percentage, 0) / results.length).toFixed(2)}%
                                                 </p>
                                             </div>
-                                            <div className="text-5xl opacity-20">📈</div>
+                                            <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                                                <span className="text-blue-900 text-xl">📈</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Editable Results Table */}
-                                <div id="results-table-print" className="bg-white rounded-2xl shadow-xl p-8">
-                                    <h2 className="text-2xl font-bold text-gray-800 mb-6">✏️ Edit Results</h2>
+                                <div id="results-table-print" className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+                                    <h2 className="text-xl font-bold text-blue-900 mb-6">✏️ Edit Results</h2>
                                     <div className="overflow-x-auto">
                                         <table className="w-full border-collapse">
                                             <thead>
-                                                <tr className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                                                <tr className="bg-blue-900 text-white">
                                                     <th className="px-4 py-3 text-center">Roll</th>
                                                     <th className="px-4 py-3 text-center">Student Name</th>
                                                     <th className="px-4 py-3 text-center">Subject Name</th>
@@ -1054,7 +1063,7 @@ const MarksResultsPage = () => {
                                                                         });
                                                                     }
                                                                 }}
-                                                                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                                                                className="px-4 py-2 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors"
                                                             >
                                                                 Update
                                                             </button>
@@ -1159,17 +1168,17 @@ const MarksResultsPage = () => {
 
                 {/* Empty State */}
                 {viewMode === 'view' && !selectedCard && classSectionCards.length === 0 && (
-                    <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-12 text-center">
                         <div className="text-6xl mb-4">📊</div>
-                        <h3 className="text-2xl font-bold text-gray-800 mb-2">No Results Found</h3>
+                        <h3 className="text-xl font-bold text-blue-900 mb-2">No Results Found</h3>
                         <p className="text-gray-600">No results have been saved in the system yet</p>
                     </div>
                 )}
 
                 {viewMode === 'entry' && students.length === 0 && selectedClass && selectedSection && (
-                    <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
+                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-12 text-center">
                         <div className="text-6xl mb-4">👥</div>
-                        <h3 className="text-2xl font-bold text-gray-800 mb-2">No Students Found</h3>
+                        <h3 className="text-xl font-bold text-blue-900 mb-2">No Students Found</h3>
                         <p className="text-gray-600">No active students in selected class and section</p>
                     </div>
                 )}

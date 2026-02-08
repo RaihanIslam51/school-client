@@ -20,14 +20,14 @@ const NoticesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('all');
 
-    // Notice types with enhanced styling
+    // Notice types with professional styling
     const noticeTypes = [
-        { value: 'general', label: 'General Notice', icon: '📢', color: 'bg-blue-500', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700' },
-        { value: 'exam', label: 'Exam Notice', icon: '📝', color: 'bg-green-500', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700' },
-        { value: 'holiday', label: 'Holiday Notice', icon: '🏖️', color: 'bg-orange-500', bgColor: 'bg-orange-50', borderColor: 'border-orange-200', textColor: 'text-orange-700' },
-        { value: 'event', label: 'Event Notice', icon: '🎉', color: 'bg-purple-500', bgColor: 'bg-purple-50', borderColor: 'border-purple-200', textColor: 'text-purple-700' },
-        { value: 'academic', label: 'Academic Notice', icon: '🎓', color: 'bg-indigo-500', bgColor: 'bg-indigo-50', borderColor: 'border-indigo-200', textColor: 'text-indigo-700' },
-        { value: 'urgent', label: 'Urgent Notice', icon: '🚨', color: 'bg-red-500', bgColor: 'bg-red-50', borderColor: 'border-red-200', textColor: 'text-red-700' }
+        { value: 'general', label: 'General Notice', icon: '📢', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'exam', label: 'Exam Notice', icon: '📝', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'holiday', label: 'Holiday Notice', icon: '🏖️', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'event', label: 'Event Notice', icon: '🎉', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'academic', label: 'Academic Notice', icon: '🎓', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'urgent', label: 'Urgent Notice', icon: '🚨', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' }
     ];
 
     // Fetch notices
@@ -234,7 +234,7 @@ const NoticesPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+            <div className="min-h-screen bg-white p-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="animate-pulse space-y-8">
                         <div className="flex items-center justify-between">
@@ -256,20 +256,20 @@ const NoticesPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="min-h-screen bg-white">
             <div className="container mx-auto p-6">
                 {/* Header Section */}
                 <div className="mb-8">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
+                            <h1 className="text-4xl font-bold text-blue-900 mb-2">
                                 📢 Notice Management
                             </h1>
                             <p className="text-gray-600 text-lg">Create, manage, and organize school notices professionally</p>
                         </div>
                         <button
                             onClick={openCreateModal}
-                            className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            className="inline-flex items-center gap-3 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -312,8 +312,8 @@ const NoticesPage = () => {
                 <div className="grid grid-cols-1 gap-8">
                     {/* Notices List */}
                     <div className="w-full">
-                        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                            <div className="bg-gradient-to-r from-gray-800 to-gray-700 p-6">
+                        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                            <div className="bg-blue-900 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <h2 className="text-2xl font-bold text-white flex items-center">
@@ -351,7 +351,7 @@ const NoticesPage = () => {
                                         {(!searchTerm && filterType === 'all') && (
                                             <button
                                                 onClick={openCreateModal}
-                                                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-300"
+                                                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300"
                                             >
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -367,15 +367,11 @@ const NoticesPage = () => {
                                             return (
                                                 <div
                                                     key={notice._id}
-                                                    className={`group relative p-6 rounded-2xl border-l-4 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${
-                                                        notice.important
-                                                            ? 'border-red-500 bg-gradient-to-r from-red-50 to-pink-50'
-                                                            : `${typeInfo.borderColor} ${typeInfo.bgColor}`
-                                                    }`}
+                                                    className="group relative p-6 rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
                                                 >
                                                     <div className="flex items-start gap-4">
                                                         {/* Notice Icon */}
-                                                        <div className={`flex-shrink-0 w-14 h-14 rounded-xl ${typeInfo.color} flex items-center justify-center text-2xl shadow-lg`}>
+                                                        <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-blue-900 flex items-center justify-center text-2xl shadow-lg text-white">
                                                             {typeInfo.icon}
                                                         </div>
 
@@ -388,7 +384,7 @@ const NoticesPage = () => {
                                                                             {notice.title}
                                                                         </h3>
                                                                         {notice.important && (
-                                                                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full animate-pulse">
+                                                                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-900 text-xs font-bold rounded-full">
                                                                                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                                                     <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                                                                 </svg>
@@ -397,7 +393,7 @@ const NoticesPage = () => {
                                                                         )}
                                                                     </div>
                                                                     <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                                                                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${typeInfo.color} text-white`}>
+                                                                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-900 text-white">
                                                                             {typeInfo.icon} {typeInfo.label}
                                                                         </span>
                                                                         <span className="flex items-center gap-1">
@@ -470,7 +466,7 @@ const NoticesPage = () => {
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                         {/* Modal Header */}
-                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 rounded-t-2xl">
+                        <div className="bg-blue-900 p-6 rounded-t-2xl">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h2 className="text-2xl font-bold text-white flex items-center">
@@ -587,20 +583,20 @@ const NoticesPage = () => {
                             </div>
 
                             {/* Important Checkbox */}
-                            <div className="flex items-center p-4 bg-red-50 border border-red-200 rounded-xl">
+                            <div className="flex items-center p-4 bg-blue-50 border border-blue-200 rounded-xl">
                                 <input
                                     type="checkbox"
                                     name="important"
                                     id="important"
                                     checked={formData.important}
                                     onChange={handleChange}
-                                    className="w-5 h-5 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500"
+                                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                                 />
                                 <label htmlFor="important" className="ml-3 flex-1">
-                                    <span className="text-sm font-semibold text-red-700">Mark as Important Notice</span>
-                                    <p className="text-xs text-red-600 mt-1">This will highlight the notice and draw extra attention</p>
+                                    <span className="text-sm font-semibold text-blue-900">Mark as Important Notice</span>
+                                    <p className="text-xs text-blue-700 mt-1">This will highlight the notice and draw extra attention</p>
                                 </label>
-                                <div className="text-red-500">
+                                <div className="text-blue-900">
                                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                     </svg>
@@ -619,7 +615,7 @@ const NoticesPage = () => {
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+                                    className="flex-1 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {submitting ? (
                                         <div className="flex items-center justify-center">

@@ -231,86 +231,91 @@ const Bennar = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-900 text-lg">Loading...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Banner Management</h1>
-                    <p className="text-gray-600 mt-1">Manage all website banners ({banners.length} total)</p>
-                </div>
-                <button
-                    onClick={openAddModal}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2"
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Add Banner
-                </button>
-            </div>
+        <div className="min-h-screen bg-white">
+            <div className="container mx-auto">
+                <div className="space-y-6">
+                    {/* Header */}
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h1 className="text-3xl font-bold text-blue-900">Banner Management</h1>
+                            <p className="text-gray-900 mt-1">Manage all website banners ({banners.length} total)</p>
+                        </div>
+                        <button
+                            onClick={openAddModal}
+                            className="bg-blue-900 hover:bg-blue-800 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            Add Banner
+                        </button>
+                    </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <div className="flex items-center">
-                        <div className="p-3 bg-blue-100 rounded-lg">
-                            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-blue-900 rounded-lg">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-900">Total Banners</p>
+                                    <p className="text-2xl font-bold text-gray-900">{banners.length}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-600">Total Banners</p>
-                            <p className="text-2xl font-bold text-gray-900">{banners.length}</p>
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-blue-900 rounded-lg">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-900">Active</p>
+                                    <p className="text-2xl font-bold text-gray-900">{banners.filter(b => b.status === 'active').length}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-blue-900 rounded-lg">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-900">Suspended</p>
+                                    <p className="text-2xl font-bold text-gray-900">{banners.filter(b => b.status === 'suspended').length}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                            <div className="flex items-center">
+                                <div className="p-3 bg-blue-900 rounded-lg">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-900">Draft</p>
+                                    <p className="text-2xl font-bold text-gray-900">{banners.filter(b => b.status === 'draft').length}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <div className="flex items-center">
-                        <div className="p-3 bg-green-100 rounded-lg">
-                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-600">Active</p>
-                            <p className="text-2xl font-bold text-gray-900">{banners.filter(b => b.status === 'active').length}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <div className="flex items-center">
-                        <div className="p-3 bg-yellow-100 rounded-lg">
-                            <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                            </svg>
-                        </div>
-                        <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-600">Suspended</p>
-                            <p className="text-2xl font-bold text-gray-900">{banners.filter(b => b.status === 'suspended').length}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <div className="flex items-center">
-                        <div className="p-3 bg-purple-100 rounded-lg">
-                            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                        </div>
-                        <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-600">Draft</p>
-                            <p className="text-2xl font-bold text-gray-900">{banners.filter(b => b.status === 'draft').length}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             {/* Banners Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -332,13 +337,7 @@ const Bennar = () => {
                                 </div>
                             )}
                             <div className="absolute top-2 right-2">
-                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                    banner.status === 'active'
-                                        ? 'bg-green-100 text-green-800'
-                                        : banner.status === 'suspended'
-                                        ? 'bg-yellow-100 text-yellow-800'
-                                        : 'bg-gray-100 text-gray-800'
-                                }`}>
+                                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-900">
                                     {banner.status}
                                 </span>
                             </div>
@@ -357,9 +356,9 @@ const Bennar = () => {
                             {banner.stats && banner.stats.length > 0 && (
                                 <div className="flex gap-2 mb-4">
                                     {banner.stats.slice(0, 3).map((stat, index) => (
-                                        <div key={index} className="bg-blue-50 px-2 py-1 rounded text-xs">
-                                            <span className="font-bold text-blue-600">{stat.number}</span>
-                                            <span className="text-blue-500 ml-1">{stat.label}</span>
+                                        <div key={index} className="bg-gray-100 px-2 py-1 rounded text-xs">
+                                            <span className="font-bold text-gray-900">{stat.number}</span>
+                                            <span className="text-gray-700 ml-1">{stat.label}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -379,11 +378,7 @@ const Bennar = () => {
                                     </button>
                                     <button
                                         onClick={() => toggleStatus(banner._id, banner.status)}
-                                        className={`p-2 rounded-lg ${
-                                            banner.status === 'active'
-                                                ? 'text-yellow-600 hover:bg-yellow-50'
-                                                : 'text-green-600 hover:bg-green-50'
-                                        }`}
+                                        className="p-2 text-blue-900 hover:bg-gray-100 rounded-lg"
                                         title={banner.status === 'active' ? 'Suspend' : 'Activate'}
                                     >
                                         {banner.status === 'active' ? (
@@ -411,19 +406,20 @@ const Bennar = () => {
                     </div>
                 ))}
             </div>
+                </div>
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md">
-                    <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
                         <div className="p-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                            <h3 className="text-2xl font-bold text-blue-900 mb-4">
                                 {editingBanner ? 'Edit Banner' : 'Add New Banner'}
                             </h3>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Images */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Banner Images</label>
+                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Banner Images</label>
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                                         {formData.images.map((image, index) => (
                                             <div key={index} className="relative">
@@ -455,10 +451,10 @@ const Bennar = () => {
                                         />
                                         <label
                                             htmlFor="image-upload"
-                                            className={`inline-flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer ${
+                                            className={`inline-flex items-center gap-3 px-6 py-3 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                                                 uploading
                                                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                    : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                                                    : 'bg-blue-900 hover:bg-blue-800 text-white shadow-lg hover:shadow-xl'
                                             }`}
                                         >
                                             {uploading ? (
@@ -488,38 +484,38 @@ const Bennar = () => {
 
                                 {/* Headline */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Headline</label>
+                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Headline</label>
                                     <input
                                         type="text"
                                         name="headline"
                                         value={formData.headline}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                         required
                                     />
                                 </div>
 
                                 {/* Subheadline */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Subheadline</label>
+                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Subheadline</label>
                                     <input
                                         type="text"
                                         name="subheadline"
                                         value={formData.subheadline}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                         required
                                     />
                                 </div>
 
                                 {/* Status */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                    <label className="block text-sm font-semibold text-gray-900 mb-2">Status</label>
                                     <select
                                         name="status"
                                         value={formData.status}
                                         onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                     >
                                         <option value="active">Active</option>
                                         <option value="suspended">Suspended</option>
@@ -529,12 +525,12 @@ const Bennar = () => {
 
                                 {/* Stats */}
                                 <div>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <label className="block text-sm font-medium text-gray-700">Statistics</label>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <label className="block text-sm font-semibold text-gray-900">Statistics</label>
                                         <button
                                             type="button"
                                             onClick={addStat}
-                                            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
+                                            className="bg-blue-900 hover:bg-blue-800 text-white px-3 py-1 rounded text-sm transition-colors"
                                         >
                                             Add Stat
                                         </button>
@@ -547,7 +543,7 @@ const Bennar = () => {
                                                     placeholder="Number"
                                                     value={stat.number}
                                                     onChange={(e) => handleStatChange(index, 'number', e.target.value)}
-                                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                                     required
                                                 />
                                                 <input
@@ -555,13 +551,13 @@ const Bennar = () => {
                                                     placeholder="Label"
                                                     value={stat.label}
                                                     onChange={(e) => handleStatChange(index, 'label', e.target.value)}
-                                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
                                                     required
                                                 />
                                                 <button
                                                     type="button"
                                                     onClick={() => removeStat(index)}
-                                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded"
+                                                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg transition-colors"
                                                 >
                                                     Remove
                                                 </button>
@@ -571,18 +567,18 @@ const Bennar = () => {
                                 </div>
 
                                 {/* Buttons */}
-                                <div className="flex justify-end space-x-3">
+                                <div className="flex gap-4 pt-6">
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg"
+                                        className="flex-1 px-6 py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={saving}
-                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50"
+                                        className="flex-1 px-6 py-3 bg-blue-900 text-white font-semibold rounded-lg hover:bg-blue-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {saving ? 'Saving...' : (editingBanner ? 'Update' : 'Create')}
                                     </button>
@@ -592,6 +588,7 @@ const Bennar = () => {
                     </div>
                 </div>
             )}
+        </div>
         </div>
     );
 };

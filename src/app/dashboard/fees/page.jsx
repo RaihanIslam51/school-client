@@ -46,6 +46,7 @@ const FeesManagementPage = () => {
         { name: 'Late Fine', defaultAmount: 100 }
     ];
 
+
     // Load classes on mount
     useEffect(() => {
         // Classes are now static
@@ -585,53 +586,53 @@ const FeesManagementPage = () => {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
-            <div className="container mx-auto">
+        <div className="min-h-screen bg-white p-3 sm:p-4 md:p-6 lg:p-8">
+            <div className="container mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
                 {/* Header */}
-                <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-                    <div className="flex items-center justify-between">
+                <div className="border-b border-gray-200 p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                💰 Fees Management System
+                            <h1 className="text-2xl sm:text-3xl font-bold text-[#1a202c]">
+                                Fees Management System
                             </h1>
-                            <p className="text-gray-600 mt-2">Professional fee collection and receipt management</p>
+                            <p className="text-black text-sm sm:text-base mt-1">Professional fee collection and receipt management</p>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex flex-wrap gap-2">
                             <button
                                 onClick={() => setViewMode('collection')}
-                                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                                className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
                                     viewMode === 'collection'
-                                        ? 'bg-blue-600 text-white shadow-lg'
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        ? 'bg-blue-900 text-white border-b-2 border-blue-900'
+                                        : 'bg-white text-gray-700 hover:bg-gray-50'
                                 }`}
                             >
-                                💵 Fee Collection
+                                Fee Collection
                             </button>
                             <button
                                 onClick={() => setViewMode('records')}
-                                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                                className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
                                     viewMode === 'records'
-                                        ? 'bg-purple-600 text-white shadow-lg'
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        ? 'bg-blue-900 text-white border-b-2 border-blue-900'
+                                        : 'bg-white text-gray-700 hover:bg-gray-50'
                                 }`}
                             >
-                                📋 Fee Records
+                                Fee Records
                             </button>
                         </div>
                     </div>
                 </div>
 
                 {/* Filters Section */}
-                <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6">🎯 Selection Criteria</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                    <h2 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Selection Criteria</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         {/* Class Selection */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Class</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Class</label>
                             <select
                                 value={selectedClass}
                                 onChange={(e) => setSelectedClass(e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             >
                                 <option value="">Select Class</option>
                                 {classes.map((cls, index) => (
@@ -642,11 +643,11 @@ const FeesManagementPage = () => {
 
                         {/* Section Selection */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Section</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Section</label>
                             <select
                                 value={selectedSection}
                                 onChange={(e) => setSelectedSection(e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                 disabled={!selectedClass}
                             >
                                 <option value="">Select Section</option>
@@ -658,13 +659,13 @@ const FeesManagementPage = () => {
 
                         {/* Academic Year */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Academic Year</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Academic Year</label>
                             <input
                                 type="text"
                                 value={academicYear}
                                 onChange={(e) => setAcademicYear(e.target.value)}
                                 placeholder="2026"
-                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                             />
                         </div>
                     </div>
@@ -672,44 +673,44 @@ const FeesManagementPage = () => {
 
                 {/* Statistics Cards */}
                 {statistics && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl p-6 text-white">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-blue-100 text-sm">Total Collected</p>
-                                    <p className="text-3xl font-bold mt-2">৳{statistics.totalCollected.toLocaleString()}</p>
+                                    <p className="text-black text-xs sm:text-sm">Total Collected</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">৳{statistics.totalCollected.toLocaleString()}</p>
                                 </div>
-                                <div className="text-5xl opacity-20">💵</div>
+                                <div className="text-3xl sm:text-5xl opacity-20">💵</div>
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-xl p-6 text-white">
+                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-green-100 text-sm">Paid Records</p>
-                                    <p className="text-3xl font-bold mt-2">{statistics.paidCount}</p>
+                                    <p className="text-black text-xs sm:text-sm">Paid Records</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">{statistics.paidCount}</p>
                                 </div>
-                                <div className="text-5xl opacity-20">✅</div>
+                                <div className="text-3xl sm:text-5xl opacity-20">✅</div>
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white">
+                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-red-100 text-sm">Total Due</p>
-                                    <p className="text-3xl font-bold mt-2">৳{statistics.totalDue.toLocaleString()}</p>
+                                    <p className="text-black text-xs sm:text-sm">Total Due</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">৳{statistics.totalDue.toLocaleString()}</p>
                                 </div>
-                                <div className="text-5xl opacity-20">⚠️</div>
+                                <div className="text-3xl sm:text-5xl opacity-20">⚠️</div>
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white">
+                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-purple-100 text-sm">Total Records</p>
-                                    <p className="text-3xl font-bold mt-2">{statistics.totalRecords}</p>
+                                    <p className="text-black text-xs sm:text-sm">Total Records</p>
+                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">{statistics.totalRecords}</p>
                                 </div>
-                                <div className="text-5xl opacity-20">📊</div>
+                                <div className="text-3xl sm:text-5xl opacity-20">📊</div>
                             </div>
                         </div>
                     </div>
@@ -717,49 +718,49 @@ const FeesManagementPage = () => {
 
                 {/* Fee Collection Mode */}
                 {viewMode === 'collection' && selectedClass && selectedSection && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         {/* Students Info */}
-                        <div className="bg-white rounded-2xl shadow-xl p-8">
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-2xl font-bold text-gray-800">👥 Students ({students.length})</h2>
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                                <h2 className="text-lg sm:text-xl font-bold text-[#1a202c]">Students ({students.length})</h2>
                                 {collectionMode === 'individual' && (
                                     <div className="flex gap-2">
                                         <button
                                             onClick={selectAllStudents}
-                                            className="px-3 py-1 bg-blue-600 text-white rounded text-sm font-semibold hover:bg-blue-700"
+                                            className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
                                         >
                                             Select All
                                         </button>
                                         <button
                                             onClick={deselectAllStudents}
-                                            className="px-3 py-1 bg-gray-600 text-white rounded text-sm font-semibold hover:bg-gray-700"
+                                            className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
                                         >
                                             Deselect All
                                         </button>
                                     </div>
                                 )}
                             </div>
-                            <div className="max-h-[600px] overflow-y-auto">
-                                <div className="space-y-3">
+                            <div className="max-h-[400px] sm:max-h-[600px] overflow-y-auto">
+                                <div className="space-y-2 sm:space-y-3">
                                     {students.map((student) => (
                                         <div
                                             key={student._id}
-                                            className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                                            className={`p-3 sm:p-4 rounded border cursor-pointer transition-all ${
                                                 collectionMode === 'bulk'
-                                                    ? 'border-blue-200 bg-blue-50'
+                                                    ? 'border-gray-300 bg-gray-50'
                                                     : selectedStudents.some(s => s._id === student._id)
-                                                        ? 'border-green-500 bg-green-50'
-                                                        : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                                                        ? 'border-[#1a202c] bg-gray-100'
+                                                        : 'border-gray-300 hover:border-[#1a202c] hover:bg-gray-50'
                                             }`}
                                             onClick={() => collectionMode === 'individual' && toggleStudentSelection(student)}
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <p className="font-semibold text-gray-800">{student.name}</p>
-                                                    <p className="text-sm text-gray-600">Roll: {student.rollNumber}</p>
+                                                    <p className="font-semibold text-black text-sm sm:text-base">{student.name}</p>
+                                                    <p className="text-xs sm:text-sm text-black">Roll: {student.rollNumber}</p>
                                                 </div>
                                                 {collectionMode === 'bulk' ? (
-                                                    <div className="text-green-600 text-2xl">✓</div>
+                                                    <div className="text-[#1a202c] text-xl sm:text-2xl">✓</div>
                                                 ) : (
                                                     <input
                                                         type="checkbox"
@@ -768,7 +769,7 @@ const FeesManagementPage = () => {
                                                             e.stopPropagation();
                                                             toggleStudentSelection(student);
                                                         }}
-                                                        className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                                        className="w-4 h-4 border-gray-300 rounded focus:ring-[#1a202c]"
                                                     />
                                                 )}
                                             </div>
@@ -779,14 +780,14 @@ const FeesManagementPage = () => {
                         </div>
 
                         {/* Fee Collection Form */}
-                        <div className="bg-white rounded-2xl shadow-xl p-8">
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6">💳 Fee Collection</h2>
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                            <h2 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Fee Collection</h2>
                             
-                            <div className="space-y-6">
+                            <div className="space-y-4 sm:space-y-6">
                                 {/* Collection Mode Selection */}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">Collection Mode</label>
-                                    <div className="flex gap-4">
+                                    <label className="block text-xs sm:text-sm font-semibold text-black mb-2 sm:mb-3">Collection Mode</label>
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                                         <label className="flex items-center">
                                             <input
                                                 type="radio"
@@ -796,9 +797,9 @@ const FeesManagementPage = () => {
                                                     setCollectionMode(e.target.value);
                                                     setSelectedStudents([]);
                                                 }}
-                                                className="mr-2"
+                                                className="mr-2 border-gray-300 focus:ring-[#1a202c]"
                                             />
-                                            <span className="text-sm font-medium">Bulk Collection (All Students)</span>
+                                            <span className="text-xs sm:text-sm font-medium text-black">Bulk Collection (All Students)</span>
                                         </label>
                                         <label className="flex items-center">
                                             <input
@@ -809,19 +810,19 @@ const FeesManagementPage = () => {
                                                     setCollectionMode(e.target.value);
                                                     setSelectedStudents([]);
                                                 }}
-                                                className="mr-2"
+                                                className="mr-2 border-gray-300 focus:ring-[#1a202c]"
                                             />
-                                            <span className="text-sm font-medium">Individual Selection</span>
+                                            <span className="text-xs sm:text-sm font-medium text-black">Individual Selection</span>
                                         </label>
                                     </div>
                                 </div>
 
                                 {/* Class/Section Info */}
-                                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border-2 border-blue-200">
-                                    <p className="font-semibold text-gray-800">
+                                <div className="bg-gray-50 border border-gray-300 p-3 sm:p-4 rounded">
+                                    <p className="font-semibold text-[#1a202c] text-sm sm:text-base">
                                         {collectionMode === 'bulk' ? 'Bulk Fee Collection' : 'Individual Fee Collection'}
                                     </p>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-xs sm:text-sm text-black mt-1">
                                         Class: {selectedClass} | Section: {selectedSection} | 
                                         {collectionMode === 'bulk' 
                                             ? ` Students: ${students.length}` 
@@ -832,13 +833,13 @@ const FeesManagementPage = () => {
 
                                     {/* Fee Categories */}
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-3">Add Fees</label>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-2 sm:mb-3">Add Fees</label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                             {feeCategories.map((category, index) => (
                                                 <button
                                                     key={index}
                                                     onClick={() => addFee(category)}
-                                                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-sm font-semibold hover:shadow-lg transition-all"
+                                                    className="px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
                                                 >
                                                     + {category.name}
                                                 </button>
@@ -850,21 +851,21 @@ const FeesManagementPage = () => {
                                         <>
                                             {/* Selected Fees */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-3">Selected Fees</label>
+                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-2 sm:mb-3">Selected Fees</label>
                                                 <div className="space-y-2">
                                                     {selectedFees.map((fee, index) => (
-                                                        <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                                                        <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-200">
                                                             <div>
-                                                                <p className="font-semibold text-sm">{fee.feeCategory}</p>
+                                                                <p className="font-semibold text-sm text-black">{fee.feeCategory}</p>
                                                                 {fee.description && (
-                                                                    <p className="text-xs text-gray-600">{fee.description}</p>
+                                                                    <p className="text-xs text-black">{fee.description}</p>
                                                                 )}
                                                             </div>
                                                             <div className="flex items-center gap-3">
-                                                                <span className="font-bold">৳{fee.amount}</span>
+                                                                <span className="font-bold text-black">৳{fee.amount}</span>
                                                                 <button
                                                                     onClick={() => removeFee(index)}
-                                                                    className="text-red-500 hover:text-red-700 font-bold"
+                                                                    className="text-red-600 hover:text-red-800 font-bold"
                                                                 >
                                                                     ×
                                                                 </button>
@@ -876,11 +877,11 @@ const FeesManagementPage = () => {
 
                                             {/* Payment Details */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Method</label>
+                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Payment Method</label>
                                                 <select
                                                     value={paymentMethod}
                                                     onChange={(e) => setPaymentMethod(e.target.value)}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 >
                                                     <option value="Cash">Cash</option>
                                                     <option value="Card">Card</option>
@@ -891,40 +892,40 @@ const FeesManagementPage = () => {
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">Paid Amount (৳)</label>
+                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Paid Amount (৳)</label>
                                                 <input
                                                     type="number"
                                                     value={paidAmount}
                                                     onChange={(e) => setPaidAmount(e.target.value)}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                     placeholder="Enter amount"
                                                 />
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">Remarks (Optional)</label>
+                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Remarks (Optional)</label>
                                                 <textarea
                                                     value={remarks}
                                                     onChange={(e) => setRemarks(e.target.value)}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                     rows="2"
                                                     placeholder="Add any remarks..."
                                                 ></textarea>
                                             </div>
 
                                             {/* Summary */}
-                                            <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border-2 border-gray-200">
+                                            <div className="bg-gray-50 border border-gray-300 p-3 sm:p-4 rounded">
                                                 <div className="flex justify-between mb-2">
-                                                    <span className="font-semibold">Total Amount:</span>
-                                                    <span className="font-bold">৳{calculateTotals().total}</span>
+                                                    <span className="font-semibold text-sm text-black">Total Amount:</span>
+                                                    <span className="font-bold text-sm text-black">৳{calculateTotals().total}</span>
                                                 </div>
                                                 <div className="flex justify-between mb-2">
-                                                    <span className="font-semibold text-green-600">Paid Amount:</span>
-                                                    <span className="font-bold text-green-600">৳{calculateTotals().paid}</span>
+                                                    <span className="font-semibold text-sm text-black">Paid Amount:</span>
+                                                    <span className="font-bold text-sm text-black">৳{calculateTotals().paid}</span>
                                                 </div>
-                                                <div className="flex justify-between pt-2 border-t-2 border-gray-300">
-                                                    <span className="font-semibold text-red-600">Due Amount:</span>
-                                                    <span className="font-bold text-red-600">৳{calculateTotals().due}</span>
+                                                <div className="flex justify-between pt-2 border-t border-gray-300">
+                                                    <span className="font-semibold text-sm text-black">Due Amount:</span>
+                                                    <span className="font-bold text-sm text-black">৳{calculateTotals().due}</span>
                                                 </div>
                                             </div>
 
@@ -932,9 +933,9 @@ const FeesManagementPage = () => {
                                             <button
                                                 onClick={collectFee}
                                                 disabled={loading}
-                                                className="w-full px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50"
+                                                className="w-full px-5 sm:px-6 py-2.5 sm:py-4 bg-blue-900 text-white rounded font-semibold text-sm sm:text-lg hover:bg-blue-800 transition-all disabled:opacity-50"
                                             >
-                                                {loading ? 'Processing...' : `💰 Collect Fees for ${
+                                                {loading ? 'Processing...' : `Collect Fees for ${
                                                     collectionMode === 'bulk' 
                                                         ? `${students.length} Students` 
                                                         : `${selectedStudents.length} Selected Student${selectedStudents.length !== 1 ? 's' : ''}`
@@ -942,9 +943,9 @@ const FeesManagementPage = () => {
                                             </button>
                                         </>
                                     ) : (
-                                        <div className="text-center py-12">
-                                            <div className="text-6xl mb-4">💰</div>
-                                            <p className="text-gray-600">
+                                        <div className="text-center py-8 sm:py-12">
+                                            <div className="text-4xl sm:text-6xl mb-4">💰</div>
+                                            <p className="text-black text-sm sm:text-base">
                                                 {collectionMode === 'bulk' 
                                                     ? 'Add fees to collect for all students' 
                                                     : 'Add fees and select students to collect fees'
@@ -959,32 +960,32 @@ const FeesManagementPage = () => {
 
                 {/* Fee Records Mode */}
                 {viewMode === 'records' && selectedClass && selectedSection && (
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        <div className="flex items-center justify-between mb-6">
+                    <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-800">📋 Fee Records ({feeRecords.length})</h2>
+                                <h2 className="text-lg sm:text-xl font-bold text-[#1a202c]">Fee Records ({feeRecords.length})</h2>
                                 {statistics && (
-                                    <p className="text-sm text-gray-600 mt-1">
+                                    <p className="text-xs sm:text-sm text-black mt-1">
                                         Total: {statistics.totalRecords} | Paid: {statistics.paidCount} | Unpaid: {statistics.totalRecords - statistics.paidCount}
                                     </p>
                                 )}
                             </div>
-                            <div className="flex items-center gap-4">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                                 {selectedRecords.length > 0 && (
                                     <button
                                         onClick={deleteSelectedRecords}
                                         disabled={loading}
-                                        className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-all disabled:opacity-50"
+                                        className="px-3 sm:px-4 py-2 bg-red-600 text-white rounded text-sm font-semibold hover:bg-red-700 transition-all disabled:opacity-50"
                                     >
                                         🗑️ Delete ({selectedRecords.length})
                                     </button>
                                 )}
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Filter Records</label>
+                                    <label className="block text-xs sm:text-sm font-semibold text-black mb-1">Filter Records</label>
                                     <select
                                         value={recordFilter}
                                         onChange={(e) => setRecordFilter(e.target.value)}
-                                        className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                     >
                                         <option value="all">All Records</option>
                                         <option value="paid">Paid Only</option>
@@ -995,22 +996,22 @@ const FeesManagementPage = () => {
                         </div>
                         
                         {feeRecords.length > 0 && (
-                            <div className="flex items-center gap-4 mb-4">
+                            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-4">
                                 <div className="flex gap-2">
                                     <button
                                         onClick={selectAllRecords}
-                                        className="px-3 py-1 bg-blue-600 text-white rounded text-sm font-semibold hover:bg-blue-700"
+                                        className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
                                     >
                                         Select All
                                     </button>
                                     <button
                                         onClick={deselectAllRecords}
-                                        className="px-3 py-1 bg-gray-600 text-white rounded text-sm font-semibold hover:bg-gray-700"
+                                        className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
                                     >
                                         Deselect All
                                     </button>
                                 </div>
-                                <span className="text-sm text-gray-600">
+                                <span className="text-xs sm:text-sm text-black">
                                     {selectedRecords.length} of {feeRecords.length} selected
                                 </span>
                             </div>
@@ -1018,10 +1019,10 @@ const FeesManagementPage = () => {
                         
                         {feeRecords.length > 0 ? (
                             <div className="overflow-x-auto">
-                                <table className="w-full border-collapse">
+                                <table className="w-full border-collapse text-xs sm:text-sm">
                                     <thead>
-                                        <tr className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-                                            <th className="px-4 py-3 text-center">
+                                        <tr className="bg-[#1a202c] text-white">
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center">
                                                 <input
                                                     type="checkbox"
                                                     checked={selectedRecords.length === feeRecords.length && feeRecords.length > 0}
@@ -1032,49 +1033,49 @@ const FeesManagementPage = () => {
                                                             deselectAllRecords();
                                                         }
                                                     }}
-                                                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                                    className="w-3 h-3 sm:w-4 sm:h-4 border-gray-300 rounded focus:ring-white"
                                                 />
                                             </th>
-                                            <th className="px-4 py-3 text-left">Receipt No</th>
-                                            <th className="px-4 py-3 text-left">Date</th>
-                                            <th className="px-4 py-3 text-left">Student</th>
-                                            <th className="px-4 py-3 text-left">Roll</th>
-                                            <th className="px-4 py-3 text-right">Total (৳)</th>
-                                            <th className="px-4 py-3 text-right">Paid (৳)</th>
-                                            <th className="px-4 py-3 text-right">Due (৳)</th>
-                                            <th className="px-4 py-3 text-center">Status</th>
-                                            <th className="px-4 py-3 text-center">Action</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Receipt No</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Date</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Student</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Roll</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-right">Total (৳)</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-right">Paid (৳)</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-right">Due (৳)</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center">Status</th>
+                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {feeRecords.map((record, index) => (
-                                            <tr key={index} className={`border-b hover:bg-blue-50 transition-colors ${
-                                                selectedRecords.some(r => r._id === record._id) ? 'bg-blue-50' : ''
+                                            <tr key={index} className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
+                                                selectedRecords.some(r => r._id === record._id) ? 'bg-gray-100' : ''
                                             }`}>
-                                                <td className="px-4 py-3 text-center">
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
                                                     <input
                                                         type="checkbox"
                                                         checked={selectedRecords.some(r => r._id === record._id)}
                                                         onChange={() => toggleRecordSelection(record)}
-                                                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                                                        className="w-3 h-3 sm:w-4 sm:h-4 border-gray-300 rounded focus:ring-[#1a202c]"
                                                     />
                                                 </td>
-                                                <td className="px-4 py-3 font-mono text-sm">{record.receiptNumber}</td>
-                                                <td className="px-4 py-3 text-sm">{new Date(record.paymentDate).toLocaleDateString()}</td>
-                                                <td className="px-4 py-3">{record.studentName}</td>
-                                                <td className="px-4 py-3">{record.rollNumber}</td>
-                                                <td className="px-4 py-3 text-right font-semibold">{record.totalAmount.toFixed(2)}</td>
-                                                <td className="px-4 py-3 text-right font-semibold text-green-600">{record.paidAmount.toFixed(2)}</td>
-                                                <td className="px-4 py-3 text-right font-semibold text-red-600">{record.dueAmount.toFixed(2)}</td>
-                                                <td className="px-4 py-3 text-center">
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 font-mono text-xs sm:text-sm text-black">{record.receiptNumber}</td>
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-black">{new Date(record.paymentDate).toLocaleDateString()}</td>
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-black">{record.studentName}</td>
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-black">{record.rollNumber}</td>
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.totalAmount.toFixed(2)}</td>
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.paidAmount.toFixed(2)}</td>
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.dueAmount.toFixed(2)}</td>
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
                                                     <select
                                                         value={record.status}
                                                         onChange={(e) => updateFeeStatus(record._id, e.target.value)}
-                                                        className={`px-3 py-1 rounded-full text-sm font-bold border-0 ${
-                                                            record.status === 'Paid' ? 'bg-green-100 text-green-800' :
-                                                            record.status === 'Partial' ? 'bg-yellow-100 text-yellow-800' :
-                                                            record.status === 'Pending' ? 'bg-orange-100 text-orange-800' :
-                                                            'bg-red-100 text-red-800'
+                                                        className={`px-2 sm:px-3 py-1 rounded text-xs font-bold border-0 ${
+                                                            record.status === 'Paid' ? 'bg-[#1a202c] text-white' :
+                                                            record.status === 'Partial' ? 'bg-gray-600 text-white' :
+                                                            record.status === 'Pending' ? 'bg-gray-400 text-white' :
+                                                            'bg-gray-300 text-black'
                                                         }`}
                                                     >
                                                         <option value="Paid">Paid</option>
@@ -1082,12 +1083,12 @@ const FeesManagementPage = () => {
                                                         <option value="Pending">Pending</option>
                                                     </select>
                                                 </td>
-                                                <td className="px-4 py-3 text-center">
+                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
                                                     <button
                                                         onClick={() => viewReceipt(record)}
-                                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-all"
+                                                        className="px-3 sm:px-4 py-1 sm:py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all"
                                                     >
-                                                        📄 View
+                                                        View
                                                     </button>
                                                 </td>
                                             </tr>
@@ -1096,9 +1097,9 @@ const FeesManagementPage = () => {
                                 </table>
                             </div>
                         ) : (
-                            <div className="text-center py-12">
-                                <div className="text-6xl mb-4">📋</div>
-                                <p className="text-gray-600">No fee records found for this class and section</p>
+                            <div className="text-center py-8 sm:py-12">
+                                <div className="text-4xl sm:text-6xl mb-4">📋</div>
+                                <p className="text-black text-sm sm:text-base">No fee records found for this class and section</p>
                             </div>
                         )}
                     </div>

@@ -433,120 +433,94 @@ export default function ExamManagement() {
     };
 
     return (
-        <div className="p-4 lg:p-8">
+        <div className="min-h-screen bg-white p-3 sm:p-4 md:p-6 lg:p-8">
             <style jsx global>{`
                 .swal-high-z-index {
                     z-index: 10000 !important;
                 }
             `}</style>
-            <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8">
+            <div className="container mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
                 {/* Header */}
-                <div className="mb-6">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2 flex items-center">
-                        <svg className="w-8 h-8 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
+                <div className="border-b border-gray-200 p-4 sm:p-6">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-[#1a202c] mb-2">
                         Exam Management System
                     </h2>
-                    <p className="text-gray-600">Professional exam setup, scheduling & mark distribution</p>
+                    <p className="text-black text-sm sm:text-base">Professional exam setup, scheduling & mark distribution</p>
                 </div>
 
                 {/* Tab Navigation */}
-                <div className="flex flex-wrap gap-2 mb-6 border-b-2 border-gray-200 pb-2">
+                <div className="flex flex-wrap gap-1 sm:gap-2 border-b border-gray-300 p-4 sm:p-6">
                     <button
                         onClick={() => setActiveTab('setup')}
-                        className={`px-6 py-3 rounded-t-lg font-semibold transition-all duration-200 ${
+                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'setup'
-                                ? 'bg-indigo-600 text-white shadow-lg'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
+                                : 'bg-white text-gray-700 hover:bg-gray-50'
                         }`}
                     >
-                        <span className="flex items-center gap-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                            Exam Setup
-                        </span>
+                        Exam Setup
                     </button>
                     <button
                         onClick={() => setActiveTab('schedule')}
-                        className={`px-6 py-3 rounded-t-lg font-semibold transition-all duration-200 ${
+                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'schedule'
-                                ? 'bg-indigo-600 text-white shadow-lg'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
+                                : 'bg-white text-gray-700 hover:bg-gray-50'
                         }`}
                     >
-                        <span className="flex items-center gap-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            Subject Schedule
-                        </span>
+                        Subject Schedule
                     </button>
                     <button
                         onClick={() => setActiveTab('marks')}
-                        className={`px-6 py-3 rounded-t-lg font-semibold transition-all duration-200 ${
+                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'marks'
-                                ? 'bg-indigo-600 text-white shadow-lg'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
+                                : 'bg-white text-gray-700 hover:bg-gray-50'
                         }`}
                     >
-                        <span className="flex items-center gap-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                            </svg>
-                            Mark Distribution
-                        </span>
+                        Mark Distribution
                     </button>
                     <button
                         onClick={() => setActiveTab('list')}
-                        className={`px-6 py-3 rounded-t-lg font-semibold transition-all duration-200 ${
+                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'list'
-                                ? 'bg-indigo-600 text-white shadow-lg'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
+                                : 'bg-white text-gray-700 hover:bg-gray-50'
                         }`}
                     >
-                        <span className="flex items-center gap-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                            </svg>
-                            Exam List
-                        </span>
+                        Exam List
                     </button>
                 </div>
 
                 {/* Content Area */}
-                <div className="mt-6">
+                <div className="p-4 sm:p-6">
                     {/* Exam Setup Tab */}
                     {activeTab === 'setup' && (
-                        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl border-2 border-indigo-200">
-                            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                                <svg className="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                            <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">
                                 Create New Exam
                             </h3>
                             
                             <form onSubmit={handleExamSetupSubmit}>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Exam Name *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Name *</label>
                                         <input
                                             type="text"
                                             value={examSetup.examName}
                                             onChange={(e) => setExamSetup({...examSetup, examName: e.target.value})}
                                             placeholder="e.g., Mid Term Exam 2024"
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Exam Type *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Type *</label>
                                         <select
                                             value={examSetup.examType}
                                             onChange={(e) => setExamSetup({...examSetup, examType: e.target.value})}
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                         >
                                             <option value="Mid Term">Mid Term</option>
                                             <option value="Final">Final</option>
@@ -557,23 +531,23 @@ export default function ExamManagement() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Academic Year *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Academic Year *</label>
                                         <input
                                             type="text"
                                             value={examSetup.academicYear}
                                             onChange={(e) => setExamSetup({...examSetup, academicYear: e.target.value})}
                                             placeholder="2024-2025"
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Class *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Class *</label>
                                         <select
                                             value={examSetup.class}
                                             onChange={(e) => setExamSetup({...examSetup, class: e.target.value})}
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         >
                                             <option value="">Select Class</option>
@@ -594,11 +568,11 @@ export default function ExamManagement() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Section *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Section *</label>
                                         <select
                                             value={examSetup.section}
                                             onChange={(e) => setExamSetup({...examSetup, section: e.target.value})}
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         >
                                             <option value="">Select Section</option>
@@ -610,11 +584,11 @@ export default function ExamManagement() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Exam Category *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Category *</label>
                                         <select
                                             value={examSetup.examCategory}
                                             onChange={(e) => setExamSetup({...examSetup, examCategory: e.target.value})}
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                         >
                                             <option value="Written">Written</option>
                                             <option value="MCQ">MCQ</option>
@@ -625,57 +599,57 @@ export default function ExamManagement() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Total Marks *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Total Marks *</label>
                                         <input
                                             type="number"
                                             value={examSetup.totalMarks}
                                             onChange={(e) => setExamSetup({...examSetup, totalMarks: e.target.value})}
                                             placeholder="100"
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Pass Marks *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Pass Marks *</label>
                                         <input
                                             type="number"
                                             value={examSetup.passMarks}
                                             onChange={(e) => setExamSetup({...examSetup, passMarks: e.target.value})}
                                             placeholder="33"
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Start Date *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Start Date *</label>
                                         <input
                                             type="date"
                                             value={examSetup.startDate}
                                             onChange={(e) => setExamSetup({...examSetup, startDate: e.target.value})}
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">End Date *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">End Date *</label>
                                         <input
                                             type="date"
                                             value={examSetup.endDate}
                                             onChange={(e) => setExamSetup({...examSetup, endDate: e.target.value})}
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Exam Status *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Status *</label>
                                         <select
                                             value={examSetup.status}
                                             onChange={(e) => setExamSetup({...examSetup, status: e.target.value})}
-                                            className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                         >
                                             <option value="Draft">Draft</option>
                                             <option value="Published">Published</option>
@@ -685,11 +659,11 @@ export default function ExamManagement() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 flex gap-3">
+                                <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-semibold disabled:opacity-50"
+                                        className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all disabled:opacity-50 text-sm sm:text-base"
                                     >
                                         {loading ? 'Creating...' : 'Create Exam'}
                                     </button>
@@ -708,7 +682,7 @@ export default function ExamManagement() {
                                             endDate: '',
                                             status: 'Draft'
                                         })}
-                                        className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold"
+                                        className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 border border-gray-300 text-black rounded hover:bg-gray-50 transition-all font-semibold text-sm sm:text-base"
                                     >
                                         Reset
                                     </button>
@@ -719,45 +693,33 @@ export default function ExamManagement() {
 
                     {/* Subject Schedule Tab - Will be implemented in next message */}
                     {activeTab === 'schedule' && (
-                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-xl border-2 border-blue-200">
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                                    <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
+                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c]">
                                     Subject-wise Exam Scheduling
                                 </h3>
                                 <button
                                     onClick={() => setScheduleViewMode(scheduleViewMode === 'edit' ? 'view' : 'edit')}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold flex items-center gap-2"
+                                    className="w-full sm:w-auto px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm"
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
                                     {scheduleViewMode === 'edit' ? 'View Schedules' : 'Edit Schedules'}
                                 </button>
                             </div>
 
                             {scheduleViewMode === 'edit' ? (
                                 <>
-                                    <div className="bg-blue-100 border border-blue-300 rounded-lg p-4 mb-6">
-                                        <div className="flex items-start gap-2">
-                                            <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <div>
-                                                <h4 className="font-semibold text-blue-900">Required Fields</h4>
-                                                <p className="text-sm text-blue-800">Fields marked with <span className="text-red-500">*</span> are required: Subject Name, Exam Date, Start Time, End Time, and Duration.</p>
-                                            </div>
-                                        </div>
+                                    <div className="bg-gray-50 border border-gray-200 rounded p-3 sm:p-4 mb-4 sm:mb-6">
+                                        <p className="text-xs sm:text-sm text-black">
+                                            <span className="font-semibold">Required Fields:</span> Fields marked with <span className="text-red-600">*</span> are required: Subject Name, Exam Date, Start Time, End Time, and Duration.
+                                        </p>
                                     </div>
                                     
-                                    <div className="mb-6">
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">Select Exam *</label>
+                                    <div className="mb-4 sm:mb-6">
+                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Select Exam *</label>
                                         <select
                                             value={selectedExam || ''}
                                             onChange={(e) => setSelectedExam(e.target.value)}
-                                            className="w-full max-w-md px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                         >
                                             <option value="">Choose an exam</option>
                                             {exams.map(exam => (
@@ -770,94 +732,94 @@ export default function ExamManagement() {
 
                                     {selectedExam && (
                                         <>
-                                            <div className="space-y-4">
+                                            <div className="space-y-3 sm:space-y-4">
                                                 {subjects.map((subject, index) => (
-                                                    <div key={subject.id} className="bg-white p-5 rounded-lg border-2 border-blue-200 shadow-sm">
-                                                        <div className="flex items-center justify-between mb-4">
-                                                            <h4 className="text-lg font-semibold text-gray-900">Subject #{index + 1}</h4>
+                                                    <div key={subject.id} className="bg-white border border-gray-300 rounded p-3 sm:p-5">
+                                                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                                                            <h4 className="text-base sm:text-lg font-semibold text-[#1a202c]">Subject #{index + 1}</h4>
                                                             <button
                                                                 onClick={() => handleRemoveSubject(subject.id)}
-                                                                className="text-red-600 hover:text-red-800 font-semibold"
+                                                                className="text-red-600 hover:text-red-800 font-semibold text-sm"
                                                             >
                                                                 Remove
                                                             </button>
                                                         </div>
                                                         
-                                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                                                             <div>
-                                                                <label className="block text-sm font-medium text-gray-700 mb-2">Subject Name <span className="text-red-500">*</span></label>
+                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Subject Name <span className="text-red-600">*</span></label>
                                                                 <input
                                                                     type="text"
                                                                     value={subject.subjectName}
                                                                     onChange={(e) => handleSubjectChange(subject.id, 'subjectName', e.target.value)}
                                                                     placeholder="Mathematics"
-                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                                     required
                                                                 />
                                                             </div>
 
                                                             <div>
-                                                                <label className="block text-sm font-medium text-gray-700 mb-2">Exam Date <span className="text-red-500">*</span></label>
+                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Exam Date <span className="text-red-600">*</span></label>
                                                                 <input
                                                                     type="date"
                                                                     value={subject.examDate}
                                                                     onChange={(e) => handleSubjectChange(subject.id, 'examDate', e.target.value)}
-                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                                     required
                                                                 />
                                                             </div>
 
                                                             <div>
-                                                                <label className="block text-sm font-medium text-gray-700 mb-2">Start Time <span className="text-red-500">*</span></label>
+                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Start Time <span className="text-red-600">*</span></label>
                                                                 <input
                                                                     type="time"
                                                                     value={subject.startTime}
                                                                     onChange={(e) => handleSubjectChange(subject.id, 'startTime', e.target.value)}
-                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                                     required
                                                                 />
                                                             </div>
 
                                                             <div>
-                                                                <label className="block text-sm font-medium text-gray-700 mb-2">End Time <span className="text-red-500">*</span></label>
+                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">End Time <span className="text-red-600">*</span></label>
                                                                 <input
                                                                     type="time"
                                                                     value={subject.endTime}
                                                                     onChange={(e) => handleSubjectChange(subject.id, 'endTime', e.target.value)}
-                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                                     required
                                                                 />
                                                             </div>
 
                                                             <div>
-                                                                <label className="block text-sm font-medium text-gray-700 mb-2">Duration (minutes) <span className="text-red-500">*</span></label>
+                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Duration (minutes) <span className="text-red-600">*</span></label>
                                                                 <input
                                                                     type="number"
                                                                     value={subject.duration}
                                                                     onChange={(e) => handleSubjectChange(subject.id, 'duration', e.target.value)}
                                                                     placeholder="120"
-                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                                     required
                                                                 />
                                                             </div>
 
                                                             <div>
-                                                                <label className="block text-sm font-medium text-gray-700 mb-2">Room / Hall</label>
+                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Room / Hall</label>
                                                                 <input
                                                                     type="text"
                                                                     value={subject.room}
                                                                     onChange={(e) => handleSubjectChange(subject.id, 'room', e.target.value)}
                                                                     placeholder="Room 101"
-                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                                 />
                                                             </div>
 
-                                                            <div className="md:col-span-2">
-                                                                <label className="block text-sm font-medium text-gray-700 mb-2">Invigilator (Teacher)</label>
+                                                            <div className="sm:col-span-2">
+                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Invigilator (Teacher)</label>
                                                                 <select
                                                                     value={subject.invigilator}
                                                                     onChange={(e) => handleSubjectChange(subject.id, 'invigilator', e.target.value)}
-                                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                                 >
                                                                     <option value="">Select Teacher</option>
                                                                     {teachers.map(teacher => (
@@ -872,10 +834,10 @@ export default function ExamManagement() {
                                                 ))}
                                             </div>
 
-                                            <div className="mt-6 flex gap-3">
+                                            <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
                                                 <button
                                                     onClick={handleAddSubject}
-                                                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold"
+                                                    className="w-full sm:w-auto px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
                                                 >
                                                     + Add Subject
                                                 </button>
@@ -883,7 +845,7 @@ export default function ExamManagement() {
                                                     <button
                                                         onClick={handleScheduleSubmit}
                                                         disabled={loading}
-                                                        className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all font-semibold disabled:opacity-50"
+                                                        className="w-full sm:w-auto px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold disabled:opacity-50 text-sm sm:text-base"
                                                     >
                                                         {loading ? 'Saving...' : 'Save Schedule'}
                                                     </button>
@@ -894,71 +856,65 @@ export default function ExamManagement() {
                                 </>
                             ) : (
                                 // View Mode
-                                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
-                                    <h4 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
-                                        <svg className="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                        </svg>
+                                <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                                    <h4 className="text-base sm:text-lg font-bold text-[#1a202c] mb-4 sm:mb-6">
                                         All Subject Schedules Overview
                                     </h4>
 
                                     {exams.length === 0 ? (
-                                        <div className="text-center py-16">
-                                            <svg className="w-32 h-32 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
-                                            <h3 className="text-2xl font-bold text-gray-900 mb-2">No Exams Found</h3>
-                                            <p className="text-gray-600 mb-6">Create exams first to view their schedules</p>
+                                        <div className="text-center py-12 sm:py-16">
+                                            <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Exams Found</h3>
+                                            <p className="text-black mb-4 sm:mb-6 text-sm sm:text-base">Create exams first to view their schedules</p>
                                             <button
                                                 onClick={() => setActiveTab('setup')}
-                                                className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all font-semibold"
+                                                className="px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
                                             >
                                                 Create New Exam
                                             </button>
                                         </div>
                                     ) : (
-                                        <div className="space-y-6">
+                                        <div className="space-y-4 sm:space-y-6">
                                             {exams.map((exam) => (
-                                                <div key={exam._id} className="bg-white rounded-lg border-2 border-emerald-200 shadow-sm overflow-hidden">
-                                                    <div className="bg-emerald-600 text-white px-6 py-4">
-                                                        <h5 className="text-lg font-bold">{exam.examName}</h5>
-                                                        <p className="text-sm opacity-90">
+                                                <div key={exam._id} className="bg-white border border-gray-300 rounded overflow-hidden">
+                                                    <div className="bg-[#1a202c] text-white px-4 sm:px-6 py-3 sm:py-4">
+                                                        <h5 className="text-base sm:text-lg font-bold">{exam.examName}</h5>
+                                                        <p className="text-xs sm:text-sm mt-1">
                                                             {exam.class} - Section {exam.section} | {exam.examType} | {exam.academicYear}
                                                         </p>
                                                     </div>
 
                                                     {exam.subjects && exam.subjects.length > 0 ? (
                                                         <div className="overflow-x-auto">
-                                                            <table className="w-full">
-                                                                <thead className="bg-emerald-50">
+                                                            <table className="w-full text-xs sm:text-sm">
+                                                                <thead className="bg-gray-100">
                                                                     <tr>
-                                                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-900">Subject</th>
-                                                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-900">Date</th>
-                                                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-900">Time</th>
-                                                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-900">Duration</th>
-                                                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-900">Room</th>
-                                                                        <th className="px-4 py-3 text-left text-sm font-semibold text-emerald-900">Invigilator</th>
+                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Subject</th>
+                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Date</th>
+                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Time</th>
+                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Duration</th>
+                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Room</th>
+                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Invigilator</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     {exam.subjects.map((subject, index) => (
-                                                                        <tr key={index} className="border-t border-emerald-100 hover:bg-emerald-25">
-                                                                            <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                                                                        <tr key={index} className="border-t border-gray-200 hover:bg-gray-50">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 font-medium text-black">
                                                                                 {subject.subjectName}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {subject.examDate ? new Date(subject.examDate).toLocaleDateString() : 'N/A'}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {subject.startTime} - {subject.endTime}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {subject.duration} min
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {subject.room || 'Not assigned'}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {subject.invigilator ? 
                                                                                     teachers.find(t => t._id === subject.invigilator)?.name || 'Unknown' 
                                                                                     : 'Not assigned'}
@@ -969,14 +925,11 @@ export default function ExamManagement() {
                                                             </table>
                                                         </div>
                                                     ) : (
-                                                        <div className="px-6 py-8 text-center">
-                                                            <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                            </svg>
-                                                            <p className="text-gray-500 font-medium">No subjects scheduled for this exam</p>
+                                                        <div className="px-4 sm:px-6 py-6 sm:py-8 text-center">
+                                                            <p className="text-black font-medium text-sm sm:text-base">No subjects scheduled for this exam</p>
                                                             <button
                                                                 onClick={() => setScheduleViewMode('edit')}
-                                                                className="mt-3 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all text-sm font-semibold"
+                                                                className="mt-3 px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-xs sm:text-sm font-semibold"
                                                             >
                                                                 Schedule Subjects
                                                             </button>
@@ -995,18 +948,18 @@ export default function ExamManagement() {
 
                     {/* Mark Distribution Tab - Continuing in next section */}
                     {activeTab === 'marks' && (
-                        <div className="space-y-6">
-                            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border-2 border-green-200">
-                                <h3 className="text-xl font-bold text-gray-900 mb-6">Subject Mark Distribution</h3>
+                        <div className="space-y-4 sm:space-y-6">
+                            <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Subject Mark Distribution</h3>
                                 
                                 <form onSubmit={handleMarkDistributionSubmit}>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Select Exam *</label>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Select Exam *</label>
                                             <select
                                                 value={markDistribution.examId}
                                                 onChange={(e) => setMarkDistribution({...markDistribution, examId: e.target.value})}
-                                                className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 required
                                             >
                                                 <option value="">Choose an exam</option>
@@ -1019,78 +972,78 @@ export default function ExamManagement() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Subject Name *</label>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Subject Name *</label>
                                             <input
                                                 type="text"
                                                 value={markDistribution.subject}
                                                 onChange={(e) => setMarkDistribution({...markDistribution, subject: e.target.value})}
                                                 placeholder="Mathematics"
-                                                className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                                 required
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Written Marks</label>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Written Marks</label>
                                             <input
                                                 type="number"
                                                 value={markDistribution.written}
                                                 onChange={(e) => setMarkDistribution({...markDistribution, written: e.target.value})}
                                                 placeholder="50"
-                                                className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">MCQ Marks</label>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">MCQ Marks</label>
                                             <input
                                                 type="number"
                                                 value={markDistribution.mcq}
                                                 onChange={(e) => setMarkDistribution({...markDistribution, mcq: e.target.value})}
                                                 placeholder="30"
-                                                className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Practical Marks</label>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Practical Marks</label>
                                             <input
                                                 type="number"
                                                 value={markDistribution.practical}
                                                 onChange={(e) => setMarkDistribution({...markDistribution, practical: e.target.value})}
                                                 placeholder="10"
-                                                className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">Viva Marks</label>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Viva Marks</label>
                                             <input
                                                 type="number"
                                                 value={markDistribution.viva}
                                                 onChange={(e) => setMarkDistribution({...markDistribution, viva: e.target.value})}
                                                 placeholder="10"
-                                                className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="mb-6">
+                                    <div className="mb-4 sm:mb-6">
                                         <label className="flex items-center cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 checked={markDistribution.isOptional}
                                                 onChange={(e) => setMarkDistribution({...markDistribution, isOptional: e.target.checked})}
-                                                className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                                                className="w-4 h-4 border-gray-300 rounded focus:ring-[#1a202c]"
                                             />
-                                            <span className="ml-3 text-sm font-semibold text-gray-700">Optional Subject</span>
+                                            <span className="ml-3 text-xs sm:text-sm font-semibold text-black">Optional Subject</span>
                                         </label>
                                     </div>
 
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:shadow-xl transition-all font-semibold disabled:opacity-50"
+                                        className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all disabled:opacity-50 text-sm sm:text-base"
                                     >
                                         {loading ? 'Saving...' : 'Save Mark Distribution'}
                                     </button>
@@ -1098,81 +1051,75 @@ export default function ExamManagement() {
                             </div>
 
                             {/* Existing Mark Distributions Display */}
-                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
-                                <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                                    <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
+                            <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">
                                     Existing Mark Distributions
                                 </h3>
 
                                 {exams.length === 0 ? (
-                                    <div className="text-center py-16">
-                                        <svg className="w-32 h-32 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                        </svg>
-                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">No Exams Found</h3>
-                                        <p className="text-gray-600 mb-6">Create exams first to view mark distributions</p>
+                                    <div className="text-center py-12 sm:py-16">
+                                        <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Exams Found</h3>
+                                        <p className="text-black mb-4 sm:mb-6 text-sm sm:text-base">Create exams first to view mark distributions</p>
                                         <button
                                             onClick={() => setActiveTab('setup')}
-                                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold"
+                                            className="px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
                                         >
                                             Create New Exam
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="space-y-6">
+                                    <div className="space-y-4 sm:space-y-6">
                                         {exams.map((exam) => (
-                                            <div key={exam._id} className="bg-white rounded-lg border-2 border-blue-200 shadow-sm overflow-hidden">
-                                                <div className="bg-blue-600 text-white px-6 py-4">
-                                                    <h4 className="text-lg font-bold">{exam.examName}</h4>
-                                                    <p className="text-sm opacity-90">
+                                            <div key={exam._id} className="bg-white border border-gray-300 rounded overflow-hidden">
+                                                <div className="bg-[#1a202c] text-white px-4 sm:px-6 py-3 sm:py-4">
+                                                    <h4 className="text-base sm:text-lg font-bold">{exam.examName}</h4>
+                                                    <p className="text-xs sm:text-sm mt-1">
                                                         {exam.class} - Section {exam.section} | {exam.examType} | Total: {exam.totalMarks} marks
                                                     </p>
                                                 </div>
 
                                                 {exam.markDistribution && exam.markDistribution.length > 0 ? (
                                                     <div className="overflow-x-auto">
-                                                        <table className="w-full">
-                                                            <thead className="bg-blue-50">
+                                                        <table className="w-full text-xs sm:text-sm">
+                                                            <thead className="bg-gray-100">
                                                                 <tr>
-                                                                    <th className="px-4 py-3 text-left text-sm font-semibold text-blue-900">Subject</th>
-                                                                    <th className="px-4 py-3 text-left text-sm font-semibold text-blue-900">Written</th>
-                                                                    <th className="px-4 py-3 text-left text-sm font-semibold text-blue-900">MCQ</th>
-                                                                    <th className="px-4 py-3 text-left text-sm font-semibold text-blue-900">Practical</th>
-                                                                    <th className="px-4 py-3 text-left text-sm font-semibold text-blue-900">Viva</th>
-                                                                    <th className="px-4 py-3 text-left text-sm font-semibold text-blue-900">Total</th>
-                                                                    <th className="px-4 py-3 text-left text-sm font-semibold text-blue-900">Type</th>
+                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Subject</th>
+                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Written</th>
+                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">MCQ</th>
+                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Practical</th>
+                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Viva</th>
+                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Total</th>
+                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Type</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 {exam.markDistribution.map((mark, index) => {
                                                                     const total = (mark.written || 0) + (mark.mcq || 0) + (mark.practical || 0) + (mark.viva || 0);
                                                                     return (
-                                                                        <tr key={index} className="border-t border-blue-100 hover:bg-blue-25">
-                                                                            <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                                                                        <tr key={index} className="border-t border-gray-200 hover:bg-gray-50">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 font-medium text-black">
                                                                                 {mark.subject}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {mark.written || 0}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {mark.mcq || 0}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {mark.practical || 0}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
                                                                                 {mark.viva || 0}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm font-semibold text-blue-600">
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 font-semibold text-[#1a202c]">
                                                                                 {total}
                                                                             </td>
-                                                                            <td className="px-4 py-3 text-sm text-gray-700">
-                                                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
+                                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${
                                                                                     mark.isOptional 
-                                                                                        ? 'bg-yellow-100 text-yellow-800' 
-                                                                                        : 'bg-green-100 text-green-800'
+                                                                                        ? 'bg-gray-200 text-black' 
+                                                                                        : 'bg-[#1a202c] text-white'
                                                                                 }`}>
                                                                                     {mark.isOptional ? 'Optional' : 'Compulsory'}
                                                                                 </span>
@@ -1184,18 +1131,15 @@ export default function ExamManagement() {
                                                         </table>
                                                     </div>
                                                 ) : (
-                                                    <div className="px-6 py-8 text-center">
-                                                        <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                                        </svg>
-                                                        <p className="text-gray-500 font-medium">No mark distributions set for this exam</p>
+                                                    <div className="px-4 sm:px-6 py-6 sm:py-8 text-center">
+                                                        <p className="text-black font-medium text-sm sm:text-base">No mark distributions set for this exam</p>
                                                         <button
                                                             onClick={() => {
                                                                 setMarkDistribution({...markDistribution, examId: exam._id});
                                                                 // Scroll to form
-                                                                document.querySelector('.bg-gradient-to-br.from-green-50')?.scrollIntoView({ behavior: 'smooth' });
+                                                                document.querySelector('.bg-white.border.border-gray-200.rounded')?.scrollIntoView({ behavior: 'smooth' });
                                                             }}
-                                                            className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-sm font-semibold"
+                                                            className="mt-3 px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-xs sm:text-sm font-semibold"
                                                         >
                                                             Add Mark Distribution
                                                         </button>
@@ -1208,29 +1152,29 @@ export default function ExamManagement() {
                             </div>
 
                             {/* Grade System */}
-                            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl border-2 border-purple-200">
-                                <h3 className="text-xl font-bold text-gray-900 mb-6">Grading System</h3>
+                            <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Grading System</h3>
                                 
                                 <div className="overflow-x-auto">
-                                    <table className="w-full border-collapse">
+                                    <table className="w-full border-collapse text-xs sm:text-sm">
                                         <thead>
-                                            <tr className="bg-purple-200">
-                                                <th className="border-2 border-purple-300 px-4 py-3 text-left font-bold">Grade</th>
-                                                <th className="border-2 border-purple-300 px-4 py-3 text-left font-bold">Min Marks</th>
-                                                <th className="border-2 border-purple-300 px-4 py-3 text-left font-bold">Max Marks</th>
-                                                <th className="border-2 border-purple-300 px-4 py-3 text-left font-bold">Grade Point</th>
+                                            <tr className="bg-gray-100">
+                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Grade</th>
+                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Min Marks</th>
+                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Max Marks</th>
+                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Grade Point</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {gradeSystem.map((grade, index) => (
-                                                <tr key={index} className="hover:bg-purple-100 transition-colors">
-                                                    <td className="border-2 border-purple-200 px-4 py-3">
-                                                        <span className="font-bold text-lg text-purple-900">{grade.grade}</span>
+                                                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3">
+                                                        <span className="font-bold text-base sm:text-lg text-[#1a202c]">{grade.grade}</span>
                                                     </td>
-                                                    <td className="border-2 border-purple-200 px-4 py-3">{grade.minMarks}</td>
-                                                    <td className="border-2 border-purple-200 px-4 py-3">{grade.maxMarks}</td>
-                                                    <td className="border-2 border-purple-200 px-4 py-3">
-                                                        <span className="font-semibold">
+                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-black">{grade.minMarks}</td>
+                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-black">{grade.maxMarks}</td>
+                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3">
+                                                        <span className="font-semibold text-black">
                                                             {grade.grade === 'A+' ? '5.00' : 
                                                              grade.grade === 'A' ? '4.00' : 
                                                              grade.grade === 'A-' ? '3.50' : 
@@ -1251,69 +1195,51 @@ export default function ExamManagement() {
                     {/* Exam List Tab */}
                     {activeTab === 'list' && (
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between mb-6">
-                                <h3 className="text-2xl font-bold text-gray-900">All Exams</h3>
-                                <span className="text-sm text-gray-600 bg-indigo-50 px-4 py-2 rounded-lg font-semibold">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
+                                <h3 className="text-xl sm:text-2xl font-bold text-[#1a202c]">All Exams</h3>
+                                <span className="text-xs sm:text-sm text-black bg-gray-100 px-4 py-2 rounded font-semibold">
                                     {exams.length} Exam{exams.length !== 1 ? 's' : ''} Found
                                 </span>
                             </div>
 
                             {exams.length === 0 ? (
-                                <div className="text-center py-16">
-                                    <svg className="w-32 h-32 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">No Exams Created Yet</h3>
-                                    <p className="text-gray-600 mb-6">Start by creating your first exam in the Exam Setup tab</p>
+                                <div className="text-center py-12 sm:py-16">
+                                    <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Exams Created Yet</h3>
+                                    <p className="text-black mb-4 sm:mb-6 text-sm sm:text-base">Start by creating your first exam in the Exam Setup tab</p>
                                     <button
                                         onClick={() => setActiveTab('setup')}
-                                        className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-semibold"
+                                        className="px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
                                     >
                                         Create New Exam
                                     </button>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
                                     {exams.map((exam) => (
-                                        <div key={exam._id} className="bg-gradient-to-br from-white to-indigo-50 border-2 border-indigo-200 rounded-2xl p-6 hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                                            <div className="flex items-start justify-between mb-4">
+                                        <div key={exam._id} className="bg-white border border-gray-300 rounded p-4 sm:p-6 hover:shadow-lg transition-all">
+                                            <div className="flex items-start justify-between mb-3 sm:mb-4">
                                                 <div className="flex-1">
-                                                    <h4 className="text-xl font-bold text-gray-900 mb-2">{exam.examName}</h4>
-                                                    <div className="space-y-1 text-sm text-gray-600">
-                                                        <p className="flex items-center gap-2">
-                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                                            </svg>
-                                                            {exam.class} - Section {exam.section}
-                                                        </p>
-                                                        <p className="flex items-center gap-2">
-                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                            </svg>
-                                                            {new Date(exam.startDate).toLocaleDateString()} - {new Date(exam.endDate).toLocaleDateString()}
-                                                        </p>
-                                                        <p className="flex items-center gap-2">
-                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                            </svg>
-                                                            Total: {exam.totalMarks} | Pass: {exam.passMarks}
-                                                        </p>
+                                                    <h4 className="text-base sm:text-xl font-bold text-[#1a202c] mb-2">{exam.examName}</h4>
+                                                    <div className="space-y-1 text-xs sm:text-sm text-black">
+                                                        <p>{exam.class} - Section {exam.section}</p>
+                                                        <p>{new Date(exam.startDate).toLocaleDateString()} - {new Date(exam.endDate).toLocaleDateString()}</p>
+                                                        <p>Total: {exam.totalMarks} | Pass: {exam.passMarks}</p>
                                                     </div>
                                                 </div>
-                                                <div className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                                    exam.status === 'Published' ? 'bg-green-100 text-green-800' :
-                                                    exam.status === 'Ongoing' ? 'bg-blue-100 text-blue-800' :
-                                                    exam.status === 'Completed' ? 'bg-purple-100 text-purple-800' :
-                                                    'bg-gray-100 text-gray-800'
+                                                <div className={`px-2 sm:px-3 py-1 rounded text-xs font-bold ${
+                                                    exam.status === 'Published' ? 'bg-[#1a202c] text-white' :
+                                                    exam.status === 'Ongoing' ? 'bg-[#1a202c] text-white' :
+                                                    exam.status === 'Completed' ? 'bg-gray-800 text-white' :
+                                                    'bg-gray-200 text-black'
                                                 }`}>
                                                     {exam.status}
                                                 </div>
                                             </div>
 
-                                            <div className="flex gap-2 pt-4 border-t-2 border-indigo-100">
+                                            <div className="flex flex-col sm:flex-row gap-2 pt-3 sm:pt-4 border-t border-gray-200">
                                                 <select
                                                     onChange={(e) => updateExamStatus(exam._id, e.target.value)}
-                                                    className="flex-1 px-3 py-2 text-sm border-2 border-indigo-200 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                                                    className="flex-1 px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
                                                     defaultValue={exam.status}
                                                 >
                                                     <option value="Draft">Draft</option>
@@ -1323,7 +1249,7 @@ export default function ExamManagement() {
                                                 </select>
                                                 <button
                                                     onClick={() => deleteExam(exam._id)}
-                                                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all text-sm font-semibold"
+                                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-all text-xs sm:text-sm font-semibold"
                                                 >
                                                     Delete
                                                 </button>

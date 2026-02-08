@@ -10,7 +10,7 @@ const FacilitiesPage = () => {
         title: '',
         description: '',
         icon: '🏫',
-        gradient: 'from-blue-500 to-cyan-500',
+        gradient: 'bg-blue-900',
         features: [],
         category: 'general',
         capacity: '',
@@ -24,26 +24,14 @@ const FacilitiesPage = () => {
     const [filterCategory, setFilterCategory] = useState('all');
     const [currentFeature, setCurrentFeature] = useState('');
 
-    // Facility categories with enhanced styling
+    // Facility categories with professional styling
     const facilityCategories = [
-        { value: 'classroom', label: 'Classroom', icon: '🏫', color: 'bg-blue-500', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700' },
-        { value: 'lab', label: 'Laboratory', icon: '🔬', color: 'bg-purple-500', bgColor: 'bg-purple-50', borderColor: 'border-purple-200', textColor: 'text-purple-700' },
-        { value: 'sports', label: 'Sports', icon: '⚽', color: 'bg-green-500', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700' },
-        { value: 'library', label: 'Library', icon: '📚', color: 'bg-orange-500', bgColor: 'bg-orange-50', borderColor: 'border-orange-200', textColor: 'text-orange-700' },
-        { value: 'transport', label: 'Transportation', icon: '🚌', color: 'bg-yellow-500', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200', textColor: 'text-yellow-700' },
-        { value: 'general', label: 'General', icon: '🏢', color: 'bg-gray-500', bgColor: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-700' }
-    ];
-
-    // Gradient options
-    const gradientOptions = [
-        { value: 'from-blue-500 to-cyan-500', label: 'Blue to Cyan', preview: 'bg-gradient-to-r from-blue-500 to-cyan-500' },
-        { value: 'from-purple-500 to-pink-500', label: 'Purple to Pink', preview: 'bg-gradient-to-r from-purple-500 to-pink-500' },
-        { value: 'from-green-500 to-emerald-500', label: 'Green to Emerald', preview: 'bg-gradient-to-r from-green-500 to-emerald-500' },
-        { value: 'from-orange-500 to-red-500', label: 'Orange to Red', preview: 'bg-gradient-to-r from-orange-500 to-red-500' },
-        { value: 'from-teal-500 to-blue-500', label: 'Teal to Blue', preview: 'bg-gradient-to-r from-teal-500 to-blue-500' },
-        { value: 'from-yellow-500 to-orange-500', label: 'Yellow to Orange', preview: 'bg-gradient-to-r from-yellow-500 to-orange-500' },
-        { value: 'from-indigo-500 to-purple-500', label: 'Indigo to Purple', preview: 'bg-gradient-to-r from-indigo-500 to-purple-500' },
-        { value: 'from-pink-500 to-rose-500', label: 'Pink to Rose', preview: 'bg-gradient-to-r from-pink-500 to-rose-500' }
+        { value: 'classroom', label: 'Classroom', icon: '🏫', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'lab', label: 'Laboratory', icon: '🔬', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'sports', label: 'Sports', icon: '⚽', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'library', label: 'Library', icon: '📚', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'transport', label: 'Transportation', icon: '🚌', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' },
+        { value: 'general', label: 'General', icon: '🏢', color: 'bg-blue-900', bgColor: 'bg-white', borderColor: 'border-gray-200', textColor: 'text-gray-900' }
     ];
 
     // Icon options
@@ -162,7 +150,7 @@ const FacilitiesPage = () => {
             title: '',
             description: '',
             icon: '🏫',
-            gradient: 'from-blue-500 to-cyan-500',
+            gradient: 'bg-blue-900',
             features: [],
             category: 'general',
             capacity: '',
@@ -181,7 +169,7 @@ const FacilitiesPage = () => {
             title: '',
             description: '',
             icon: '🏫',
-            gradient: 'from-blue-500 to-cyan-500',
+            gradient: 'bg-blue-900',
             features: [],
             category: 'general',
             capacity: '',
@@ -203,7 +191,7 @@ const FacilitiesPage = () => {
             title: facility.title,
             description: facility.description,
             icon: facility.icon || '🏫',
-            gradient: facility.gradient || 'from-blue-500 to-cyan-500',
+            gradient: facility.gradient || 'bg-blue-900',
             features: facility.features || [],
             category: facility.category || 'general',
             capacity: facility.capacity || '',
@@ -278,7 +266,7 @@ const FacilitiesPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+            <div className="min-h-screen bg-white p-6">
                 <div className="container mx-auto">
                     <div className="animate-pulse space-y-8">
                         <div className="flex items-center justify-between">
@@ -299,18 +287,19 @@ const FacilitiesPage = () => {
         );
     }
 
+    
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+        <div className="min-h-screen bg-white p-6">
             <div className="container mx-auto">
                 {/* Header */}
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
                     <div>
-                        <h1 className="text-4xl font-bold text-gray-800 mb-2">Facilities Management</h1>
+                        <h1 className="text-4xl font-bold text-blue-900 mb-2">Facilities Management</h1>
                         <p className="text-gray-600">Manage and showcase your school's facilities</p>
                     </div>
                     <button
                         onClick={openCreateModal}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -370,7 +359,7 @@ const FacilitiesPage = () => {
                             {(!searchTerm && filterCategory === 'all') && (
                                 <button
                                     onClick={openCreateModal}
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-300"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -390,7 +379,7 @@ const FacilitiesPage = () => {
                                     >
                                         <div className="flex items-start gap-4">
                                             {/* Facility Icon */}
-                                            <div className={`flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${facility.gradient} flex items-center justify-center text-3xl shadow-lg`}>
+                                            <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-blue-900 flex items-center justify-center text-3xl shadow-lg text-white">
                                                 {facility.icon}
                                             </div>
 
@@ -403,7 +392,7 @@ const FacilitiesPage = () => {
                                                                 {facility.title}
                                                             </h3>
                                                             {facility.isFeatured && (
-                                                                <span className="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">
+                                                                <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-900 text-xs font-bold rounded-full">
                                                                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                                                     </svg>
@@ -417,7 +406,7 @@ const FacilitiesPage = () => {
                                                         {facility.features && facility.features.length > 0 && (
                                                             <div className="flex flex-wrap gap-2 mb-3">
                                                                 {facility.features.slice(0, 3).map((feature, idx) => (
-                                                                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                                                                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-full">
                                                                         <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                                                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                                                         </svg>
@@ -605,30 +594,6 @@ const FacilitiesPage = () => {
                                             </div>
                                         </div>
 
-                                        {/* Gradient Selection */}
-                                        <div className="lg:col-span-2">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Gradient Theme
-                                            </label>
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                                {gradientOptions.map((gradient) => (
-                                                    <button
-                                                        key={gradient.value}
-                                                        type="button"
-                                                        onClick={() => setFormData(prev => ({ ...prev, gradient: gradient.value }))}
-                                                        className={`p-3 rounded-xl border-2 transition-all hover:scale-105 ${
-                                                            formData.gradient === gradient.value
-                                                                ? 'border-blue-500 shadow-lg ring-2 ring-blue-200'
-                                                                : 'border-gray-200 hover:border-gray-300'
-                                                        }`}
-                                                    >
-                                                        <div className={`w-full h-8 rounded-lg ${gradient.preview} mb-2`}></div>
-                                                        <div className="text-xs font-medium text-gray-700">{gradient.label}</div>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
                                         {/* Capacity and Location */}
                                         <div>
                                             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -729,7 +694,7 @@ const FacilitiesPage = () => {
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             {submitting ? (
                                                 <div className="flex items-center gap-2">
