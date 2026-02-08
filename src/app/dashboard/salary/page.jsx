@@ -21,8 +21,8 @@ const SalaryManagementPage = () => {
         department: '',
         status: '',
         salaryMonth: '',
-        salaryYear: new Date().getFullYear().toString(),
-        academicYear: new Date().getFullYear().toString(),
+        salaryYear: '',
+        academicYear: '',
         startDate: '',
         endDate: '',
         search: ''
@@ -234,8 +234,8 @@ const SalaryManagementPage = () => {
             department: '',
             status: '',
             salaryMonth: '',
-            salaryYear: new Date().getFullYear().toString(),
-            academicYear: new Date().getFullYear().toString(),
+            salaryYear: '',
+            academicYear: '',
             startDate: '',
             endDate: '',
             search: ''
@@ -297,6 +297,7 @@ const SalaryManagementPage = () => {
 
             const method = editingSalary ? 'PUT' : 'POST';
 
+
             // Convert string values to numbers for proper calculation
             const processedData = {
                 ...formData,
@@ -333,11 +334,23 @@ const SalaryManagementPage = () => {
                     'success'
                 );
 
+                if (editingSalary) {
+                    // Update existing salary in the list
+                    setSalaries(prevSalaries =>
+                        prevSalaries.map(salary =>
+                            salary._id === editingSalary._id ? data.data : salary
+                        )
+                    );
+                } else {
+                    // Add new salary to the beginning of the list
+                    setSalaries(prevSalaries => [data.data, ...prevSalaries]);
+                }
+
                 setShowForm(false);
                 setEditingSalary(null);
                 resetForm();
 
-                // Refresh the salary list and statistics
+                // Refresh the salary list and statistics to ensure consistency
                 await fetchSalaries();
                 await fetchStatistics();
             } else {
@@ -459,6 +472,9 @@ const SalaryManagementPage = () => {
                 const data = await response.json();
 
                 if (data.success) {
+                    // Remove salary from local state immediately
+                    setSalaries(prevSalaries => prevSalaries.filter(salary => salary._id !== id));
+                    
                     Swal.fire('Deleted!', 'Salary record deleted successfully', 'success');
                     fetchSalaries();
                     fetchStatistics();
@@ -484,6 +500,15 @@ const SalaryManagementPage = () => {
             const data = await response.json();
 
             if (data.success) {
+                // Update salary status in local state immediately
+                setSalaries(prevSalaries =>
+                    prevSalaries.map(salary =>
+                        salary._id === id
+                            ? { ...salary, status: 'Approved', approvedBy: 'Admin', approvedDate: new Date() }
+                            : salary
+                    )
+                );
+                
                 Swal.fire('Approved!', 'Salary approved successfully', 'success');
                 fetchSalaries();
                 fetchStatistics();
@@ -523,6 +548,15 @@ const SalaryManagementPage = () => {
                 const data = await response.json();
 
                 if (data.success) {
+                    // Update salary status in local state immediately
+                    setSalaries(prevSalaries =>
+                        prevSalaries.map(salary =>
+                            salary._id === id
+                                ? { ...salary, status: 'Rejected', rejectedBy: 'Admin', rejectionReason: reason }
+                                : salary
+                        )
+                    );
+                    
                     Swal.fire('Rejected!', 'Salary rejected successfully', 'success');
                     fetchSalaries();
                     fetchStatistics();
@@ -548,6 +582,15 @@ const SalaryManagementPage = () => {
             const data = await response.json();
 
             if (data.success) {
+                // Update salary status in local state immediately
+                setSalaries(prevSalaries =>
+                    prevSalaries.map(salary =>
+                        salary._id === id
+                            ? { ...salary, status: 'Paid', paidBy: 'Admin', paidDate: new Date() }
+                            : salary
+                    )
+                );
+                
                 Swal.fire('Paid!', 'Salary marked as paid successfully', 'success');
                 fetchSalaries();
                 fetchStatistics();
@@ -580,6 +623,15 @@ const SalaryManagementPage = () => {
             const data = await response.json();
 
             if (data.success) {
+                // Update salary statuses in local state immediately
+                setSalaries(prevSalaries =>
+                    prevSalaries.map(salary =>
+                        selectedSalaries.includes(salary._id)
+                            ? { ...salary, status: 'Approved', approvedBy: 'Admin', approvedDate: new Date() }
+                            : salary
+                    )
+                );
+                
                 Swal.fire('Success!', `${data.count} salaries approved successfully`, 'success');
                 setSelectedSalaries([]);
                 setShowBulkActions(false);
@@ -621,6 +673,11 @@ const SalaryManagementPage = () => {
                 const data = await response.json();
 
                 if (data.success) {
+                    // Remove salaries from local state immediately
+                    setSalaries(prevSalaries =>
+                        prevSalaries.filter(salary => !selectedSalaries.includes(salary._id))
+                    );
+                    
                     Swal.fire('Deleted!', `${data.count} salaries deleted successfully`, 'success');
                     setSelectedSalaries([]);
                     setShowBulkActions(false);
