@@ -37,39 +37,39 @@ const Academics = () => {
 
     // Fallback data if no API data
     const fallbackClasses = [
-        {
-            _id: '1',
-            title: 'Pre-Primary',
-            description: 'Building foundation through play-based learning and creative exploration',
-            level: 'Pre-Primary',
-            grades: ['Play', 'Nursery', 'KG'],
-            icon: '🎨',
-            ageGroup: 'Ages 2-5',
-            type: 'class',
-            stats: { students: '120+', teachers: '8', activities: '15+' }
-        },
-        {
-            _id: '2',
-            title: 'Primary',
-            description: 'Developing core academic and social skills with interactive learning',
-            level: 'Primary',
-            grades: ['Class 1-5'],
-            icon: '📚',
-            ageGroup: 'Ages 6-10',
-            type: 'class',
-            stats: { students: '250+', teachers: '15', activities: '20+' }
-        },
-        {
-            _id: '3',
-            title: 'Secondary',
-            description: 'Preparing for board examinations with advanced curriculum',
-            level: 'Secondary',
-            grades: ['Class 6-10'],
-            icon: '🎓',
-            ageGroup: 'Ages 11-15',
-            type: 'class',
-            stats: { students: '300+', teachers: '20', activities: '25+' }
-        },
+        // {
+        //     _id: '1',
+        //     title: 'Pre-Primary',
+        //     description: 'Building foundation through play-based learning and creative exploration',
+        //     level: 'Pre-Primary',
+        //     grades: ['Play', 'Nursery', 'KG'],
+        //     icon: '🎨',
+        //     ageGroup: 'Ages 2-5',
+        //     type: 'class',
+        //     stats: { students: '120+', teachers: '8', activities: '15+' }
+        // },
+        // {
+        //     _id: '2',
+        //     title: 'Primary',
+        //     description: 'Developing core academic and social skills with interactive learning',
+        //     level: 'Primary',
+        //     grades: ['Class 1-5'],
+        //     icon: '📚',
+        //     ageGroup: 'Ages 6-10',
+        //     type: 'class',
+        //     stats: { students: '250+', teachers: '15', activities: '20+' }
+        // },
+        // {
+        //     _id: '3',
+        //     title: 'Secondary',
+        //     description: 'Preparing for board examinations with advanced curriculum',
+        //     level: 'Secondary',
+        //     grades: ['Class 6-10'],
+        //     icon: '🎓',
+        //     ageGroup: 'Ages 11-15',
+        //     type: 'class',
+        //     stats: { students: '300+', teachers: '20', activities: '25+' }
+        // },
         {
             _id: '4',
             title: 'Higher Secondary',
@@ -103,56 +103,56 @@ const Academics = () => {
     };
 
     const fallbackActivities = [
-        {
-            _id: 'a1',
-            title: 'Music & Dance',
-            description: 'Vocal and instrumental music with cultural dance performances',
-            details: ['Classical & Contemporary Music', 'Traditional & Modern Dance', 'Annual Cultural Programs', 'Instrument Training'],
-            icon: '🎵',
-            type: 'activity',
-            category: 'Arts',
-            participants: '200+'
-        },
-        {
-            _id: 'a2',
-            title: 'Arts & Crafts',
-            description: 'Creative expression through various art forms and crafts',
-            details: ['Drawing & Painting', 'Sculpture & Pottery', 'Digital Art', 'Creative Workshops'],
-            icon: '🎨',
-            type: 'activity',
-            category: 'Arts',
-            participants: '150+'
-        },
-        {
-            _id: 'a3',
-            title: 'Sports',
-            description: 'Comprehensive sports program with professional coaching',
-            details: ['Football, Cricket, Basketball', 'Athletics & Swimming', 'Inter-School Competitions', 'Fitness Training'],
-            icon: '⚽',
-            type: 'activity',
-            category: 'Sports',
-            participants: '300+'
-        },
-        {
-            _id: 'a4',
-            title: 'Drama & Theatre',
-            description: 'Public speaking, acting, and stage performance development',
-            details: ['Theatre Productions', 'Public Speaking', 'Creative Expression', 'Stage Management'],
-            icon: '🎭',
-            type: 'activity',
-            category: 'Arts',
-            participants: '120+'
-        },
-        {
-            _id: 'a5',
-            title: 'Debate & Quiz',
-            description: 'Critical thinking, research, and competitive events',
-            details: ['Model United Nations', 'Quiz Competitions', 'Debate Tournaments', 'Research Projects'],
-            icon: '🗣️',
-            type: 'activity',
-            category: 'Academics',
-            participants: '180+'
-        },
+        // {
+        //     _id: 'a1',
+        //     title: 'Music & Dance',
+        //     description: 'Vocal and instrumental music with cultural dance performances',
+        //     details: ['Classical & Contemporary Music', 'Traditional & Modern Dance', 'Annual Cultural Programs', 'Instrument Training'],
+        //     icon: '🎵',
+        //     type: 'activity',
+        //     category: 'Arts',
+        //     participants: '200+'
+        // },
+        // {
+        //     _id: 'a2',
+        //     title: 'Arts & Crafts',
+        //     description: 'Creative expression through various art forms and crafts',
+        //     details: ['Drawing & Painting', 'Sculpture & Pottery', 'Digital Art', 'Creative Workshops'],
+        //     icon: '🎨',
+        //     type: 'activity',
+        //     category: 'Arts',
+        //     participants: '150+'
+        // },
+        // {
+        //     _id: 'a3',
+        //     title: 'Sports',
+        //     description: 'Comprehensive sports program with professional coaching',
+        //     details: ['Football, Cricket, Basketball', 'Athletics & Swimming', 'Inter-School Competitions', 'Fitness Training'],
+        //     icon: '⚽',
+        //     type: 'activity',
+        //     category: 'Sports',
+        //     participants: '300+'
+        // },
+        // {
+        //     _id: 'a4',
+        //     title: 'Drama & Theatre',
+        //     description: 'Public speaking, acting, and stage performance development',
+        //     details: ['Theatre Productions', 'Public Speaking', 'Creative Expression', 'Stage Management'],
+        //     icon: '🎭',
+        //     type: 'activity',
+        //     category: 'Arts',
+        //     participants: '120+'
+        // },
+        // {
+        //     _id: 'a5',
+        //     title: 'Debate & Quiz',
+        //     description: 'Critical thinking, research, and competitive events',
+        //     details: ['Model United Nations', 'Quiz Competitions', 'Debate Tournaments', 'Research Projects'],
+        //     icon: '🗣️',
+        //     type: 'activity',
+        //     category: 'Academics',
+        //     participants: '180+'
+        // },
         {
             _id: 'a6',
             title: 'Science Club',

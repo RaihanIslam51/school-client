@@ -5,10 +5,27 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import ImgBBUpload from '../../../../components/ImgBBUpload';
+import {
+  useStudents,
+  useCreateStudent,
+  useUpdateStudent,
+  useDeleteStudent,
+  prefetchStudents
+} from '../../../hooks/useApi';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function StudentManagement() {
-    const [students, setStudents] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
+
+    // React Query hooks for data management
+    const { data: studentsData, isLoading: loading, error: studentsError } = useStudents();
+    const createStudentMutation = useCreateStudent();
+    const updateStudentMutation = useUpdateStudent();
+    const deleteStudentMutation = useDeleteStudent();
+
+    // Filter students from the data (assuming API returns all users)
+    const students = studentsData?.data?.filter(user => user.role === 'student') || [];
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentStudent, setCurrentStudent] = useState(null);
@@ -30,40 +47,23 @@ export default function StudentManagement() {
         status: 'active'
     });
 
-    // Fetch all students
-    const fetchStudents = async () => {
-        try {
-            setLoading(true);
-            console.log('Fetching students from:', `${API_URL}/api/students`);
-            const response = await fetch(`${API_URL}/api/students`);
-            console.log('Response status:', response.status);
-            const data = await response.json();
-            console.log('Response data:', data);
-            
-            if (data.success) {
-                // Filter only users with role 'student'
-                const studentUsers = data.data.filter(user => user.role === 'student');
-                setStudents(studentUsers);
-                console.log('Students loaded:', studentUsers.length);
-            } else {
-                console.error('API returned success=false:', data.message);
-            }
-        } catch (error) {
-            console.error('Error fetching students:', error);
+    // Handle errors from React Query
+    useEffect(() => {
+        if (studentsError) {
+            console.error('Error fetching students:', studentsError);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to fetch students. Make sure server is running on port 5000.',
+                text: 'Failed to fetch students. Please check your connection.',
                 customClass: { container: 'swal-high-z-index' }
             });
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [studentsError]);
 
-    useEffect(() => {
-        fetchStudents();
-    }, []);
+    // Prefetch data on hover (for better UX)
+    const handlePrefetchOnHover = () => {
+        prefetchStudents(queryClient);
+    };
 
     // Generate unique student ID
     const generateStudentId = () => {
@@ -132,20 +132,17 @@ export default function StudentManagement() {
     // Submit form (Add or Edit)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
-            let url, method, body;
-            
             if (isEditMode) {
                 // Update existing student
-                url = `${API_URL}/api/auth/user/${currentStudent._id}`;
-                method = 'PUT';
-                body = JSON.stringify(formData);
+                await updateStudentMutation.mutateAsync({
+                    id: currentStudent._id,
+                    ...formData
+                });
             } else {
                 // Add new student (register)
-                url = `${API_URL}/api/auth/register`;
-                method = 'POST';
-                body = JSON.stringify({
+                await createStudentMutation.mutateAsync({
                     studentId: formData.studentId,
                     name: formData.name,
                     rollNumber: formData.rollNumber,
@@ -162,64 +159,40 @@ export default function StudentManagement() {
                     status: formData.status
                 });
             }
-            
-            console.log('Submitting to:', url);
-            console.log('Request body:', body);
-            
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: body,
+
+            await Swal.fire({
+                icon: 'success',
+                title: isEditMode ? 'Updated!' : 'Added!',
+                text: isEditMode ? 'Student updated successfully' : 'Student added successfully. Default password is the roll number.',
+                timer: 2000,
+                showConfirmButton: false,
+                customClass: { container: 'swal-high-z-index' }
             });
 
-            const data = await response.json();
-            console.log('Submit response:', data);
-
-            if (data.success) {
-                await Swal.fire({
-                    icon: 'success',
-                    title: isEditMode ? 'Updated!' : 'Added!',
-                    text: isEditMode ? 'Student updated successfully' : 'Student added successfully. Default password is the roll number.',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    customClass: { container: 'swal-high-z-index' }
-                });
-                setIsModalOpen(false);
-                setIsEditMode(false);
-                setCurrentStudent(null);
-                // Reset form data
-                setFormData({
-                    studentId: '',
-                    name: '',
-                    email: '',
-                    class: '',
-                    section: '',
-                    rollNumber: '',
-                    dateOfBirth: '',
-                    parentName: '',
-                    parentPhone: '',
-                    address: '',
-                    imageUrl: '',
-                    status: 'active'
-                });
-                // Fetch updated list
-                await fetchStudents();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message || 'Operation failed',
-                    customClass: { container: 'swal-high-z-index' }
-                });
-            }
+            setIsModalOpen(false);
+            setIsEditMode(false);
+            setCurrentStudent(null);
+            // Reset form data
+            setFormData({
+                studentId: '',
+                name: '',
+                email: '',
+                class: '',
+                section: '',
+                rollNumber: '',
+                dateOfBirth: '',
+                parentName: '',
+                parentPhone: '',
+                address: '',
+                imageUrl: '',
+                status: 'active'
+            });
         } catch (error) {
             console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Something went wrong!',
+                text: error?.message || 'Something went wrong!',
                 customClass: { container: 'swal-high-z-index' }
             });
         }
@@ -240,23 +213,16 @@ export default function StudentManagement() {
 
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`${API_URL}/api/auth/user/${id}`, {
-                    method: 'DELETE',
+                await deleteStudentMutation.mutateAsync(id);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: 'Student has been deleted.',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    customClass: { container: 'swal-high-z-index' }
                 });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Deleted!',
-                        text: 'Student has been deleted.',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        customClass: { container: 'swal-high-z-index' }
-                    });
-                    fetchStudents();
-                }
             } catch (error) {
                 console.error('Error deleting student:', error);
                 Swal.fire({

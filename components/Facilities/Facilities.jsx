@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../../config/api';
 
+
 const Facilities = () => {
     const [facilities, setFacilities] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -55,41 +56,41 @@ const Facilities = () => {
 
     // Fallback to default facilities if no data from API
     const displayFacilities = facilities.length > 0 ? facilities : [
-        {
-            _id: '1',
-            title: 'Smart Classrooms',
-            description: 'Interactive digital boards and modern teaching equipment for enhanced learning experience.',
-            icon: '💻',
-            features: ['Digital Boards', 'Audio Systems', 'AC Rooms']
-        },
-        {
-            _id: '2',
-            title: 'Science Lab',
-            description: 'Well-equipped laboratories for Physics, Chemistry, and Biology with modern instruments.',
-            icon: '🔬',
-            features: ['Modern Equipment', 'Safety Measures', 'Expert Guidance']
-        },
-        {
-            _id: '3',
-            title: 'Computer Lab',
-            description: 'State-of-the-art computer labs with latest technology and high-speed internet.',
-            icon: '🖥️',
-            features: ['Latest PCs', 'High-Speed WiFi', 'Coding Tools']
-        },
-        {
-            _id: '4',
-            title: 'Library',
-            description: 'Extensive collection of books, journals, and digital resources for comprehensive learning.',
-            icon: '📚',
-            features: ['10,000+ Books', 'Digital Library', 'Reading Rooms']
-        },
-        {
-            _id: '5',
-            title: 'Playground',
-            description: 'Spacious sports facilities including basketball, football, cricket, and indoor games.',
-            icon: '⚽',
-            features: ['Sports Ground', 'Indoor Games', 'Fitness Area']
-        },
+        // {
+        //     _id: '1',
+        //     title: 'Smart Classrooms',
+        //     description: 'Interactive digital boards and modern teaching equipment for enhanced learning experience.',
+        //     icon: '💻',
+        //     features: ['Digital Boards', 'Audio Systems', 'AC Rooms']
+        // },
+        // {
+        //     _id: '2',
+        //     title: 'Science Lab',
+        //     description: 'Well-equipped laboratories for Physics, Chemistry, and Biology with modern instruments.',
+        //     icon: '🔬',
+        //     features: ['Modern Equipment', 'Safety Measures', 'Expert Guidance']
+        // },
+        // {
+        //     _id: '3',
+        //     title: 'Computer Lab',
+        //     description: 'State-of-the-art computer labs with latest technology and high-speed internet.',
+        //     icon: '🖥️',
+        //     features: ['Latest PCs', 'High-Speed WiFi', 'Coding Tools']
+        // },
+        // {
+        //     _id: '4',
+        //     title: 'Library',
+        //     description: 'Extensive collection of books, journals, and digital resources for comprehensive learning.',
+        //     icon: '📚',
+        //     features: ['10,000+ Books', 'Digital Library', 'Reading Rooms']
+        // },
+        // {
+        //     _id: '5',
+        //     title: 'Playground',
+        //     description: 'Spacious sports facilities including basketball, football, cricket, and indoor games.',
+        //     icon: '⚽',
+        //     features: ['Sports Ground', 'Indoor Games', 'Fitness Area']
+        // },
         {
             _id: '6',
             title: 'Transportation',

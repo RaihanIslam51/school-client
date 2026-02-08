@@ -55,76 +55,76 @@ const Gallery = () => {
 
     // Fallback data if API fails
     const fallbackGalleries = [
-        {
-            _id: '1',
-            title: 'Annual Sports Day 2025',
-            description: 'Celebrating excellence in sports with various competitions and team events showcasing student athletic achievements.',
-            category: 'Sports',
-            images: [
-                'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400',
-                'https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=400',
-                'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400'
-            ],
-            eventDate: '2025-02-15',
-            isActive: true,
-            featured: true
-        },
-        {
-            _id: '2',
-            title: 'Cultural Festival 2025',
-            description: 'A vibrant celebration of diverse cultures with traditional dances, music performances, and artistic exhibitions.',
-            category: 'Cultural',
-            images: [
-                'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400',
-                'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400',
-                'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'
-            ],
-            eventDate: '2025-01-20',
-            isActive: true,
-            featured: false
-        },
-        {
-            _id: '3',
-            title: 'Science Exhibition 2025',
-            description: 'Innovative science projects and experiments demonstrating student creativity and scientific understanding.',
-            category: 'Science',
-            images: [
-                'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400',
-                'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
-                'https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?w=400'
-            ],
-            eventDate: '2025-01-10',
-            isActive: true,
-            featured: true
-        },
-        {
-            _id: '4',
-            title: 'New Campus Infrastructure',
-            description: 'Modern facilities including state-of-the-art laboratories, sports complex, and learning spaces.',
-            category: 'Infrastructure',
-            images: [
-                'https://images.unsplash.com/photo-1562774053-701939374585?w=400',
-                'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400',
-                'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400'
-            ],
-            eventDate: '2024-12-01',
-            isActive: true,
-            featured: false
-        },
-        {
-            _id: '5',
-            title: 'Art & Craft Exhibition',
-            description: 'Showcasing student artwork, crafts, and creative expressions from various art forms and mediums.',
-            category: 'Arts',
-            images: [
-                'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400',
-                'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400',
-                'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=400'
-            ],
-            eventDate: '2024-11-25',
-            isActive: true,
-            featured: false
-        },
+        // {
+        //     _id: '1',
+        //     title: 'Annual Sports Day 2025',
+        //     description: 'Celebrating excellence in sports with various competitions and team events showcasing student athletic achievements.',
+        //     category: 'Sports',
+        //     images: [
+        //         'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400',
+        //         'https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=400',
+        //         'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400'
+        //     ],
+        //     eventDate: '2025-02-15',
+        //     isActive: true,
+        //     featured: true
+        // },
+        // {
+        //     _id: '2',
+        //     title: 'Cultural Festival 2025',
+        //     description: 'A vibrant celebration of diverse cultures with traditional dances, music performances, and artistic exhibitions.',
+        //     category: 'Cultural',
+        //     images: [
+        //         'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400',
+        //         'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400',
+        //         'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400'
+        //     ],
+        //     eventDate: '2025-01-20',
+        //     isActive: true,
+        //     featured: false
+        // },
+        // {
+        //     _id: '3',
+        //     title: 'Science Exhibition 2025',
+        //     description: 'Innovative science projects and experiments demonstrating student creativity and scientific understanding.',
+        //     category: 'Science',
+        //     images: [
+        //         'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400',
+        //         'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+        //         'https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?w=400'
+        //     ],
+        //     eventDate: '2025-01-10',
+        //     isActive: true,
+        //     featured: true
+        // },
+        // {
+        //     _id: '4',
+        //     title: 'New Campus Infrastructure',
+        //     description: 'Modern facilities including state-of-the-art laboratories, sports complex, and learning spaces.',
+        //     category: 'Infrastructure',
+        //     images: [
+        //         'https://images.unsplash.com/photo-1562774053-701939374585?w=400',
+        //         'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400',
+        //         'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400'
+        //     ],
+        //     eventDate: '2024-12-01',
+        //     isActive: true,
+        //     featured: false
+        // },
+        // {
+        //     _id: '5',
+        //     title: 'Art & Craft Exhibition',
+        //     description: 'Showcasing student artwork, crafts, and creative expressions from various art forms and mediums.',
+        //     category: 'Arts',
+        //     images: [
+        //         'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400',
+        //         'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400',
+        //         'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=400'
+        //     ],
+        //     eventDate: '2024-11-25',
+        //     isActive: true,
+        //     featured: false
+        // },
         {
             _id: '6',
             title: 'Technology Innovation Day',

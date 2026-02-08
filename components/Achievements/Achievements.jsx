@@ -50,51 +50,51 @@ const Achievements = () => {
 
     // Fallback data if API fails
     const fallbackAchievements = [
-        {
-            _id: '1',
-            title: 'National Science Olympiad Winners',
-            description: 'Our students secured top positions in the National Science Olympiad 2025, showcasing exceptional scientific knowledge and analytical skills.',
-            date: '2025-01-15',
-            category: 'Academic',
-            achievements: ['Gold Medal - Physics', 'Silver Medal - Chemistry', 'Bronze Medal - Biology'],
-            isActive: true
-        },
-        {
-            _id: '2',
-            title: 'Inter-School Football Championship',
-            description: 'Champions of the State-level Inter-School Football Championship with outstanding team performance and sportsmanship.',
-            date: '2024-12-20',
-            category: 'Sports',
-            achievements: ['State Champions', 'Best Player Award', 'Fair Play Trophy'],
-            isActive: true
-        },
-        {
-            _id: '3',
-            title: 'Cultural Festival Excellence',
-            description: 'Grand winners in the Annual Cultural Festival with mesmerizing performances in music, dance, and drama.',
-            date: '2024-11-10',
-            category: 'Cultural',
-            achievements: ['Best Dance Performance', 'Music Competition Winner', 'Overall Championship'],
-            isActive: true
-        },
-        {
-            _id: '4',
-            title: 'Robotics Competition Success',
-            description: 'First place in the National Robotics Competition with innovative robot designs and programming excellence.',
-            date: '2024-10-05',
-            category: 'Technology',
-            achievements: ['Innovation Award', 'Technical Excellence', 'Best Design'],
-            isActive: true
-        },
-        {
-            _id: '5',
-            title: 'Art Exhibition Recognition',
-            description: 'Multiple awards in the State Art Exhibition for creative expressions and artistic excellence.',
-            date: '2024-09-18',
-            category: 'Arts',
-            achievements: ['Best Painting', 'Creative Sculpture', 'Young Artist Award'],
-            isActive: true
-        },
+        // {
+        //     _id: '1',
+        //     title: 'National Science Olympiad Winners',
+        //     description: 'Our students secured top positions in the National Science Olympiad 2025, showcasing exceptional scientific knowledge and analytical skills.',
+        //     date: '2025-01-15',
+        //     category: 'Academic',
+        //     achievements: ['Gold Medal - Physics', 'Silver Medal - Chemistry', 'Bronze Medal - Biology'],
+        //     isActive: true
+        // },
+        // {
+        //     _id: '2',
+        //     title: 'Inter-School Football Championship',
+        //     description: 'Champions of the State-level Inter-School Football Championship with outstanding team performance and sportsmanship.',
+        //     date: '2024-12-20',
+        //     category: 'Sports',
+        //     achievements: ['State Champions', 'Best Player Award', 'Fair Play Trophy'],
+        //     isActive: true
+        // },
+        // {
+        //     _id: '3',
+        //     title: 'Cultural Festival Excellence',
+        //     description: 'Grand winners in the Annual Cultural Festival with mesmerizing performances in music, dance, and drama.',
+        //     date: '2024-11-10',
+        //     category: 'Cultural',
+        //     achievements: ['Best Dance Performance', 'Music Competition Winner', 'Overall Championship'],
+        //     isActive: true
+        // },
+        // {
+        //     _id: '4',
+        //     title: 'Robotics Competition Success',
+        //     description: 'First place in the National Robotics Competition with innovative robot designs and programming excellence.',
+        //     date: '2024-10-05',
+        //     category: 'Technology',
+        //     achievements: ['Innovation Award', 'Technical Excellence', 'Best Design'],
+        //     isActive: true
+        // },
+        // {
+        //     _id: '5',
+        //     title: 'Art Exhibition Recognition',
+        //     description: 'Multiple awards in the State Art Exhibition for creative expressions and artistic excellence.',
+        //     date: '2024-09-18',
+        //     category: 'Arts',
+        //     achievements: ['Best Painting', 'Creative Sculpture', 'Young Artist Award'],
+        //     isActive: true
+        // },
         {
             _id: '6',
             title: 'Mathematics Olympiad Champions',

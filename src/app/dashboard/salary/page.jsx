@@ -5,6 +5,21 @@ import Swal from 'sweetalert2';
 import { API_BASE_URL } from '../../../../config/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import {
+  useSalaries,
+  useSalaryStatistics,
+  useCreateSalary,
+  useUpdateSalary,
+  useDeleteSalary,
+  useApproveSalary,
+  useRejectSalary,
+  useMarkSalaryAsPaid,
+  useBulkApproveSalaries,
+  useBulkDeleteSalaries,
+  prefetchSalaries,
+  prefetchTeachers
+} from '../../../hooks/useApi';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SalaryManagementPage = () => {
     // State management
@@ -114,14 +129,38 @@ const SalaryManagementPage = () => {
         'Online'
     ];
 
+    // React Query hooks
+    const queryClient = useQueryClient();
+    const { data: salariesData, isLoading: salariesLoading, error: salariesError } = useSalaries(filters);
+    const { data: statisticsData, isLoading: statisticsLoading } = useSalaryStatistics(filters);
+    const createSalaryMutation = useCreateSalary();
+    const updateSalaryMutation = useUpdateSalary();
+    const deleteSalaryMutation = useDeleteSalary();
+    const approveSalaryMutation = useApproveSalary();
+    const rejectSalaryMutation = useRejectSalary();
+    const markAsPaidMutation = useMarkSalaryAsPaid();
+    const bulkApproveMutation = useBulkApproveSalaries();
+    const bulkDeleteMutation = useBulkDeleteSalaries();
+
+    // Update local state when data changes
+    useEffect(() => {
+        if (salariesData?.data) {
+            setSalaries(salariesData.data);
+        }
+    }, [salariesData]);
+
+    useEffect(() => {
+        if (statisticsData?.data) {
+            setStatistics(statisticsData.data);
+        }
+    }, [statisticsData]);
+
     // Load initial data
     useEffect(() => {
         const loadInitialData = async () => {
             setLoading(true);
             try {
                 await Promise.all([
-                    fetchSalaries(),
-                    fetchStatistics(),
                     fetchHelperData(),
                     fetchEmployees()
                 ]);
@@ -134,49 +173,34 @@ const SalaryManagementPage = () => {
         loadInitialData();
     }, []);
 
-    // Fetch salaries with filters
-    const fetchSalaries = async () => {
-        try {
-            const queryParams = new URLSearchParams();
+    // Update loading state based on queries
+    useEffect(() => {
+        setLoading(salariesLoading || statisticsLoading);
+    }, [salariesLoading, statisticsLoading]);
 
-            Object.entries(filters).forEach(([key, value]) => {
-                if (value) queryParams.append(key, value);
-            });
-
-            // Fetch more records to ensure we see recent additions
-            queryParams.append('limit', '50');
-            queryParams.append('sort', '-createdAt');
-
-            const response = await fetch(`${API_BASE_URL}/salaries?${queryParams}`);
-            const data = await response.json();
-
-            if (data.success) {
-                setSalaries(data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching salaries:', error);
+    // Handle errors
+    useEffect(() => {
+        if (salariesError) {
+            console.error('Error fetching salaries:', salariesError);
             Swal.fire('Error', 'Failed to load salaries', 'error');
         }
+    }, [salariesError]);
+
+    // Prefetch data on hover (for better UX)
+    const handlePrefetchOnHover = () => {
+        prefetchTeachers(queryClient);
     };
 
-    // Fetch statistics
+    // Fetch salaries with filters (legacy function for compatibility)
+    const fetchSalaries = async () => {
+        // This is now handled by React Query
+        // Keeping for backward compatibility
+    };
+
+    // Fetch statistics (legacy function for compatibility)
     const fetchStatistics = async () => {
-        try {
-            const queryParams = new URLSearchParams();
-
-            Object.entries(filters).forEach(([key, value]) => {
-                if (value && key !== 'search') queryParams.append(key, value);
-            });
-
-            const response = await fetch(`${API_BASE_URL}/salaries/statistics?${queryParams}`);
-            const data = await response.json();
-
-            if (data.success) {
-                setStatistics(data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching statistics:', error);
-        }
+        // This is now handled by React Query
+        // Keeping for backward compatibility
     };
 
     // Fetch helper data
@@ -251,7 +275,7 @@ const SalaryManagementPage = () => {
         e.preventDefault();
 
         // Prevent double submission
-        if (loading) return;
+        if (loading || createSalaryMutation.isPending || updateSalaryMutation.isPending) return;
 
         if (!formData.employeeId || !formData.basicSalary) {
             Swal.fire('Error', 'Please fill the required fields: Employee and Basic Salary', 'error');
@@ -289,80 +313,43 @@ const SalaryManagementPage = () => {
             }
         }
 
+        // Convert string values to numbers for proper calculation
+        const processedData = {
+            ...formData,
+            basicSalary: parseFloat(formData.basicSalary) || 0,
+            houseRentAllowance: parseFloat(formData.houseRentAllowance) || 0,
+            conveyanceAllowance: parseFloat(formData.conveyanceAllowance) || 0,
+            medicalAllowance: parseFloat(formData.medicalAllowance) || 0,
+            specialAllowance: parseFloat(formData.specialAllowance) || 0,
+            performanceBonus: parseFloat(formData.performanceBonus) || 0,
+            annualBonus: parseFloat(formData.annualBonus) || 0,
+            providentFund: parseFloat(formData.providentFund) || 0,
+            professionalTax: parseFloat(formData.professionalTax) || 0,
+            incomeTax: parseFloat(formData.incomeTax) || 0,
+            loanDeduction: parseFloat(formData.loanDeduction) || 0,
+            workingDays: parseInt(formData.workingDays) || 30,
+            presentDays: parseInt(formData.presentDays) || 30,
+            leaveDays: parseInt(formData.leaveDays) || 0,
+            overtimeHours: parseFloat(formData.overtimeHours) || 0,
+            overtimeRate: parseFloat(formData.overtimeRate) || 0,
+            salaryYear: parseInt(formData.salaryYear) || new Date().getFullYear()
+        };
+
         try {
-            setLoading(true);
-            const url = editingSalary
-                ? `${API_BASE_URL}/salaries/${editingSalary._id}`
-                : `${API_BASE_URL}/salaries`;
-
-            const method = editingSalary ? 'PUT' : 'POST';
-
-
-            // Convert string values to numbers for proper calculation
-            const processedData = {
-                ...formData,
-                basicSalary: parseFloat(formData.basicSalary) || 0,
-                houseRentAllowance: parseFloat(formData.houseRentAllowance) || 0,
-                conveyanceAllowance: parseFloat(formData.conveyanceAllowance) || 0,
-                medicalAllowance: parseFloat(formData.medicalAllowance) || 0,
-                specialAllowance: parseFloat(formData.specialAllowance) || 0,
-                performanceBonus: parseFloat(formData.performanceBonus) || 0,
-                annualBonus: parseFloat(formData.annualBonus) || 0,
-                providentFund: parseFloat(formData.providentFund) || 0,
-                professionalTax: parseFloat(formData.professionalTax) || 0,
-                incomeTax: parseFloat(formData.incomeTax) || 0,
-                loanDeduction: parseFloat(formData.loanDeduction) || 0,
-                workingDays: parseInt(formData.workingDays) || 30,
-                presentDays: parseInt(formData.presentDays) || 30,
-                leaveDays: parseInt(formData.leaveDays) || 0,
-                overtimeHours: parseFloat(formData.overtimeHours) || 0,
-                overtimeRate: parseFloat(formData.overtimeRate) || 0,
-                salaryYear: parseInt(formData.salaryYear) || new Date().getFullYear()
-            };
-
-            const response = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(processedData)
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                Swal.fire('Success',
-                    editingSalary ? 'Salary updated successfully' : 'Salary created successfully',
-                    'success'
-                );
-
-                if (editingSalary) {
-                    // Update existing salary in the list
-                    setSalaries(prevSalaries =>
-                        prevSalaries.map(salary =>
-                            salary._id === editingSalary._id ? data.data : salary
-                        )
-                    );
-                } else {
-                    // Add new salary to the beginning of the list
-                    setSalaries(prevSalaries => [data.data, ...prevSalaries]);
-                }
-
-                setShowForm(false);
-                setEditingSalary(null);
-                resetForm();
-
-                // Refresh the salary list and statistics to ensure consistency
-                await fetchSalaries();
-                await fetchStatistics();
+            if (editingSalary) {
+                await updateSalaryMutation.mutateAsync({ id: editingSalary._id, ...processedData });
+                Swal.fire('Success', 'Salary updated successfully', 'success');
             } else {
-                // Handle specific error messages without throwing or console logging
-                Swal.fire('Error', data.message || 'Failed to save salary', 'error');
-                return; // Exit without throwing
+                await createSalaryMutation.mutateAsync(processedData);
+                Swal.fire('Success', 'Salary created successfully', 'success');
             }
+
+            setShowForm(false);
+            setEditingSalary(null);
+            resetForm();
         } catch (error) {
-            console.error('Network or unexpected error saving salary:', error);
-            Swal.fire('Error', 'Network error occurred. Please try again.', 'error');
-        } finally {
-            setLoading(false);
+            console.error('Error saving salary:', error);
+            Swal.fire('Error', error.message || 'Failed to save salary', 'error');
         }
     };
 
@@ -465,25 +452,11 @@ const SalaryManagementPage = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`${API_BASE_URL}/salaries/${id}`, {
-                    method: 'DELETE'
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // Remove salary from local state immediately
-                    setSalaries(prevSalaries => prevSalaries.filter(salary => salary._id !== id));
-                    
-                    Swal.fire('Deleted!', 'Salary record deleted successfully', 'success');
-                    fetchSalaries();
-                    fetchStatistics();
-                } else {
-                    throw new Error(data.message);
-                }
+                await deleteSalaryMutation.mutateAsync(id);
+                Swal.fire('Deleted!', 'Salary record deleted successfully', 'success');
             } catch (error) {
                 console.error('Error deleting salary:', error);
-                Swal.fire('Error', 'Failed to delete salary record', 'error');
+                Swal.fire('Error', error.message || 'Failed to delete salary record', 'error');
             }
         }
     };
@@ -491,33 +464,11 @@ const SalaryManagementPage = () => {
     // Approve salary
     const approveSalary = async (id) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/salaries/${id}/approve`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ approvedBy: 'Admin' })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                // Update salary status in local state immediately
-                setSalaries(prevSalaries =>
-                    prevSalaries.map(salary =>
-                        salary._id === id
-                            ? { ...salary, status: 'Approved', approvedBy: 'Admin', approvedDate: new Date() }
-                            : salary
-                    )
-                );
-                
-                Swal.fire('Approved!', 'Salary approved successfully', 'success');
-                fetchSalaries();
-                fetchStatistics();
-            } else {
-                throw new Error(data.message);
-            }
+            await approveSalaryMutation.mutateAsync(id);
+            Swal.fire('Approved!', 'Salary approved successfully', 'success');
         } catch (error) {
             console.error('Error approving salary:', error);
-            Swal.fire('Error', 'Failed to approve salary', 'error');
+            Swal.fire('Error', error.message || 'Failed to approve salary', 'error');
         }
     };
 
@@ -539,33 +490,11 @@ const SalaryManagementPage = () => {
 
         if (reason) {
             try {
-                const response = await fetch(`${API_BASE_URL}/salaries/${id}/reject`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ rejectionReason: reason, rejectedBy: 'Admin' })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // Update salary status in local state immediately
-                    setSalaries(prevSalaries =>
-                        prevSalaries.map(salary =>
-                            salary._id === id
-                                ? { ...salary, status: 'Rejected', rejectedBy: 'Admin', rejectionReason: reason }
-                                : salary
-                        )
-                    );
-                    
-                    Swal.fire('Rejected!', 'Salary rejected successfully', 'success');
-                    fetchSalaries();
-                    fetchStatistics();
-                } else {
-                    throw new Error(data.message);
-                }
+                await rejectSalaryMutation.mutateAsync({ id, reason });
+                Swal.fire('Rejected!', 'Salary rejected successfully', 'success');
             } catch (error) {
                 console.error('Error rejecting salary:', error);
-                Swal.fire('Error', 'Failed to reject salary', 'error');
+                Swal.fire('Error', error.message || 'Failed to reject salary', 'error');
             }
         }
     };
@@ -573,33 +502,11 @@ const SalaryManagementPage = () => {
     // Mark as paid
     const markAsPaid = async (id) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/salaries/${id}/mark-paid`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ paymentDate: new Date() })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                // Update salary status in local state immediately
-                setSalaries(prevSalaries =>
-                    prevSalaries.map(salary =>
-                        salary._id === id
-                            ? { ...salary, status: 'Paid', paidBy: 'Admin', paidDate: new Date() }
-                            : salary
-                    )
-                );
-                
-                Swal.fire('Paid!', 'Salary marked as paid successfully', 'success');
-                fetchSalaries();
-                fetchStatistics();
-            } else {
-                throw new Error(data.message);
-            }
+            await markAsPaidMutation.mutateAsync(id);
+            Swal.fire('Paid!', 'Salary marked as paid successfully', 'success');
         } catch (error) {
             console.error('Error marking as paid:', error);
-            Swal.fire('Error', 'Failed to mark salary as paid', 'error');
+            Swal.fire('Error', error.message || 'Failed to mark salary as paid', 'error');
         }
     };
 
@@ -611,38 +518,13 @@ const SalaryManagementPage = () => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/salaries/bulk/approve`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    salaryIds: selectedSalaries,
-                    approvedBy: 'Admin'
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                // Update salary statuses in local state immediately
-                setSalaries(prevSalaries =>
-                    prevSalaries.map(salary =>
-                        selectedSalaries.includes(salary._id)
-                            ? { ...salary, status: 'Approved', approvedBy: 'Admin', approvedDate: new Date() }
-                            : salary
-                    )
-                );
-                
-                Swal.fire('Success!', `${data.count} salaries approved successfully`, 'success');
-                setSelectedSalaries([]);
-                setShowBulkActions(false);
-                fetchSalaries();
-                fetchStatistics();
-            } else {
-                throw new Error(data.message);
-            }
+            await bulkApproveMutation.mutateAsync(selectedSalaries);
+            Swal.fire('Success!', 'Salaries approved successfully', 'success');
+            setSelectedSalaries([]);
+            setShowBulkActions(false);
         } catch (error) {
             console.error('Error bulk approving:', error);
-            Swal.fire('Error', 'Failed to bulk approve salaries', 'error');
+            Swal.fire('Error', error.message || 'Failed to bulk approve salaries', 'error');
         }
     };
 
@@ -664,31 +546,13 @@ const SalaryManagementPage = () => {
 
         if (result.isConfirmed) {
             try {
-                const response = await fetch(`${API_BASE_URL}/salaries/bulk/delete`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ salaryIds: selectedSalaries })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    // Remove salaries from local state immediately
-                    setSalaries(prevSalaries =>
-                        prevSalaries.filter(salary => !selectedSalaries.includes(salary._id))
-                    );
-                    
-                    Swal.fire('Deleted!', `${data.count} salaries deleted successfully`, 'success');
-                    setSelectedSalaries([]);
-                    setShowBulkActions(false);
-                    fetchSalaries();
-                    fetchStatistics();
-                } else {
-                    throw new Error(data.message);
-                }
+                await bulkDeleteMutation.mutateAsync(selectedSalaries);
+                Swal.fire('Deleted!', 'Salaries deleted successfully', 'success');
+                setSelectedSalaries([]);
+                setShowBulkActions(false);
             } catch (error) {
                 console.error('Error bulk deleting:', error);
-                Swal.fire('Error', 'Failed to bulk delete salaries', 'error');
+                Swal.fire('Error', error.message || 'Failed to bulk delete salaries', 'error');
             }
         }
     };
@@ -1729,36 +1593,40 @@ const SalaryManagementPage = () => {
                                                             <>
                                                                 <button
                                                                     onClick={() => approveSalary(salary._id)}
-                                                                    className="p-1.5 sm:p-2 bg-blue-900 text-white rounded text-xs sm:text-sm hover:bg-blue-800 transition-all duration-200"
+                                                                    disabled={approveSalaryMutation.isPending}
+                                                                    className="p-1.5 sm:p-2 bg-green-600 text-white rounded text-xs sm:text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                                     title="Approve Salary"
                                                                 >
-                                                                    ✅
+                                                                    {approveSalaryMutation.isPending ? '⏳' : '✅'}
                                                                 </button>
                                                                 <button
                                                                     onClick={() => rejectSalary(salary._id)}
-                                                                    className="p-1.5 sm:p-2 bg-red-600 text-white rounded text-xs sm:text-sm hover:bg-red-700 transition-all duration-200"
+                                                                    disabled={rejectSalaryMutation.isPending}
+                                                                    className="p-1.5 sm:p-2 bg-red-600 text-white rounded text-xs sm:text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                                     title="Reject Salary"
                                                                 >
-                                                                    ❌
+                                                                    {rejectSalaryMutation.isPending ? '⏳' : '❌'}
                                                                 </button>
                                                             </>
                                                         )}
 
                                                         <button
                                                             onClick={() => deleteSalary(salary._id)}
-                                                            className="p-1.5 sm:p-2 bg-red-600 text-white rounded text-xs sm:text-sm hover:bg-red-700 transition-all duration-200"
+                                                            disabled={deleteSalaryMutation.isPending}
+                                                            className="p-1.5 sm:p-2 bg-red-600 text-white rounded text-xs sm:text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                             title="Delete Salary"
                                                         >
-                                                            🗑️
+                                                            {deleteSalaryMutation.isPending ? '⏳' : '🗑️'}
                                                         </button>
 
                                                         {salary.status === 'Approved' && (
                                                             <button
                                                                 onClick={() => markAsPaid(salary._id)}
-                                                                className="p-1.5 sm:p-2 bg-blue-900 text-white rounded text-xs sm:text-sm hover:bg-blue-800 transition-all duration-200"
+                                                                disabled={markAsPaidMutation.isPending}
+                                                                className="p-1.5 sm:p-2 bg-blue-900 text-white rounded text-xs sm:text-sm hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                                 title="Mark as Paid"
                                                             >
-                                                                💰
+                                                                {markAsPaidMutation.isPending ? '⏳' : '💰'}
                                                             </button>
                                                         )}
                                                     </div>
@@ -1863,15 +1731,17 @@ const SalaryManagementPage = () => {
                                                 <>
                                                     <button
                                                         onClick={() => approveSalary(salary._id)}
-                                                        className="flex-1 px-3 py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all duration-200"
+                                                        disabled={approveSalaryMutation.isPending}
+                                                        className="flex-1 px-3 py-2 bg-green-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                     >
-                                                        ✅ Approve
+                                                        {approveSalaryMutation.isPending ? '⏳ Approving...' : '✅ Approve'}
                                                     </button>
                                                     <button
                                                         onClick={() => rejectSalary(salary._id)}
-                                                        className="flex-1 px-3 py-2 bg-red-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-red-700 transition-all duration-200"
+                                                        disabled={rejectSalaryMutation.isPending}
+                                                        className="flex-1 px-3 py-2 bg-red-600 text-white rounded text-xs sm:text-sm font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                     >
-                                                        ❌ Reject
+                                                        {rejectSalaryMutation.isPending ? '⏳ Rejecting...' : '❌ Reject'}
                                                     </button>
                                                 </>
                                             )}
@@ -1879,9 +1749,10 @@ const SalaryManagementPage = () => {
                                             {salary.status === 'Approved' && (
                                                 <button
                                                     onClick={() => markAsPaid(salary._id)}
-                                                    className="flex-1 px-3 py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all duration-200"
+                                                    disabled={markAsPaidMutation.isPending}
+                                                    className="flex-1 px-3 py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                 >
-                                                    💰 Mark Paid
+                                                    {markAsPaidMutation.isPending ? '⏳ Marking Paid...' : '💰 Mark Paid'}
                                                 </button>
                                             )}
                                         </div>

@@ -6,10 +6,27 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import ImgBBUpload from '../../../../components/ImgBBUpload';
+import {
+  useTeachers,
+  useCreateTeacher,
+  useUpdateTeacher,
+  useDeleteTeacher,
+  prefetchTeachers
+} from '../../../hooks/useApi';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function TeacherManagement() {
-    const [teachers, setTeachers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
+
+    // React Query hooks for data management
+    const { data: teachersData, isLoading: loading, error: teachersError } = useTeachers();
+    const createTeacherMutation = useCreateTeacher();
+    const updateTeacherMutation = useUpdateTeacher();
+    const deleteTeacherMutation = useDeleteTeacher();
+
+    // Use data from React Query
+    const teachers = teachersData?.data || [];
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentTeacher, setCurrentTeacher] = useState(null);
@@ -28,32 +45,23 @@ export default function TeacherManagement() {
         status: 'active'
     });
 
-    // Fetch all teachers
-    const fetchTeachers = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`${API_URL}/api/teachers`);
-            const data = await response.json();
-            
-            if (data.success) {
-                setTeachers(data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching teachers:', error);
+    // Handle errors from React Query
+    useEffect(() => {
+        if (teachersError) {
+            console.error('Error fetching teachers:', teachersError);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to fetch teachers. Make sure server is running on port 5000.',
+                text: 'Failed to fetch teachers. Please check your connection.',
                 customClass: { container: 'swal-high-z-index' }
             });
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [teachersError]);
 
-    useEffect(() => {
-        fetchTeachers();
-    }, []);
+    // Prefetch data on hover (for better UX)
+    const handlePrefetchOnHover = () => {
+        prefetchTeachers(queryClient);
+    };
 
     // Generate unique teacher ID
     const generateTeacherId = () => {
@@ -120,20 +128,17 @@ export default function TeacherManagement() {
     // Submit form (Add or Edit)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
-            let url, method, body;
-            
             if (isEditMode) {
                 // Update existing teacher
-                url = `${API_URL}/api/teachers/${currentTeacher._id}`;
-                method = 'PUT';
-                body = JSON.stringify(formData);
+                await updateTeacherMutation.mutateAsync({
+                    id: currentTeacher._id,
+                    ...formData
+                });
             } else {
                 // Add new teacher
-                url = `${API_URL}/api/teachers`;
-                method = 'POST';
-                body = JSON.stringify({
+                await createTeacherMutation.mutateAsync({
                     teacherId: formData.teacherId,
                     name: formData.name,
                     email: formData.email,
@@ -148,59 +153,39 @@ export default function TeacherManagement() {
                     status: formData.status
                 });
             }
-            
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: body,
+
+            await Swal.fire({
+                icon: 'success',
+                title: isEditMode ? 'Updated!' : 'Added!',
+                text: isEditMode ? 'Teacher updated successfully' : 'Teacher added successfully. Default password is the email prefix.',
+                timer: 2000,
+                showConfirmButton: false,
+                customClass: { container: 'swal-high-z-index' }
             });
 
-            const data = await response.json();
-
-            if (data.success) {
-                await Swal.fire({
-                    icon: 'success',
-                    title: isEditMode ? 'Updated!' : 'Added!',
-                    text: isEditMode ? 'Teacher updated successfully' : 'Teacher added successfully. Default password is the email prefix.',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    customClass: { container: 'swal-high-z-index' }
-                });
-                setIsModalOpen(false);
-                setIsEditMode(false);
-                setCurrentTeacher(null);
-                // Reset form data
-                setFormData({
-                    teacherId: '',
-                    name: '',
-                    email: '',
-                    phone: '',
-                    subject: '',
-                    qualification: '',
-                    experience: '',
-                    dateOfJoining: '',
-                    address: '',
-                    imageUrl: '',
-                    status: 'active'
-                });
-                // Fetch updated list
-                await fetchTeachers();
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message || 'Operation failed',
-                    customClass: { container: 'swal-high-z-index' }
-                });
-            }
+            setIsModalOpen(false);
+            setIsEditMode(false);
+            setCurrentTeacher(null);
+            // Reset form data
+            setFormData({
+                teacherId: '',
+                name: '',
+                email: '',
+                phone: '',
+                subject: '',
+                qualification: '',
+                experience: '',
+                dateOfJoining: '',
+                address: '',
+                imageUrl: '',
+                status: 'active'
+            });
         } catch (error) {
             console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Something went wrong!',
+                text: error?.message || 'Operation failed',
                 customClass: { container: 'swal-high-z-index' }
             });
         }
@@ -221,23 +206,16 @@ export default function TeacherManagement() {
 
         if (result.isConfirmed) {
             try {
-            const response = await fetch(`${API_URL}/api/teachers/${id}`, {
-                method: 'DELETE',
-            });
+                await deleteTeacherMutation.mutateAsync(id);
 
-                const data = await response.json();
-
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Deleted!',
-                        text: 'Teacher has been deleted.',
-                        timer: 2000,
-                        showConfirmButton: false,
-                        customClass: { container: 'swal-high-z-index' }
-                    });
-                    await fetchTeachers();
-                }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: 'Teacher has been deleted.',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    customClass: { container: 'swal-high-z-index' }
+                });
             } catch (error) {
                 console.error('Error deleting teacher:', error);
                 Swal.fire({
