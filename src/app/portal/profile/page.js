@@ -1,10 +1,11 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
+import Image from 'next/image';
 import { API_URL } from '../../../../config/api';
 import ImgBBUpload from '../../../../components/ImgBBUpload';
 import Swal from 'sweetalert2';
 
-export default function PortalProfile() {
+export default memo(function PortalProfile() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
@@ -117,22 +118,24 @@ export default function PortalProfile() {
     }
 
     return (
-        <div className="min-h-screen bg-white p-4 sm:p-6">
+        <div className="min-h-screen bg-white p-1 sm:p-2">
             <div className="container mx-auto">
                 {/* Header Section */}
                 <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-8">
                     <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
                         {/* Profile Image */}
                         <div className="relative group">
-                            <div className="w-32 h-32 md:w-40 md:h-40 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-sm">
+                            <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-sm">
                                 {user.imageUrl ? (
-                                    <img
+                                    <Image
                                         src={user.imageUrl}
                                         alt={user.name}
-                                        className="w-full h-full rounded-full object-cover"
+                                        fill
+                                        className="rounded-full object-cover"
+                                        loading="lazy"
                                     />
                                 ) : (
-                                    <span className="text-6xl md:text-7xl text-blue-900 font-bold">
+                                    <span className="text-5xl sm:text-6xl md:text-7xl text-blue-900 font-bold">
                                         {user.name.charAt(0).toUpperCase()}
                                     </span>
                                 )}
@@ -151,7 +154,7 @@ export default function PortalProfile() {
 
                         {/* User Info */}
                         <div className="flex-1 text-center md:text-left">
-                            <h1 className="text-2xl md:text-3xl font-bold text-blue-900 mb-3">{user.name}</h1>
+                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-900 mb-3">{user.name}</h1>
                             <div className="flex flex-col md:flex-row md:items-center md:space-x-6 space-y-2 md:space-y-0 text-gray-600">
                                 <div className="flex items-center space-x-2">
                                     <svg className="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -416,4 +419,4 @@ export default function PortalProfile() {
             </div>
         </div>
     );
-}
+});

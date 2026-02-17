@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { API_URL } from '../../../../config/api';
 
 export default function TeacherProfile() {
@@ -110,7 +111,7 @@ export default function TeacherProfile() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-900"></div>
             </div>
         );
     }
@@ -122,12 +123,12 @@ export default function TeacherProfile() {
             const user = JSON.parse(userData);
             if (user.role !== 'teacher') {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-50">
+            <div className="flex items-center justify-center min-h-screen bg-white">
                 <div className="bg-white rounded-lg shadow-md p-8 max-w-md text-center border border-gray-200">
                     <div className="text-6xl mb-4">🚫</div>
                     <h2 className="text-2xl font-bold text-blue-900 mb-2">Access Restricted</h2>
-                    <p className="text-gray-700 mb-4">This page is only accessible to teachers.</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-black mb-4">This page is only accessible to teachers.</p>
+                    <p className="text-sm text-black">
                         You are logged in as: <span className="font-semibold capitalize">{user.role}</span>
                     </p>
                     <button
@@ -146,8 +147,8 @@ export default function TeacherProfile() {
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
                     <div className="text-6xl mb-4">👨‍🏫</div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Profile Not Found</h2>
-                    <p className="text-gray-600">Please log in to view your profile.</p>
+                    <h2 className="text-2xl font-bold text-black mb-2">Profile Not Found</h2>
+                    <p className="text-black">Please log in to view your profile.</p>
                 </div>
             </div>
         );
@@ -162,9 +163,11 @@ export default function TeacherProfile() {
                         {/* Profile Image */}
                         <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
                             {teacher.imageUrl ? (
-                                <img
+                                <Image
                                     src={teacher.imageUrl}
                                     alt={teacher.name}
+                                    width={128}
+                                    height={128}
                                     className="w-full h-full rounded-lg object-cover"
                                 />
                             ) : (
@@ -177,7 +180,7 @@ export default function TeacherProfile() {
                         {/* Teacher Info */}
                         <div className="flex-1 text-center md:text-left">
                             <h1 className="text-3xl md:text-4xl font-bold text-blue-900 mb-3">{teacher.name}</h1>
-                            <div className="flex flex-col md:flex-row md:items-center md:space-x-6 space-y-2 md:space-y-0 text-gray-700">
+                            <div className="flex flex-col md:flex-row md:items-center md:space-x-6 space-y-2 md:space-y-0 text-black">
                                 <div className="flex items-center space-x-2">
                                     <span className="font-semibold">Teacher ID: {teacher.teacherId}</span>
                                 </div>
@@ -216,43 +219,43 @@ export default function TeacherProfile() {
                         <div className="space-y-4">
                             <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Full Name</p>
-                                    <p className="text-base font-semibold text-gray-900">{teacher.name}</p>
+                                    <p className="text-sm font-medium text-black">Full Name</p>
+                                    <p className="text-base font-semibold text-black">{teacher.name}</p>
                                 </div>
                             </div>
 
                             <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Email</p>
-                                    <p className="text-base font-semibold text-gray-900">{teacher.email || 'Not provided'}</p>
+                                    <p className="text-sm font-medium text-black">Email</p>
+                                    <p className="text-base font-semibold text-black">{teacher.email || 'Not provided'}</p>
                                 </div>
                             </div>
 
                             <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Phone</p>
-                                    <p className="text-base font-semibold text-gray-900">{teacher.phone || 'Not provided'}</p>
+                                    <p className="text-sm font-medium text-black">Phone</p>
+                                    <p className="text-base font-semibold text-black">{teacher.phone || 'Not provided'}</p>
                                 </div>
                             </div>
 
                             <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Qualification</p>
-                                    <p className="text-base font-semibold text-gray-900">{teacher.qualification || 'Not provided'}</p>
+                                    <p className="text-sm font-medium text-black">Qualification</p>
+                                    <p className="text-base font-semibold text-black">{teacher.qualification || 'Not provided'}</p>
                                 </div>
                             </div>
 
                             <div className="flex justify-between items-center py-2">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Experience</p>
-                                    <p className="text-base font-semibold text-gray-900">{teacher.experience ? `${teacher.experience} years` : 'Not provided'}</p>
+                                    <p className="text-sm font-medium text-black">Experience</p>
+                                    <p className="text-base font-semibold text-black">{teacher.experience ? `${teacher.experience} years` : 'Not provided'}</p>
                                 </div>
                             </div>
 
                             <div className="flex justify-between items-center py-2">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Date of Joining</p>
-                                    <p className="text-base font-semibold text-gray-900">
+                                    <p className="text-sm font-medium text-black">Date of Joining</p>
+                                    <p className="text-base font-semibold text-black">
                                         {teacher.dateOfJoining ? new Date(teacher.dateOfJoining).toLocaleDateString('en-US', {
                                             year: 'numeric',
                                             month: 'long',
@@ -278,27 +281,27 @@ export default function TeacherProfile() {
                         </div>
 
                         <div className="space-y-4">
-                            <div className="text-center p-4 bg-gray-50 rounded">
-                                <p className="text-sm font-medium text-gray-600 mb-1">Subject Specialization</p>
+                            <div className="text-center p-4 bg-white rounded">
+                                <p className="text-sm font-medium text-black mb-1">Subject Specialization</p>
                                 <p className="text-2xl font-bold text-blue-900">{teacher.subject}</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="text-center p-3 bg-gray-50 rounded">
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Classes Assigned</p>
-                                    <p className="text-xl font-bold text-gray-900">{classRoutines.length}</p>
+                                <div className="text-center p-3 bg-white rounded">
+                                    <p className="text-sm font-medium text-black mb-1">Classes Assigned</p>
+                                    <p className="text-xl font-bold text-black">{classRoutines.length}</p>
                                 </div>
-                                <div className="text-center p-3 bg-gray-50 rounded">
-                                    <p className="text-sm font-medium text-gray-600 mb-1">Total Students</p>
-                                    <p className="text-xl font-bold text-gray-900">
+                                <div className="text-center p-3 bg-white rounded">
+                                    <p className="text-sm font-medium text-black mb-1">Total Students</p>
+                                    <p className="text-xl font-bold text-black">
                                         {classRoutines.reduce((sum, routine) => sum + (routine.numberOfStudents || 0), 0)}
                                     </p>
                                 </div>
                             </div>
 
                             <div className="py-2">
-                                <p className="text-sm font-medium text-gray-600 mb-1">Address</p>
-                                <p className="text-base font-semibold text-gray-900">
+                                <p className="text-sm font-medium text-black mb-1">Address</p>
+                                <p className="text-base font-semibold text-black">
                                     {teacher.address || 'Not provided'}
                                 </p>
                             </div>
@@ -318,7 +321,7 @@ export default function TeacherProfile() {
                             Class Management Schedule
                         </h2>
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">Total Classes</p>
+                            <p className="text-sm text-black">Total Classes</p>
                             <p className="text-xl font-bold text-blue-900">{classRoutines.length}</p>
                         </div>
                     </div>
@@ -335,27 +338,27 @@ export default function TeacherProfile() {
                                                 </svg>
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-gray-900">{routine.subject}</h3>
-                                                <p className="text-sm text-gray-600">Class {routine.className} - {routine.section}</p>
+                                                <h3 className="font-bold text-black">{routine.subject}</h3>
+                                                <p className="text-sm text-black">Class {routine.className} - {routine.section}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-xs text-gray-500">{routine.day}</p>
+                                            <p className="text-xs text-black">{routine.day}</p>
                                             <p className="text-sm font-semibold text-blue-900">{routine.startTime} - {routine.endTime}</p>
                                         </div>
                                     </div>
 
                                     <div className="space-y-2">
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="text-gray-600">Room:</span>
+                                            <span className="text-black">Room:</span>
                                             <span className="font-medium">{routine.room || 'TBA'}</span>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="text-gray-600">Students:</span>
+                                            <span className="text-black">Students:</span>
                                             <span className="font-medium">{routine.numberOfStudents || 0}</span>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="text-gray-600">Duration:</span>
+                                            <span className="text-black">Duration:</span>
                                             <span className="font-medium">{routine.duration || '1 hour'}</span>
                                         </div>
                                     </div>
@@ -375,12 +378,12 @@ export default function TeacherProfile() {
                     ) : (
                         <div className="text-center py-12">
                             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4v10a2 2 0 002 2h4a2 2 0 002-2V11M9 11h6" />
                                 </svg>
                             </div>
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">No Classes Assigned</h3>
-                            <p className="text-gray-600">You don't have any classes scheduled at the moment.</p>
+                            <h3 className="text-lg font-medium text-black mb-2">No Classes Assigned</h3>
+                            <p className="text-black">You don't have any classes scheduled at the moment.</p>
                         </div>
                     )}
                 </div>

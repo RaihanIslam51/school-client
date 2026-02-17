@@ -1,13 +1,21 @@
-// Service Worker Registration Utility
+// Service Worker Registration Utility - DISABLED AND UNREGISTERING ALL SW
 class ServiceWorkerManager {
   constructor() {
     this.registration = null;
     this.updateAvailable = false;
     this.updateCallbacks = [];
+    // Auto-unregister any existing service workers
+    this.unregisterAll();
   }
 
-  // Register the service worker
+  // DISABLED - DO NOT REGISTER SERVICE WORKER
   async register() {
+    console.log('[SW Manager] Service Worker registration is DISABLED');
+    console.log('[SW Manager] Unregistering any existing service workers...');
+    await this.unregisterAll();
+    return null;
+    
+    /* ORIGINAL CODE - DISABLED
     if ('serviceWorker' in navigator) {
       try {
         console.log('[SW Manager] Registering service worker...');
@@ -49,6 +57,7 @@ class ServiceWorkerManager {
       console.warn('[SW Manager] Service workers not supported');
       return null;
     }
+    */
   }
 
   // Unregister the service worker
@@ -65,6 +74,30 @@ class ServiceWorkerManager {
         throw error;
       }
     }
+  }
+
+  // Unregister ALL service workers
+  async unregisterAll() {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        console.log(`[SW Manager] Found ${registrations.length} service worker(s) to unregister`);
+        
+        for (const registration of registrations) {
+          const result = await registration.unregister();
+          console.log('[SW Manager] Unregistered service worker:', result);
+        }
+        
+        this.registration = null;
+        this.updateAvailable = false;
+        console.log('[SW Manager] All service workers unregistered successfully');
+        return true;
+      } catch (error) {
+        console.error('[SW Manager] Failed to unregister all service workers:', error);
+        return false;
+      }
+    }
+    return false;
   }
 
   // Skip waiting and activate new service worker
@@ -175,14 +208,22 @@ const swManager = new ServiceWorkerManager();
 // Export for use in components
 export default swManager;
 
-// Auto-register on module load (client-side only)
+// Auto-register on module load (client-side only) - DISABLED
+// Service Worker registration is completely disabled
+// if (typeof window !== 'undefined') {
+//   // Register after page load
+//   if (document.readyState === 'loading') {
+//     document.addEventListener('DOMContentLoaded', () => {
+//       swManager.register().catch(console.error);
+//     });
+//   } else {
+//     swManager.register().catch(console.error);
+//   }
+// }
+
+// Instead, actively unregister any existing service workers
 if (typeof window !== 'undefined') {
-  // Register after page load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      swManager.register().catch(console.error);
-    });
-  } else {
-    swManager.register().catch(console.error);
-  }
+  swManager.unregisterAll().then(() => {
+    console.log('[SW Manager] Service workers cleanup completed');
+  }).catch(console.error);
 }

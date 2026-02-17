@@ -687,20 +687,20 @@ const SalaryManagementPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white p-4 sm:p-6">
+        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
             <div className="container mx-auto">
                 {/* Professional Header */}
-                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 mb-6">
-                    <div className="flex items-center justify-between flex-wrap gap-4">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center">
-                                <span className="text-white text-xl">💰</span>
+                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
+                    <div className="flex items-center justify-between flex-wrap gap-3 sm:gap-4">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                <span className="text-white text-lg sm:text-xl">💰</span>
                             </div>
                             <div>
-                                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">
                                     Salary Management System
                                 </h1>
-                                <p className="text-gray-600 mt-1 text-sm sm:text-base">Professional payroll processing and employee compensation management</p>
+                                <p className="text-gray-600 mt-1 text-xs sm:text-sm">Professional payroll processing and employee compensation management</p>
                             </div>
                         </div>
 
@@ -708,7 +708,7 @@ const SalaryManagementPage = () => {
                         <div className="flex gap-2 sm:gap-3 flex-wrap">
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
                                     viewMode === 'list'
                                         ? 'bg-blue-900 text-white'
                                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -718,7 +718,7 @@ const SalaryManagementPage = () => {
                             </button>
                             <button
                                 onClick={() => setViewMode('cards')}
-                                className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
                                     viewMode === 'cards'
                                         ? 'bg-blue-900 text-white'
                                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -728,7 +728,7 @@ const SalaryManagementPage = () => {
                             </button>
                             <button
                                 onClick={() => setViewMode('analytics')}
-                                className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
                                     viewMode === 'analytics'
                                         ? 'bg-blue-900 text-white'
                                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -738,7 +738,7 @@ const SalaryManagementPage = () => {
                             </button>
                             <button
                                 onClick={() => setViewMode('slips')}
-                                className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
                                     viewMode === 'slips'
                                         ? 'bg-blue-900 text-white'
                                         : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -752,67 +752,67 @@ const SalaryManagementPage = () => {
 
                 {/* Professional Statistics Cards */}
                 {statistics && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 hover:shadow-lg transition-all duration-200">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-3 sm:mb-4 lg:mb-6">
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
                                     <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Salaries</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-gray-800">{statistics.totalRecords || 0}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">{statistics.totalRecords || 0}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
                                         <span className="text-xs text-gray-500 font-medium">Active Records</span>
                                     </div>
                                 </div>
-                                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-800 rounded-lg flex items-center justify-center">
-                                    <span className="text-xl sm:text-2xl">👥</span>
+                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl lg:text-2xl">👥</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 hover:shadow-lg transition-all duration-200">
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
                                     <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Gross Salary</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-gray-800">৳{(statistics.totalGrossSalary || 0).toLocaleString()}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">৳{(statistics.totalGrossSalary || 0).toLocaleString()}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
                                         <span className="text-xs text-gray-500 font-medium">Before Deductions</span>
                                     </div>
                                 </div>
-                                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-800 rounded-lg flex items-center justify-center">
-                                    <span className="text-xl sm:text-2xl">💰</span>
+                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl lg:text-2xl">💰</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 hover:shadow-lg transition-all duration-200">
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
                                     <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Net Salary</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-gray-800">৳{(statistics.totalNetSalary || 0).toLocaleString()}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">৳{(statistics.totalNetSalary || 0).toLocaleString()}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
                                         <span className="text-xs text-gray-500 font-medium">After Deductions</span>
                                     </div>
                                 </div>
-                                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-800 rounded-lg flex items-center justify-center">
-                                    <span className="text-xl sm:text-2xl">💵</span>
+                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl lg:text-2xl">💵</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 hover:shadow-lg transition-all duration-200">
+                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
                             <div className="flex items-center justify-between">
                                 <div className="space-y-2">
                                     <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Deductions</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-gray-800">৳{(statistics.totalDeductions || 0).toLocaleString()}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">৳{(statistics.totalDeductions || 0).toLocaleString()}</p>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
+                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
                                         <span className="text-xs text-gray-500 font-medium">Tax & Contributions</span>
                                     </div>
                                 </div>
-                                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-800 rounded-lg flex items-center justify-center">
-                                    <span className="text-xl sm:text-2xl">📉</span>
+                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl lg:text-2xl">📉</span>
                                 </div>
                             </div>
                         </div>
@@ -820,28 +820,28 @@ const SalaryManagementPage = () => {
                 )}
 
                 {/* Professional Filters Section */}
-                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 mb-6">
-                    <div className="flex items-center justify-between mb-6">
+                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
                                 <span className="text-white text-sm sm:text-lg">🔍</span>
                             </div>
                             <div>
-                                <h2 className="text-lg sm:text-xl font-bold text-gray-800">Advanced Filters</h2>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Advanced Filters</h2>
                                 <p className="text-gray-600 text-xs sm:text-sm">Filter and search salary records efficiently</p>
                             </div>
                         </div>
                         <div className="flex gap-2 sm:gap-3">
                             <button
                                 onClick={applyFilters}
-                                className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>🔍</span>
                                 <span className="hidden sm:inline">Apply Filters</span>
                             </button>
                             <button
                                 onClick={clearFilters}
-                                className="px-4 py-2 sm:px-6 sm:py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>🗑️</span>
                                 <span className="hidden sm:inline">Clear All</span>
@@ -849,17 +849,17 @@ const SalaryManagementPage = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                         {/* Professional Search Input */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">🔍 Search Employees</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">🔍 Search Employees</label>
                             <div className="relative">
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => handleFilterChange('search', e.target.value)}
                                     placeholder="Search by name, ID, or designation..."
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
+                                    className="w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
                                 />
                                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                     <span className="text-sm">🔍</span>
@@ -869,11 +869,11 @@ const SalaryManagementPage = () => {
 
                         {/* Employee Type */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">👤 Employee Type</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">👤 Employee Type</label>
                             <select
                                 value={filters.employeeType}
                                 onChange={(e) => handleFilterChange('employeeType', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                             >
                                 <option value="">All Employee Types</option>
                                 {employeeTypes.map((type, index) => (
@@ -884,11 +884,11 @@ const SalaryManagementPage = () => {
 
                         {/* Department */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">🏢 Department</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">🏢 Department</label>
                             <select
                                 value={filters.department}
                                 onChange={(e) => handleFilterChange('department', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                             >
                                 <option value="">All Departments</option>
                                 {departments.map((dept, index) => (
@@ -899,11 +899,11 @@ const SalaryManagementPage = () => {
 
                         {/* Status */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">📊 Status</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">📊 Status</label>
                             <select
                                 value={filters.status}
                                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                             >
                                 <option value="">All Status</option>
                                 <option value="Draft">📝 Draft</option>
@@ -917,48 +917,48 @@ const SalaryManagementPage = () => {
 
                         {/* Salary Month */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">📅 Salary Month</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">📅 Salary Month</label>
                             <input
                                 type="month"
                                 value={filters.salaryMonth}
                                 onChange={(e) => handleFilterChange('salaryMonth', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                             />
                         </div>
 
                         {/* Salary Year */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">📆 Salary Year</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">📆 Salary Year</label>
                             <input
                                 type="number"
                                 value={filters.salaryYear}
                                 onChange={(e) => handleFilterChange('salaryYear', e.target.value)}
                                 placeholder="2026"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                             />
                         </div>
 
                         {/* Academic Year */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700">🎓 Academic Year</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">🎓 Academic Year</label>
                             <input
                                 type="text"
                                 value={filters.academicYear}
                                 onChange={(e) => handleFilterChange('academicYear', e.target.value)}
                                 placeholder="2025-2026"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
                             />
                         </div>
                     </div>
                 </div>
 
                 {/* Professional Action Buttons */}
-                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-4 sm:p-6 mb-6">
+                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
                     <div className="flex flex-wrap gap-3 sm:gap-4 justify-between items-center">
                         <div className="flex gap-2 sm:gap-3 flex-wrap">
                             <button
                                 onClick={() => setShowForm(true)}
-                                className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>➕</span>
                                 <span>Add Salary</span>
@@ -968,7 +968,7 @@ const SalaryManagementPage = () => {
                                 <>
                                     <button
                                         onClick={() => setShowBulkActions(!showBulkActions)}
-                                        className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                        className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                                     >
                                         <span>⚡</span>
                                         <span>Bulk Actions ({selectedSalaries.length})</span>
@@ -978,14 +978,14 @@ const SalaryManagementPage = () => {
                                         <div className="flex gap-2 sm:gap-3 flex-wrap">
                                             <button
                                                 onClick={bulkApprove}
-                                                className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                                             >
                                                 <span>✅</span>
                                                 <span>Approve All</span>
                                             </button>
                                             <button
                                                 onClick={bulkDelete}
-                                                className="px-4 py-2 sm:px-6 sm:py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all duration-200 flex items-center gap-2"
+                                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all duration-200 flex items-center gap-2"
                                             >
                                                 <span>🗑️</span>
                                                 <span>Delete All</span>
@@ -999,7 +999,7 @@ const SalaryManagementPage = () => {
                         <div className="flex gap-2 sm:gap-3 flex-wrap">
                             <button
                                 onClick={exportToExcel}
-                                className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>📊</span>
                                 <span>Export Excel</span>
@@ -1007,7 +1007,7 @@ const SalaryManagementPage = () => {
                             {selectedSlip && (
                                 <button
                                     onClick={exportSalarySlipToPDF}
-                                    className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                                 >
                                     <span>📄</span>
                                     <span>Export Salary Slip PDF</span>
@@ -1021,19 +1021,19 @@ const SalaryManagementPage = () => {
                 {showForm && (
                     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md bg-black/20">
                         <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto border border-gray-200">
-                            <div className="p-4 sm:p-6">
-                                <div className="flex items-center justify-between mb-6">
+                            <div className="p-3 sm:p-4 lg:p-6">
+                                <div className="flex items-center justify-between mb-4 sm:mb-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-800 rounded-lg flex items-center justify-center">
+                                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-[#1a202c] rounded-lg flex items-center justify-center">
                                             <span className="text-white text-lg sm:text-xl">
                                                 {editingSalary ? '✏️' : '➕'}
                                             </span>
                                         </div>
                                         <div>
-                                            <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+                                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">
                                                 {editingSalary ? 'Edit Salary Record' : 'Add New Salary'}
                                             </h2>
-                                            <p className="text-gray-600 mt-1 text-sm">
+                                            <p className="text-gray-600 mt-1 text-xs sm:text-sm">
                                                 {editingSalary ? 'Update employee salary details' : 'Create a new salary entry for an employee'}
                                             </p>
                                         </div>
@@ -1044,7 +1044,7 @@ const SalaryManagementPage = () => {
                                             setEditingSalary(null);
                                             resetForm();
                                         }}
-                                        className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 hover:text-gray-800 transition-all duration-200"
+                                        className="w-8 sm:w-10 h-8 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 hover:text-gray-800 transition-all duration-200"
                                     >
                                         <span className="text-lg sm:text-xl">×</span>
                                     </button>
@@ -1487,13 +1487,13 @@ const SalaryManagementPage = () => {
                 {/* Professional Salaries List View */}
                 {viewMode === 'list' && (
                     <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                        <div className="p-4 sm:p-6 border-b border-gray-200">
+                        <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                                <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
                                     <span className="text-white text-sm sm:text-lg">📋</span>
                                 </div>
                                 <div>
-                                    <h2 className="text-lg sm:text-xl font-bold text-gray-800">Salary Records</h2>
+                                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Salary Records</h2>
                                     <p className="text-gray-600 text-xs sm:text-sm">{salaries.length} total salary entries</p>
                                 </div>
                             </div>
@@ -1504,7 +1504,7 @@ const SalaryManagementPage = () => {
                                 <table className="w-full">
                                     <thead className="bg-gray-50 border-b border-gray-200">
                                         <tr>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-left">
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left">
                                                 <input
                                                     type="checkbox"
                                                     onChange={(e) => {
@@ -1515,23 +1515,23 @@ const SalaryManagementPage = () => {
                                                         }
                                                     }}
                                                     checked={selectedSalaries.length === salaries.length && salaries.length > 0}
-                                                    className="rounded border-gray-300 text-gray-800 focus:ring-gray-800"
+                                                    className="w-3 sm:w-4 h-3 sm:h-4 rounded border-gray-300 text-[#1a202c] focus:ring-[#1a202c]"
                                                 />
                                             </th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-left font-semibold text-gray-700">Salary ID</th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-left font-semibold text-gray-700">Employee</th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-left font-semibold text-gray-700">Department</th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-left font-semibold text-gray-700">Month/Year</th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-right font-semibold text-gray-700">Basic Salary</th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-right font-semibold text-gray-700">Net Salary</th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-center font-semibold text-gray-700">Status</th>
-                                            <th className="px-4 py-3 sm:px-6 sm:py-4 text-center font-semibold text-gray-700">Actions</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Salary ID</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Employee</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Department</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Month/Year</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right font-semibold text-gray-700 text-xs sm:text-sm">Basic Salary</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right font-semibold text-gray-700 text-xs sm:text-sm">Net Salary</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center font-semibold text-gray-700 text-xs sm:text-sm">Status</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center font-semibold text-gray-700 text-xs sm:text-sm">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {salaries.map((salary, index) => (
                                             <tr key={salary._id} className="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
                                                     <input
                                                         type="checkbox"
                                                         checked={selectedSalaries.includes(salary._id)}
@@ -1542,40 +1542,40 @@ const SalaryManagementPage = () => {
                                                                 setSelectedSalaries(selectedSalaries.filter(id => id !== salary._id));
                                                             }
                                                         }}
-                                                        className="rounded border-gray-300 text-gray-800 focus:ring-gray-800"
+                                                        className="w-3 sm:w-4 h-3 sm:h-4 rounded border-gray-300 text-[#1a202c] focus:ring-[#1a202c]"
                                                     />
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
                                                     <span className="font-mono text-xs sm:text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">{salary.salaryId}</span>
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
                                                     <div className="space-y-1">
-                                                        <div className="font-semibold text-gray-800">{salary.employeeName}</div>
+                                                        <div className="font-semibold text-[#1a202c] text-sm sm:text-base">{salary.employeeName}</div>
                                                         <div className="text-xs sm:text-sm text-gray-500">{salary.designation}</div>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4">
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
                                                     <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs sm:text-sm font-medium">{salary.department}</span>
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4 text-center">
-                                                    <span className="font-medium text-gray-700">{salary.salaryMonth}/{salary.salaryYear}</span>
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center">
+                                                    <span className="font-medium text-[#1a202c] text-xs sm:text-sm">{salary.salaryMonth}/{salary.salaryYear}</span>
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4 text-right">
-                                                    <span className="font-semibold text-gray-800">৳{(salary.basicSalary || 0).toFixed(2)}</span>
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right">
+                                                    <span className="font-semibold text-[#1a202c] text-sm sm:text-base">৳{(salary.basicSalary || 0).toFixed(2)}</span>
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4 text-right">
-                                                    <span className="font-semibold text-gray-800">৳{(salary.netSalary || 0).toFixed(2)}</span>
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right">
+                                                    <span className="font-semibold text-[#1a202c] text-sm sm:text-base">৳{(salary.netSalary || 0).toFixed(2)}</span>
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4 text-center">
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center">
                                                     <span className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(salary.status)}`}>
                                                         {salary.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 sm:px-6 sm:py-4 text-center">
+                                                <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center">
                                                     <div className="flex gap-1 sm:gap-2 justify-center">
                                                         <button
                                                             onClick={() => editSalary(salary)}
-                                                            className="p-1.5 sm:p-2 bg-blue-900 text-white rounded text-xs sm:text-sm hover:bg-blue-800 transition-all duration-200"
+                                                            className="p-1 sm:p-2 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 transition-all duration-200"
                                                             title="Edit Salary"
                                                         >
                                                             ✏️
@@ -1583,7 +1583,7 @@ const SalaryManagementPage = () => {
 
                                                         <button
                                                             onClick={() => generateSalarySlip(salary._id)}
-                                                            className="p-1.5 sm:p-2 bg-blue-900 text-white rounded text-xs sm:text-sm hover:bg-blue-800 transition-all duration-200"
+                                                            className="p-1 sm:p-2 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 transition-all duration-200"
                                                             title="Generate Salary Slip"
                                                         >
                                                             📄
@@ -1594,7 +1594,7 @@ const SalaryManagementPage = () => {
                                                                 <button
                                                                     onClick={() => approveSalary(salary._id)}
                                                                     disabled={approveSalaryMutation.isPending}
-                                                                    className="p-1.5 sm:p-2 bg-green-600 text-white rounded text-xs sm:text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                                                    className="p-1 sm:p-2 bg-green-600 text-white rounded text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                                     title="Approve Salary"
                                                                 >
                                                                     {approveSalaryMutation.isPending ? '⏳' : '✅'}
@@ -1602,7 +1602,7 @@ const SalaryManagementPage = () => {
                                                                 <button
                                                                     onClick={() => rejectSalary(salary._id)}
                                                                     disabled={rejectSalaryMutation.isPending}
-                                                                    className="p-1.5 sm:p-2 bg-red-600 text-white rounded text-xs sm:text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                                                    className="p-1 sm:p-2 bg-red-600 text-white rounded text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                                     title="Reject Salary"
                                                                 >
                                                                     {rejectSalaryMutation.isPending ? '⏳' : '❌'}
@@ -1613,7 +1613,7 @@ const SalaryManagementPage = () => {
                                                         <button
                                                             onClick={() => deleteSalary(salary._id)}
                                                             disabled={deleteSalaryMutation.isPending}
-                                                            className="p-1.5 sm:p-2 bg-red-600 text-white rounded text-xs sm:text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                                            className="p-1 sm:p-2 bg-red-600 text-white rounded text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                             title="Delete Salary"
                                                         >
                                                             {deleteSalaryMutation.isPending ? '⏳' : '🗑️'}
@@ -1623,7 +1623,7 @@ const SalaryManagementPage = () => {
                                                             <button
                                                                 onClick={() => markAsPaid(salary._id)}
                                                                 disabled={markAsPaidMutation.isPending}
-                                                                className="p-1.5 sm:p-2 bg-blue-900 text-white rounded text-xs sm:text-sm hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                                                className="p-1 sm:p-2 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                                 title="Mark as Paid"
                                                             >
                                                                 {markAsPaidMutation.isPending ? '⏳' : '💰'}
@@ -1660,18 +1660,18 @@ const SalaryManagementPage = () => {
 
                 {/* Professional Cards View */}
                 {viewMode === 'cards' && (
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center">
-                                <span className="text-white text-lg">🎴</span>
+                    <div className="space-y-4 sm:space-y-6">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                <span className="text-white text-sm sm:text-lg">🎴</span>
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-slate-800">Salary Cards</h2>
-                                <p className="text-slate-600 text-sm">{salaries.length} salary records in card view</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Salary Cards</h2>
+                                <p className="text-gray-600 text-xs sm:text-sm">{salaries.length} salary records in card view</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             {salaries.map((salary) => (
                                 <div key={salary._id} className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all duration-200">
                                     <div className="p-4 sm:p-6">
@@ -1785,28 +1785,28 @@ const SalaryManagementPage = () => {
 
                 {/* Professional Analytics View */}
                 {viewMode === 'analytics' && statistics && (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         {/* Analytics Header */}
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
                                 <span className="text-white text-sm sm:text-lg">📊</span>
                             </div>
                             <div>
-                                <h2 className="text-lg sm:text-xl font-bold text-gray-800">Salary Analytics</h2>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Salary Analytics</h2>
                                 <p className="text-gray-600 text-xs sm:text-sm">Comprehensive insights into salary distribution and trends</p>
                             </div>
                         </div>
 
                         {/* Status Breakdown */}
                         <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                            <div className="p-4 sm:p-6">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-800 rounded-lg flex items-center justify-center">
+                            <div className="p-3 sm:p-4 lg:p-6">
+                                <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                                    <div className="w-6 sm:w-8 h-6 sm:h-8 bg-[#1a202c] rounded-lg flex items-center justify-center">
                                         <span className="text-white text-xs sm:text-sm">📈</span>
                                     </div>
-                                    <h3 className="text-base sm:text-lg font-bold text-gray-800">Status Breakdown</h3>
+                                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#1a202c]">Status Breakdown</h3>
                                 </div>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                                     <div className="text-center p-6 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200 hover:shadow-lg transition-all duration-300">
                                         <div className="text-3xl font-bold text-slate-600 mb-2">{statistics.statusCounts?.Draft || 0}</div>
                                         <div className="text-slate-600 font-medium">Draft</div>
@@ -1893,18 +1893,18 @@ const SalaryManagementPage = () => {
 
                 {/* Salary Slip View */}
                 {viewMode === 'slips' && selectedSlip && (
-                    <div className="bg-white rounded-2xl shadow-xl p-8">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-bold text-gray-800">📄 Salary Slip</h2>
+                    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-8">
+                        <div className="flex items-center justify-between mb-4 sm:mb-6">
+                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">📄 Salary Slip</h2>
                             <button
                                 onClick={exportSalarySlipToPDF}
-                                className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all"
                             >
                                 📄 Export PDF
                             </button>
                         </div>
 
-                        <div id="salary-slip" className="bg-gray-50 rounded-lg p-8 border-2 border-gray-300">
+                        <div id="salary-slip" className="bg-gray-50 rounded-lg p-4 sm:p-6 lg:p-8 border-2 border-gray-300">
                             {/* Header */}
                             <div className="text-center mb-8">
                                 <h1 className="text-3xl font-bold text-gray-800 mb-2">Sunlight School</h1>

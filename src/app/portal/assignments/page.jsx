@@ -1,8 +1,9 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
+import Image from 'next/image';
 import { API_URL } from '../../../../config/api';
 
-export default function StudentAssignments() {
+export default memo(function StudentAssignments() {
     const [assignments, setAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentStudent, setCurrentStudent] = useState(null);
@@ -76,7 +77,7 @@ export default function StudentAssignments() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-1 sm:p-2 lg:p-3">
             <div className="container mx-auto">
                 {/* Header */}
                 <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
@@ -94,7 +95,7 @@ export default function StudentAssignments() {
                         <div className="text-6xl mb-4">📝</div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-2">No Assignments Yet</h3>
                         <p className="text-gray-600">
-                            Your teachers haven't assigned any assignments for your class yet.
+                            Your teachers have not assigned any assignments for your class yet.
                         </p>
                     </div>
                 ) : (
@@ -150,7 +151,10 @@ export default function StudentAssignments() {
                                                 <img
                                                     src={assignment.imageUrl}
                                                     alt="Assignment"
+                                                    width={192}
+                                                    height={128}
                                                     className="w-full lg:w-48 h-32 object-cover rounded-lg border border-gray-200"
+                                                    loading="lazy"
                                                 />
                                             </div>
                                         )}
@@ -188,4 +192,4 @@ export default function StudentAssignments() {
             </div>
         </div>
     );
-}
+});

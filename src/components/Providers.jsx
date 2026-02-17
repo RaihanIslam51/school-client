@@ -10,12 +10,11 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // With SSR, we usually want to set some default staleTime
-        // above 0 to avoid refetching immediately on the client
-        staleTime: 60 * 1000, // 1 minute
-        gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
-        refetchOnWindowFocus: false,
-        refetchOnMount: false,
+        // Minimal stale time for immediate UI updates
+        staleTime: 0, // Always consider data stale for fresh data
+        gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
+        refetchOnWindowFocus: true, // Refetch when window regains focus
+        refetchOnMount: true, // Refetch when component mounts
         retry: (failureCount, error) => {
           // Don't retry on 4xx errors
           if (error?.status >= 400 && error?.status < 500) {
@@ -23,11 +22,11 @@ function makeQueryClient() {
           }
           return failureCount < 3;
         },
-        networkMode: 'offlineFirst',
+        networkMode: 'online', // Changed from offlineFirst for immediate updates
       },
       mutations: {
         retry: false,
-        networkMode: 'offlineFirst',
+        networkMode: 'online', // Changed from offlineFirst for immediate updates
       },
     },
   });

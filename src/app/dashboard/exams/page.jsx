@@ -433,7 +433,7 @@ export default function ExamManagement() {
     };
 
     return (
-        <div className="min-h-screen bg-white p-3 sm:p-4 md:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
             <style jsx global>{`
                 .swal-high-z-index {
                     z-index: 10000 !important;
@@ -442,17 +442,17 @@ export default function ExamManagement() {
             <div className="container mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
                 {/* Header */}
                 <div className="border-b border-gray-200 p-4 sm:p-6">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-[#1a202c] mb-2">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mb-1 sm:mb-2">
                         Exam Management System
                     </h2>
-                    <p className="text-black text-sm sm:text-base">Professional exam setup, scheduling & mark distribution</p>
+                    <p className="text-sm sm:text-base text-black">Professional exam setup, scheduling & mark distribution</p>
                 </div>
 
                 {/* Tab Navigation */}
-                <div className="flex flex-wrap gap-1 sm:gap-2 border-b border-gray-300 p-4 sm:p-6">
+                <div className="flex flex-wrap gap-1 sm:gap-2 border-b border-gray-300 p-3 sm:p-4 lg:p-6">
                     <button
                         onClick={() => setActiveTab('setup')}
-                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
+                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'setup'
                                 ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                 : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -462,7 +462,7 @@ export default function ExamManagement() {
                     </button>
                     <button
                         onClick={() => setActiveTab('schedule')}
-                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
+                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'schedule'
                                 ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                 : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -472,7 +472,7 @@ export default function ExamManagement() {
                     </button>
                     <button
                         onClick={() => setActiveTab('marks')}
-                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
+                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'marks'
                                 ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                 : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -482,7 +482,7 @@ export default function ExamManagement() {
                     </button>
                     <button
                         onClick={() => setActiveTab('list')}
-                        className={`px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
+                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                             activeTab === 'list'
                                 ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                 : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -700,7 +700,7 @@ export default function ExamManagement() {
                                 </h3>
                                 <button
                                     onClick={() => setScheduleViewMode(scheduleViewMode === 'edit' ? 'view' : 'edit')}
-                                    className="w-full sm:w-auto px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm"
+                                    className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
                                 >
                                     {scheduleViewMode === 'edit' ? 'View Schedules' : 'Edit Schedules'}
                                 </button>
@@ -929,7 +929,7 @@ export default function ExamManagement() {
                                                             <p className="text-black font-medium text-sm sm:text-base">No subjects scheduled for this exam</p>
                                                             <button
                                                                 onClick={() => setScheduleViewMode('edit')}
-                                                                className="mt-3 px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-xs sm:text-sm font-semibold"
+                                                                className="mt-3 px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-sm sm:text-base font-semibold"
                                                             >
                                                                 Schedule Subjects
                                                             </button>
@@ -1249,7 +1249,7 @@ export default function ExamManagement() {
                                                 </select>
                                                 <button
                                                     onClick={() => deleteExam(exam._id)}
-                                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-all text-xs sm:text-sm font-semibold"
+                                                    className="px-3 sm:px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-all text-xs sm:text-sm font-semibold"
                                                 >
                                                     Delete
                                                 </button>

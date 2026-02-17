@@ -16,11 +16,13 @@ const Gallery = () => {
     useEffect(() => {
         const fetchGalleries = async () => {
             try {
-                const response = await fetch(`${API_URL}/api/gallery/active`);
+                console.log('Fetching galleries from:', `${API_URL}/api/gallery`);
+                const response = await fetch(`${API_URL}/api/gallery`, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error('Failed to fetch galleries');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
+                console.log('Galleries response:', data);
                 setGalleries(data.data || []);
             } catch (err) {
                 setError(err.message);
@@ -175,7 +177,7 @@ const Gallery = () => {
     if (loading) {
         return (
             <section className="py-12 lg:py-16 bg-white">
-                <div className="container mx-auto px-1">
+                <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                     <div className="text-center mb-10 lg:mb-12">
                         <div className="h-8 bg-gray-200 rounded-lg w-64 mx-auto mb-4"></div>
                         <div className="h-4 bg-gray-200 rounded w-80 mx-auto"></div>
@@ -188,7 +190,7 @@ const Gallery = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[...Array(6)].map((_, i) => (
                             <div key={i} className="bg-white border border-gray-200 rounded-lg overflow-hidden animate-pulse">
-                                <div className="aspect-[4/3] bg-gray-200"></div>
+                                <div className="aspect-4/3 bg-gray-200"></div>
                                 <div className="p-6">
                                     <div className="flex justify-between mb-4">
                                         <div className="h-6 bg-gray-200 rounded-full w-20"></div>
@@ -210,7 +212,7 @@ const Gallery = () => {
 
     return (
         <section className="py-6 lg:py-8 bg-white">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-10 lg:mb-12">
                     <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-3">
@@ -246,7 +248,7 @@ const Gallery = () => {
                 </div>
 
                 {/* Gallery Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
                     {visibleGalleries.map((gallery, index) => {
                         const config = categoryConfig[gallery.category] || { icon: '📁' };
                         const mainImage = gallery.images && gallery.images.length > 0 ? gallery.images[0] : 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400';
@@ -256,7 +258,7 @@ const Gallery = () => {
                                 className="bg-white border border-gray-200 hover:border-blue-900 hover:shadow-md transition-all duration-200 rounded-lg overflow-hidden"
                             >
                                 {/* Image Container */}
-                                <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+                                <div className="relative aspect-4/3 overflow-hidden bg-gray-100">
                                     <img
                                         src={mainImage}
                                         alt={gallery.title}
@@ -385,7 +387,7 @@ const Gallery = () => {
                         )}
 
                         {/* Main Image */}
-                        <div className="relative aspect-[16/10] bg-gray-100">
+                        <div className="relative aspect-16/10 bg-gray-100">
                             <img
                                 src={selectedImage.images[lightboxIndex]}
                                 alt={`${selectedImage.title} - Image ${lightboxIndex + 1}`}
@@ -433,7 +435,7 @@ const Gallery = () => {
                                             <button
                                                 key={index}
                                                 onClick={() => setLightboxIndex(index)}
-                                                className={`flex-shrink-0 relative w-16 h-16 rounded overflow-hidden border-2 transition-all duration-200 ${
+                                                className={`shrink-0 relative w-16 h-16 rounded overflow-hidden border-2 transition-all duration-200 ${
                                                     index === lightboxIndex
                                                         ? 'border-blue-900 scale-110'
                                                         : 'border-gray-200 hover:border-gray-300'

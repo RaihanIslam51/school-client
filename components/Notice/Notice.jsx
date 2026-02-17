@@ -17,8 +17,15 @@ const Notice = () => {
         const fetchNotices = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_URL}/api/notices`);
+                console.log('Fetching notices from:', `${API_URL}/api/notices`);
+                const response = await fetch(`${API_URL}/api/notices`, { cache: 'no-store' });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                console.log('Notices response:', data);
 
                 if (data.success) {
                     setNotices(data.data);
@@ -28,6 +35,7 @@ const Notice = () => {
             } catch (err) {
                 setError(err.message);
                 console.error('Error fetching notices:', err);
+                console.error('API_URL:', API_URL);
             } finally {
                 setLoading(false);
             }
@@ -101,7 +109,7 @@ const Notice = () => {
                             <div key={i} className="animate-pulse">
                                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
                                     <div className="flex gap-4">
-                                        <div className="w-12 h-12 bg-gray-200 rounded-lg flex-shrink-0"></div>
+                                        <div className="w-12 h-12 bg-gray-200 rounded-lg shrink-0"></div>
                                         <div className="flex-1">
                                             <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
                                             <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -121,10 +129,34 @@ const Notice = () => {
     if (error) {
         return (
             <section className="py-8 lg:py-12 bg-white">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div className="container mx-auto px-3 sm:px-6 lg:px-8 text-center">
                     <div className="text-4xl mb-4">⚠️</div>
                     <h2 className="text-xl font-bold text-gray-900 mb-2">Unable to Load Notices</h2>
-                    <p className="text-gray-700">{error}</p>
+                    <p className="text-gray-700 mb-4">{error}</p>
+                    <div className="bg-gray-100 p-4 rounded-lg text-left max-w-2xl mx-auto">
+                        <p className="text-sm font-mono"><strong>API URL:</strong> {API_URL}</p>
+                        <p className="text-sm font-mono"><strong>Endpoint:</strong> {API_URL}/api/notices</p>
+                        <p className="text-sm font-mono"><strong>Environment:</strong> {process.env.NODE_ENV}</p>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    // Show message if no notices
+    if (!loading && notices.length === 0) {
+        return (
+            <section className="py-8 lg:py-12 bg-white">
+                <div className="container mx-auto px-3 sm:px-6 lg:px-8 text-center">
+                    <div className="text-4xl mb-4">📢</div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">No Notices Available</h2>
+                    <p className="text-gray-700">Check back later for updates.</p>
+                    <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-left max-w-2xl mx-auto mt-4">
+                        <p className="text-sm"><strong>Debug Info:</strong></p>
+                        <p className="text-sm font-mono">API URL: {API_URL}</p>
+                        <p className="text-sm font-mono">Loading: {loading.toString()}</p>
+                        <p className="text-sm font-mono">Notices Count: {notices.length}</p>
+                    </div>
                 </div>
             </section>
         );
@@ -133,7 +165,7 @@ const Notice = () => {
     return (
         <>
             <section className="py-8 lg:py-12 bg-white">
-                <div className="container mx-auto px-1 ">
+                <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                     {/* Section Header */}
                     <div className="text-center mb-8">
                         <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-2">
@@ -194,7 +226,7 @@ const Notice = () => {
                                     <div className="p-4 sm:p-6">
                                         <div className="flex gap-4">
                                             {/* Icon */}
-                                            <div className="flex-shrink-0">
+                                            <div className="shrink-0">
                                                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-900 text-white rounded-lg flex items-center justify-center text-lg sm:text-xl">
                                                     {getNoticeIcon(notice.type)}
                                                 </div>

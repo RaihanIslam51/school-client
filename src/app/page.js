@@ -6,9 +6,10 @@ import Academics from "../../components/Academics/Academics";
 import Achievements from "../../components/Achievements/Achievements";
 import Gallery from "../../components/Gallery/Gallery";
 
+
 export default function Home() {
   return (
-   <div>
+   <div >
     <Hero></Hero>
     <Notice></Notice>
     <Facilities></Facilities>

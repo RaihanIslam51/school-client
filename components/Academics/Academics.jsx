@@ -13,15 +13,23 @@ const Academics = () => {
     useEffect(() => {
         const fetchAcademics = async () => {
             try {
-                const response = await fetch(`${API_URL}/api/academics/active`);
+                setLoading(true);
+                console.log('Fetching academics from:', `${API_URL}/api/academics`);
+                const response = await fetch(`${API_URL}/api/academics`, { cache: 'no-store' });
+                
                 if (!response.ok) {
-                    throw new Error('Failed to fetch academics');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                
                 const data = await response.json();
+                console.log('Academics response:', data);
+                console.log('Academics data array:', data.data);
+                
                 setAcademics(data.data || []);
             } catch (err) {
                 setError(err.message);
                 console.error('Error fetching academics:', err);
+                console.error('API_URL:', API_URL);
             } finally {
                 setLoading(false);
             }
@@ -179,7 +187,7 @@ const Academics = () => {
     if (loading) {
         return (
             <section className="py-12 lg:py-16 bg-white">
-                <div className="container mx-auto px-1 ">
+                <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                     <div className="animate-pulse space-y-8">
                         <div className="text-center">
                             <div className="h-12 bg-gray-200 rounded-lg w-80 mx-auto mb-4"></div>
@@ -206,7 +214,7 @@ const Academics = () => {
 
     return (
         <section className="py-6 lg:py-8 bg-white">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-6 lg:mb-12">
                     <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-3">
@@ -233,7 +241,7 @@ const Academics = () => {
                                     }`}
                                 >
                                     <span>{tab.icon}</span>
-                                    <span>{tab.label}</span>
+                                    <span className="hidden sm:inline">{tab.label}</span>
                                     <span className="bg-white/20 px-2 py-0.5 rounded text-xs">
                                         {tab.count}
                                     </span>
@@ -246,7 +254,7 @@ const Academics = () => {
                 {/* Classes Section */}
                 {activeTab === 'classes' && (
                     <div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
+                        <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-8">
                             {displayClasses.map((classLevel, index) => (
                                 <div
                                     key={classLevel._id || index}
@@ -350,7 +358,7 @@ const Academics = () => {
                         </div>
 
                         {/* Subjects Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {displaySubjects.map((subject, index) => (
                                 <div
                                     key={subject._id || index}
@@ -439,7 +447,7 @@ const Academics = () => {
                                     <div className="p-6">
                                         <div className="flex flex-col md:flex-row items-center gap-6">
                                             {/* Icon */}
-                                            <div className="flex-shrink-0">
+                                            <div className="shrink-0">
                                                 <div className="w-16 h-16 bg-blue-900 text-white rounded-lg flex items-center justify-center text-3xl">
                                                     {activity.icon}
                                                 </div>

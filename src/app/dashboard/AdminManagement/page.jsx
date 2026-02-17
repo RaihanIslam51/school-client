@@ -413,19 +413,19 @@ export default function AdminManagement() {
     });
 
     return (
-        <div className="p-4 lg:p-8">
-            <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
+            <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
                 {/* Header */}
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-                    <div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Management</h2>
-                        <p className="text-gray-600">Manage admin profiles and system access</p>
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6">
+                    <div className="mb-4 lg:mb-0">
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Admin Management</h2>
+                        <p className="text-sm sm:text-base text-gray-600">Manage admin profiles and system access</p>
                     </div>
                     <button
                         onClick={handleAddAdmin}
-                        className="mt-4 lg:mt-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center space-x-2"
+                        className="w-full sm:w-auto bg-gradient-to-r from-blue-900 to-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
                         <span>Add Admin</span>
@@ -433,51 +433,129 @@ export default function AdminManagement() {
                 </div>
 
                 {/* Search Bar */}
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                     <div className="relative">
                         <input
                             type="text"
                             placeholder="Search by name, email, designation, or admin ID..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 pl-10 sm:pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                         />
-                        <svg className="w-5 h-5 text-gray-400 absolute left-4 top-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-100">
-                        <p className="text-sm text-gray-600">Total Admins</p>
-                        <p className="text-2xl font-bold text-purple-900">{admins.length}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-3 sm:p-4 rounded-xl border border-purple-100">
+                        <p className="text-xs sm:text-sm text-gray-600">Total Admins</p>
+                        <p className="text-xl sm:text-2xl font-bold text-purple-900">{admins.length}</p>
                     </div>
-                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100">
-                        <p className="text-sm text-gray-600">Active Admins</p>
-                        <p className="text-2xl font-bold text-green-900">{admins.filter(a => a.status === 'active').length}</p>
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-3 sm:p-4 rounded-xl border border-green-100">
+                        <p className="text-xs sm:text-sm text-gray-600">Active Admins</p>
+                        <p className="text-xl sm:text-2xl font-bold text-green-900">{admins.filter(a => a.status === 'active').length}</p>
                     </div>
-                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-xl border border-amber-100">
-                        <p className="text-sm text-gray-600">Inactive Admins</p>
-                        <p className="text-2xl font-bold text-amber-900">{admins.filter(a => a.status === 'inactive').length}</p>
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-3 sm:p-4 rounded-xl border border-amber-100 sm:col-span-2 lg:col-span-1">
+                        <p className="text-xs sm:text-sm text-gray-600">Inactive Admins</p>
+                        <p className="text-xl sm:text-2xl font-bold text-amber-900">{admins.filter(a => a.status === 'inactive').length}</p>
                     </div>
                 </div>
 
                 {/* Table */}
                 {loading ? (
-                    <div className="text-center py-12">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">Loading admins...</p>
+                    <div className="text-center py-8 sm:py-12">
+                        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="mt-2 sm:mt-4 text-sm sm:text-base text-gray-600">Loading admins...</p>
                     </div>
                 ) : filteredAdmins.length === 0 ? (
-                    <div className="text-center py-12 text-gray-500">
-                        <svg className="w-24 h-24 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="text-center py-8 sm:py-12 text-gray-500">
+                        <svg className="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-3 sm:mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
-                        <p className="text-lg">No admins found</p>
+                        <p className="text-base sm:text-lg">No admins found</p>
                     </div>
                 ) : (
+                    <div className="block lg:hidden space-y-3">
+                        {/* Mobile Card View */}
+                        {filteredAdmins.map((admin, index) => (
+                            <div key={admin._id} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex items-start space-x-3">
+                                    <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                        {admin.imageUrl ? (
+                                            <img
+                                                src={admin.imageUrl}
+                                                alt={admin.name}
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSAxOVYyMEgzVjE5QzMgMTYuMzMgNS4zMyAxNCA4IDE0SDE2QzE4LjY3IDE0IDIxIDE2LjMzIDIxIDE5WiIgZmlsbD0iIzk3OTdhNyIvPgo8L3N2Zz4K';
+                                                }}
+                                            />
+                                        ) : (
+                                            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <h3 className="text-sm font-semibold text-gray-900 truncate">{admin.name}</h3>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                admin.status === 'active' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : 'bg-gray-100 text-gray-800'
+                                            }`}>
+                                                {admin.status}
+                                            </span>
+                                        </div>
+                                        <div className="space-y-1 text-xs text-gray-600">
+                                            <p><span className="font-medium">ID:</span> {admin.adminId || 'N/A'}</p>
+                                            <p><span className="font-medium">Email:</span> {admin.email && admin.email.trim() !== '' ? admin.email : 'N/A'}</p>
+                                            <p><span className="font-medium">Phone:</span> {admin.phone && admin.phone.trim() !== '' ? admin.phone : 'N/A'}</p>
+                                            <p><span className="font-medium">Designation:</span> {admin.designation && admin.designation.trim() !== '' ? admin.designation : 'N/A'}</p>
+                                        </div>
+                                        <div className="flex items-center justify-between mt-3">
+                                            <button
+                                                onClick={() => handlePrintAdmin(admin)}
+                                                className="text-purple-600 hover:text-purple-800 p-2 hover:bg-purple-50 rounded-lg transition-all"
+                                                title="Print Admin Details"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                                </svg>
+                                            </button>
+                                            <div className="flex space-x-1">
+                                                <button
+                                                    onClick={() => handleEditAdmin(admin)}
+                                                    className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded-lg transition-all"
+                                                    title="Edit"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteAdmin(admin._id)}
+                                                    className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded-lg transition-all"
+                                                    title="Delete"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Desktop Table View */}
+                <div className="hidden lg:block">
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
@@ -582,31 +660,30 @@ export default function AdminManagement() {
                             </tbody>
                         </table>
                     </div>
-                )}
-            </div>
+                </div>
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-2xl">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 sm:p-6 rounded-t-2xl">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-bold">
+                                <h3 className="text-lg sm:text-xl font-bold">
                                     {isEditMode ? 'Edit Admin' : 'Add New Admin'}
                                 </h3>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="text-white hover:text-gray-200 transition-colors"
+                                    className="text-white hover:text-gray-200 transition-colors p-1"
                                 >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
                                     <input
@@ -615,7 +692,7 @@ export default function AdminManagement() {
                                         value={formData.name}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="Enter admin name"
                                     />
                                 </div>
@@ -629,7 +706,7 @@ export default function AdminManagement() {
                                         onChange={handleInputChange}
                                         required
                                         readOnly={!isEditMode}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-sm sm:text-base"
                                         placeholder="Auto-generated"
                                     />
                                 </div>
@@ -642,7 +719,7 @@ export default function AdminManagement() {
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="admin@example.com"
                                     />
                                 </div>
@@ -655,7 +732,7 @@ export default function AdminManagement() {
                                         value={formData.phone}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="01XXXXXXXXX"
                                     />
                                 </div>
@@ -668,7 +745,7 @@ export default function AdminManagement() {
                                         value={formData.designation}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="e.g., System Administrator, Principal"
                                     />
                                 </div>
@@ -681,7 +758,7 @@ export default function AdminManagement() {
                                         value={formData.qualification}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="e.g., M.A., B.Ed, MBA"
                                     />
                                 </div>
@@ -694,7 +771,7 @@ export default function AdminManagement() {
                                         value={formData.experience}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="e.g., 5 Years"
                                     />
                                 </div>
@@ -707,7 +784,7 @@ export default function AdminManagement() {
                                         value={formData.dateOfJoining}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     />
                                 </div>
 
@@ -718,14 +795,14 @@ export default function AdminManagement() {
                                         value={formData.status}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     >
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
                                     </select>
                                 </div>
 
-                                <div className="md:col-span-2">
+                                <div className="sm:col-span-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Address *</label>
                                     <textarea
                                         name="address"
@@ -733,12 +810,12 @@ export default function AdminManagement() {
                                         onChange={handleInputChange}
                                         required
                                         rows="2"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="Enter full address"
                                     />
                                 </div>
 
-                                <div className="md:col-span-2">
+                                <div className="sm:col-span-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Admin Photo</label>
                                     <div className="space-y-3">
                                         {formData.imageUrl && (
@@ -746,7 +823,7 @@ export default function AdminManagement() {
                                                 <img
                                                     src={formData.imageUrl}
                                                     alt="Admin preview"
-                                                    className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                                                    className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg border border-gray-200"
                                                 />
                                                 <div className="flex-1">
                                                     <p className="text-sm text-gray-700 font-medium">Current Photo</p>
@@ -758,7 +835,7 @@ export default function AdminManagement() {
                                                     className="text-red-500 hover:text-red-700 p-1"
                                                     title="Remove photo"
                                                 >
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
                                                 </button>
@@ -792,17 +869,17 @@ export default function AdminManagement() {
                                 </div>
                             </div>
 
-                            <div className="flex justify-end space-x-3 pt-4 border-t">
+                            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4 sm:pt-6 border-t">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-2 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all duration-200"
+                                    className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm sm:text-base"
                                 >
                                     {isEditMode ? 'Update Admin' : 'Add Admin'}
                                 </button>
@@ -811,6 +888,7 @@ export default function AdminManagement() {
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }

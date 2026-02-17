@@ -586,21 +586,21 @@ const FeesManagementPage = () => {
 
 
     return (
-        <div className="min-h-screen bg-white p-3 sm:p-4 md:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
             <div className="container mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
                 {/* Header */}
-                <div className="border-b border-gray-200 p-4 sm:p-6">
+                <div className="border-b border-gray-200 p-3 sm:p-4 lg:p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                         <div>
-                            <h1 className="text-2xl sm:text-3xl font-bold text-[#1a202c]">
+                            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">
                                 Fees Management System
                             </h1>
                             <p className="text-black text-sm sm:text-base mt-1">Professional fee collection and receipt management</p>
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-1 sm:gap-2">
                             <button
                                 onClick={() => setViewMode('collection')}
-                                className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                                className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                                     viewMode === 'collection'
                                         ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                         : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -610,7 +610,7 @@ const FeesManagementPage = () => {
                             </button>
                             <button
                                 onClick={() => setViewMode('records')}
-                                className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                                className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
                                     viewMode === 'records'
                                         ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                         : 'bg-white text-gray-700 hover:bg-gray-50'
@@ -623,7 +623,7 @@ const FeesManagementPage = () => {
                 </div>
 
                 {/* Filters Section */}
-                <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                <div className="bg-white border border-gray-200 rounded p-3 sm:p-4 lg:p-6">
                     <h2 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Selection Criteria</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         {/* Class Selection */}
@@ -673,44 +673,44 @@ const FeesManagementPage = () => {
 
                 {/* Statistics Cards */}
                 {statistics && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 p-3 sm:p-4 lg:p-6">
+                        <div className="bg-white border border-gray-300 rounded p-3 sm:p-4 lg:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-black text-xs sm:text-sm">Total Collected</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">৳{statistics.totalCollected.toLocaleString()}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">৳{statistics.totalCollected.toLocaleString()}</p>
                                 </div>
-                                <div className="text-3xl sm:text-5xl opacity-20">💵</div>
+                                <div className="text-2xl sm:text-3xl lg:text-5xl opacity-20">💵</div>
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
+                        <div className="bg-white border border-gray-300 rounded p-3 sm:p-4 lg:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-black text-xs sm:text-sm">Paid Records</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">{statistics.paidCount}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">{statistics.paidCount}</p>
                                 </div>
-                                <div className="text-3xl sm:text-5xl opacity-20">✅</div>
+                                <div className="text-2xl sm:text-3xl lg:text-5xl opacity-20">✅</div>
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
+                        <div className="bg-white border border-gray-300 rounded p-3 sm:p-4 lg:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-black text-xs sm:text-sm">Total Due</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">৳{statistics.totalDue.toLocaleString()}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">৳{statistics.totalDue.toLocaleString()}</p>
                                 </div>
-                                <div className="text-3xl sm:text-5xl opacity-20">⚠️</div>
+                                <div className="text-2xl sm:text-3xl lg:text-5xl opacity-20">⚠️</div>
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-300 rounded p-4 sm:p-6">
+                        <div className="bg-white border border-gray-300 rounded p-3 sm:p-4 lg:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-black text-xs sm:text-sm">Total Records</p>
-                                    <p className="text-2xl sm:text-3xl font-bold text-[#1a202c] mt-2">{statistics.totalRecords}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">{statistics.totalRecords}</p>
                                 </div>
-                                <div className="text-3xl sm:text-5xl opacity-20">📊</div>
+                                <div className="text-2xl sm:text-3xl lg:text-5xl opacity-20">📊</div>
                             </div>
                         </div>
                     </div>
@@ -718,22 +718,22 @@ const FeesManagementPage = () => {
 
                 {/* Fee Collection Mode */}
                 {viewMode === 'collection' && selectedClass && selectedSection && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 p-3 sm:p-4 lg:p-6">
                         {/* Students Info */}
-                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                        <div className="bg-white border border-gray-200 rounded p-3 sm:p-4 lg:p-6">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
                                 <h2 className="text-lg sm:text-xl font-bold text-[#1a202c]">Students ({students.length})</h2>
                                 {collectionMode === 'individual' && (
                                     <div className="flex gap-2">
                                         <button
                                             onClick={selectAllStudents}
-                                            className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
+                                            className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm"
                                         >
                                             Select All
                                         </button>
                                         <button
                                             onClick={deselectAllStudents}
-                                            className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
+                                            className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm"
                                         >
                                             Deselect All
                                         </button>
@@ -780,7 +780,7 @@ const FeesManagementPage = () => {
                         </div>
 
                         {/* Fee Collection Form */}
-                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                        <div className="bg-white border border-gray-200 rounded p-3 sm:p-4 lg:p-6">
                             <h2 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Fee Collection</h2>
                             
                             <div className="space-y-4 sm:space-y-6">
@@ -933,7 +933,7 @@ const FeesManagementPage = () => {
                                             <button
                                                 onClick={collectFee}
                                                 disabled={loading}
-                                                className="w-full px-5 sm:px-6 py-2.5 sm:py-4 bg-blue-900 text-white rounded font-semibold text-sm sm:text-lg hover:bg-blue-800 transition-all disabled:opacity-50"
+                                                className="w-full px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-4 bg-blue-900 text-white rounded font-semibold text-sm sm:text-base lg:text-lg hover:bg-blue-800 transition-all disabled:opacity-50"
                                             >
                                                 {loading ? 'Processing...' : `Collect Fees for ${
                                                     collectionMode === 'bulk' 
@@ -943,9 +943,9 @@ const FeesManagementPage = () => {
                                             </button>
                                         </>
                                     ) : (
-                                        <div className="text-center py-8 sm:py-12">
-                                            <div className="text-4xl sm:text-6xl mb-4">💰</div>
-                                            <p className="text-black text-sm sm:text-base">
+                                        <div className="text-center py-6 sm:py-8 lg:py-12">
+                                            <div className="text-3xl sm:text-4xl lg:text-5xl mb-4">💰</div>
+                                            <p className="text-black text-sm sm:text-base lg:text-lg">
                                                 {collectionMode === 'bulk' 
                                                     ? 'Add fees to collect for all students' 
                                                     : 'Add fees and select students to collect fees'
@@ -960,7 +960,7 @@ const FeesManagementPage = () => {
 
                 {/* Fee Records Mode */}
                 {viewMode === 'records' && selectedClass && selectedSection && (
-                    <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
+                    <div className="bg-white border border-gray-200 rounded p-3 sm:p-4 lg:p-6">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
                             <div>
                                 <h2 className="text-lg sm:text-xl font-bold text-[#1a202c]">Fee Records ({feeRecords.length})</h2>
@@ -975,7 +975,7 @@ const FeesManagementPage = () => {
                                     <button
                                         onClick={deleteSelectedRecords}
                                         disabled={loading}
-                                        className="px-3 sm:px-4 py-2 bg-red-600 text-white rounded text-sm font-semibold hover:bg-red-700 transition-all disabled:opacity-50"
+                                        className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-red-600 text-white rounded text-sm font-semibold hover:bg-red-700 transition-all disabled:opacity-50"
                                     >
                                         🗑️ Delete ({selectedRecords.length})
                                     </button>
@@ -1000,13 +1000,13 @@ const FeesManagementPage = () => {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={selectAllRecords}
-                                        className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
+                                        className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
                                     >
                                         Select All
                                     </button>
                                     <button
                                         onClick={deselectAllRecords}
-                                        className="px-3 py-1 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800"
+                                        className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
                                     >
                                         Deselect All
                                     </button>
@@ -1022,7 +1022,7 @@ const FeesManagementPage = () => {
                                 <table className="w-full border-collapse text-xs sm:text-sm">
                                     <thead>
                                         <tr className="bg-[#1a202c] text-white">
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">
                                                 <input
                                                     type="checkbox"
                                                     checked={selectedRecords.length === feeRecords.length && feeRecords.length > 0}
@@ -1036,15 +1036,15 @@ const FeesManagementPage = () => {
                                                     className="w-3 h-3 sm:w-4 sm:h-4 border-gray-300 rounded focus:ring-white"
                                                 />
                                             </th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Receipt No</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Date</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Student</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-left">Roll</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-right">Total (৳)</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-right">Paid (৳)</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-right">Due (৳)</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center">Status</th>
-                                            <th className="px-2 sm:px-4 py-2 sm:py-3 text-center">Action</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left">Receipt No</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left">Date</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left">Student</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left">Roll</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right">Total (৳)</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right">Paid (৳)</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right">Due (৳)</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">Status</th>
+                                            <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1052,7 +1052,7 @@ const FeesManagementPage = () => {
                                             <tr key={index} className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
                                                 selectedRecords.some(r => r._id === record._id) ? 'bg-gray-100' : ''
                                             }`}>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">
                                                     <input
                                                         type="checkbox"
                                                         checked={selectedRecords.some(r => r._id === record._id)}
@@ -1060,14 +1060,14 @@ const FeesManagementPage = () => {
                                                         className="w-3 h-3 sm:w-4 sm:h-4 border-gray-300 rounded focus:ring-[#1a202c]"
                                                     />
                                                 </td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 font-mono text-xs sm:text-sm text-black">{record.receiptNumber}</td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-black">{new Date(record.paymentDate).toLocaleDateString()}</td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-black">{record.studentName}</td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-black">{record.rollNumber}</td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.totalAmount.toFixed(2)}</td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.paidAmount.toFixed(2)}</td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.dueAmount.toFixed(2)}</td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 font-mono text-xs sm:text-sm text-black">{record.receiptNumber}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-xs sm:text-sm text-black">{new Date(record.paymentDate).toLocaleDateString()}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-black">{record.studentName}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-black">{record.rollNumber}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.totalAmount.toFixed(2)}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.paidAmount.toFixed(2)}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.dueAmount.toFixed(2)}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">
                                                     <select
                                                         value={record.status}
                                                         onChange={(e) => updateFeeStatus(record._id, e.target.value)}
@@ -1083,7 +1083,7 @@ const FeesManagementPage = () => {
                                                         <option value="Pending">Pending</option>
                                                     </select>
                                                 </td>
-                                                <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">
                                                     <button
                                                         onClick={() => viewReceipt(record)}
                                                         className="px-3 sm:px-4 py-1 sm:py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all"
@@ -1097,9 +1097,9 @@ const FeesManagementPage = () => {
                                 </table>
                             </div>
                         ) : (
-                            <div className="text-center py-8 sm:py-12">
-                                <div className="text-4xl sm:text-6xl mb-4">📋</div>
-                                <p className="text-black text-sm sm:text-base">No fee records found for this class and section</p>
+                            <div className="text-center py-8 sm:py-12 lg:py-16">
+                                <div className="text-4xl sm:text-5xl lg:text-6xl mb-4">📋</div>
+                                <p className="text-black text-sm sm:text-base lg:text-lg">No fee records found for this class and section</p>
                             </div>
                         )}
                     </div>
@@ -1107,10 +1107,10 @@ const FeesManagementPage = () => {
 
                 {/* Empty State */}
                 {(!selectedClass || !selectedSection) && (
-                    <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
-                        <div className="text-6xl mb-4">🎯</div>
-                        <h3 className="text-2xl font-bold text-gray-800 mb-2">Get Started</h3>
-                        <p className="text-gray-600">Select class and section to manage fees</p>
+                    <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 lg:p-12 text-center">
+                        <div className="text-4xl sm:text-5xl lg:text-6xl mb-4">🎯</div>
+                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mb-2">Get Started</h3>
+                        <p className="text-gray-600 text-sm sm:text-base lg:text-lg">Select class and section to manage fees</p>
                     </div>
                 )}
             </div>

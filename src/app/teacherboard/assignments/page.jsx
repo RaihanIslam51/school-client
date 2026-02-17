@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { API_URL } from '../../../../config/api';
 import Swal from 'sweetalert2';
 import ImgBBUpload from '../../../../components/ImgBBUpload';
@@ -250,7 +251,7 @@ export default function AssignmentManagement() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-white p-1">
             <div className="max-w-7xl mx-auto">
                 <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
                     {/* Header */}
@@ -259,7 +260,7 @@ export default function AssignmentManagement() {
                             <h2 className="text-2xl lg:text-3xl font-bold text-blue-900 mb-2">
                                 📝 Assignment Management
                             </h2>
-                            <p className="text-gray-600">Create and manage assignments for your classes</p>
+                            <p className="text-black">Create and manage assignments for your classes</p>
                         </div>
                         <button
                             onClick={handleAddAssignment}
@@ -272,7 +273,7 @@ export default function AssignmentManagement() {
                 {/* Filters */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Class</label>
+                        <label className="block text-sm font-medium text-black mb-2">Filter by Class</label>
                         <select
                             value={filterClass}
                             onChange={(e) => setFilterClass(e.target.value)}
@@ -292,7 +293,7 @@ export default function AssignmentManagement() {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Subject</label>
+                        <label className="block text-sm font-medium text-black mb-2">Filter by Subject</label>
                         <input
                             type="text"
                             value={filterSubject}
@@ -307,7 +308,7 @@ export default function AssignmentManagement() {
                                 setFilterClass('');
                                 setFilterSubject('');
                             }}
-                            className="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+                            className="w-full px-3 py-2 bg-gray-100 text-black rounded hover:bg-gray-200 transition-colors"
                         >
                             Clear Filters
                         </button>
@@ -319,8 +320,8 @@ export default function AssignmentManagement() {
                     <div className="bg-white border border-gray-200 p-6 rounded-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Total Assignments</p>
-                                <p className="text-3xl font-bold text-gray-900">{assignments.length}</p>
+                                <p className="text-sm font-medium text-black mb-1">Total Assignments</p>
+                                <p className="text-3xl font-bold text-black">{assignments.length}</p>
                             </div>
                             <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                                 <span className="text-2xl">📚</span>
@@ -330,8 +331,8 @@ export default function AssignmentManagement() {
                     <div className="bg-white border border-gray-200 p-6 rounded-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Active</p>
-                                <p className="text-3xl font-bold text-gray-900">{assignments.filter(a => a.status === 'active').length}</p>
+                                <p className="text-sm font-medium text-black mb-1">Active</p>
+                                <p className="text-3xl font-bold text-black">{assignments.filter(a => a.status === 'active').length}</p>
                             </div>
                             <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                                 <span className="text-2xl">✅</span>
@@ -341,8 +342,8 @@ export default function AssignmentManagement() {
                     <div className="bg-white border border-gray-200 p-6 rounded-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Due Soon</p>
-                                <p className="text-3xl font-bold text-gray-900">
+                                <p className="text-sm font-medium text-black mb-1">Due Soon</p>
+                                <p className="text-3xl font-bold text-black">
                                     {assignments.filter(a => {
                                         const status = getDeadlineStatus(a.deadline);
                                         return status.status === 'urgent';
@@ -357,8 +358,8 @@ export default function AssignmentManagement() {
                     <div className="bg-white border border-gray-200 p-6 rounded-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-1">Overdue</p>
-                                <p className="text-3xl font-bold text-gray-900">
+                                <p className="text-sm font-medium text-black mb-1">Overdue</p>
+                                <p className="text-3xl font-bold text-black">
                                     {assignments.filter(a => {
                                         const status = getDeadlineStatus(a.deadline);
                                         return status.status === 'overdue';
@@ -375,16 +376,16 @@ export default function AssignmentManagement() {
                 {/* Assignment Cards - 4 per row */}
                 {loading ? (
                     <div className="text-center py-8">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">Loading assignments...</p>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-900 mx-auto"></div>
+                        <p className="mt-4 text-black">Loading assignments...</p>
                     </div>
                 ) : filteredAssignments.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
-                        <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="text-center py-8 text-black">
+                        <svg className="w-16 h-16 mx-auto mb-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <p className="text-base font-medium">No assignments found</p>
-                        <p className="text-sm text-gray-400 mt-2">Create your first assignment to get started</p>
+                        <p className="text-sm text-black mt-2">Create your first assignment to get started</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -420,43 +421,43 @@ export default function AssignmentManagement() {
                                     {/* Assignment Content */}
                                     <div className="p-4">
                                         <div className="flex items-start justify-between mb-2">
-                                            <h3 className="text-base font-bold text-gray-900 line-clamp-2 flex-1">
+                                            <h3 className="text-base font-bold text-black line-clamp-2 flex-1">
                                                 {assignment.title}
                                             </h3>
                                         </div>
 
-                                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                                        <p className="text-sm text-black mb-3 line-clamp-2">
                                             {assignment.description}
                                         </p>
 
                                         <div className="space-y-2 mb-3">
-                                            <div className="flex items-center text-sm text-gray-600">
+                                            <div className="flex items-center text-sm text-black">
                                                 <svg className="w-4 h-4 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                                 </svg>
                                                 <span className="font-medium">{assignment.subject}</span>
                                             </div>
-                                            <div className="flex items-center text-sm text-gray-600">
+                                            <div className="flex items-center text-sm text-black">
                                                 <svg className="w-4 h-4 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                                 </svg>
                                                 <span>{assignment.className} - {assignment.section}</span>
                                             </div>
-                                            <div className="flex items-center text-sm text-gray-600">
+                                            <div className="flex items-center text-sm text-black">
                                                 <svg className="w-4 h-4 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                 </svg>
                                                 <span>Due: {formatDate(assignment.deadline)}</span>
                                             </div>
                                             {assignment.totalMarks && (
-                                                <div className="flex items-center text-sm text-gray-600">
+                                                <div className="flex items-center text-sm text-black">
                                                     <svg className="w-4 h-4 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                                                     </svg>
                                                     <span>Total Marks: {assignment.totalMarks}</span>
                                                 </div>
                                             )}
-                                            <div className="flex items-center text-sm text-gray-600">
+                                            <div className="flex items-center text-sm text-black">
                                                 <svg className="w-4 h-4 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                                 </svg>
@@ -517,7 +518,7 @@ export default function AssignmentManagement() {
                         <form onSubmit={handleSubmit} className="p-4 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Assignment Title *</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Assignment Title *</label>
                                     <input
                                         type="text"
                                         name="title"
@@ -530,7 +531,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Description *</label>
                                     <textarea
                                         name="description"
                                         value={formData.description}
@@ -543,7 +544,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Subject *</label>
                                     <input
                                         type="text"
                                         name="subject"
@@ -556,7 +557,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Class *</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Class *</label>
                                     <select
                                         name="className"
                                         value={formData.className}
@@ -579,7 +580,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Section *</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Section *</label>
                                     <select
                                         name="section"
                                         value={formData.section}
@@ -596,7 +597,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Deadline *</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Deadline *</label>
                                     <input
                                         type="date"
                                         name="deadline"
@@ -608,7 +609,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Total Marks</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Total Marks</label>
                                     <input
                                         type="number"
                                         name="totalMarks"
@@ -621,7 +622,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Status *</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Status *</label>
                                     <select
                                         name="status"
                                         value={formData.status}
@@ -635,7 +636,7 @@ export default function AssignmentManagement() {
                                 </div>
 
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Assignment Image</label>
+                                    <label className="block text-sm font-medium text-black mb-2">Assignment Image</label>
                                     <ImgBBUpload onUploadSuccess={handleImageUpload} />
                                     {uploadedImageUrl && (
                                         <div className="mt-3">
@@ -653,7 +654,7 @@ export default function AssignmentManagement() {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
+                                    className="px-4 py-2 border border-gray-300 text-black rounded hover:bg-gray-50 transition-colors"
                                 >
                                     Cancel
                                 </button>

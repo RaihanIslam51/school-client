@@ -434,10 +434,10 @@ const ReportsPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center p-4">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-600 text-lg">Loading Analytics...</p>
+                    <div className="w-12 sm:w-16 h-12 sm:h-16 border-4 border-[#1a202c] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-sm sm:text-lg text-gray-600">Loading Analytics...</p>
                 </div>
             </div>
         );
@@ -445,21 +445,21 @@ const ReportsPage = () => {
 
     return (
         <div className="min-h-screen bg-white">
-            <div className="container mx-auto ">
+            <div className="container mx-auto p-2 sm:p-4 lg:p-6">
                 {/* Header */}
-                <div className="mb-8">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="mb-4 sm:mb-6 lg:mb-8">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics Dashboard</h1>
-                            <p className="text-gray-600">Comprehensive school performance analytics and insights</p>
+                            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Analytics Dashboard</h1>
+                            <p className="text-sm sm:text-base text-gray-600">Comprehensive school performance analytics and insights</p>
                         </div>
                     
                     {/* Filters */}
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                         <select
                             value={timeFilter}
                             onChange={(e) => setTimeFilter(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent bg-white text-sm"
                         >
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
@@ -470,7 +470,7 @@ const ReportsPage = () => {
                         <select
                             value={selectedYear}
                             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                            className="px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent bg-white text-sm"
                         >
                             {[2024, 2025, 2026, 2027].map(year => (
                                 <option key={year} value={year}>{year}</option>
@@ -479,7 +479,7 @@ const ReportsPage = () => {
 
                         <button
                             onClick={fetchAllData}
-                            className="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors"
+                            className="px-4 sm:px-6 py-2 sm:py-3 bg-[#1a202c] text-white rounded-lg hover:bg-[#2d3748] transition-colors text-sm"
                         >
                             🔄 Refresh
                         </button>
@@ -488,198 +488,198 @@ const ReportsPage = () => {
                 </div>
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">👨‍🎓</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">👨‍🎓</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Total</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Total</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.totalStudents}</h3>
-                    <p className="text-gray-600">Total Students</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{stats.totalStudents}</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Total Students</p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">👨‍🏫</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">👨‍🏫</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Staff</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Staff</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.totalTeachers}</h3>
-                    <p className="text-gray-600">Total Teachers</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{stats.totalTeachers}</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Total Teachers</p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">💰</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">💰</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Revenue</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Revenue</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">৳{stats.totalRevenue.toLocaleString()}</h3>
-                    <p className="text-gray-600">Total Collection</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">৳{stats.totalRevenue.toLocaleString()}</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Total Collection</p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">📊</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">📊</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Rate</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Rate</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.attendanceRate}%</h3>
-                    <p className="text-gray-600">Attendance Rate</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{stats.attendanceRate}%</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Attendance Rate</p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">🎓</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">🎓</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Achievement</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Achievement</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.certificatesIssued}</h3>
-                    <p className="text-gray-600">Certificates Issued</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{stats.certificatesIssued}</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Certificates Issued</p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">✅</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">✅</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Academic</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Academic</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">{stats.passRate}%</h3>
-                    <p className="text-gray-600">Pass Rate</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{stats.passRate}%</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Pass Rate</p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">💳</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">💳</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Pending</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Pending</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">৳{stats.pendingFees.toLocaleString()}</h3>
-                    <p className="text-gray-600">Pending Fees</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">৳{stats.pendingFees.toLocaleString()}</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Pending Fees</p>
                 </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">💸</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-2xl">💸</span>
                         </div>
-                        <span className="text-sm font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full">Expenses</span>
+                        <span className="text-xs sm:text-sm font-medium bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full">Expenses</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-1">৳{stats.totalExpenses.toLocaleString()}</h3>
-                    <p className="text-gray-600">Total Expenses</p>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">৳{stats.totalExpenses.toLocaleString()}</h3>
+                    <p className="text-sm sm:text-base text-gray-600">Total Expenses</p>
                 </div>
             </div>
 
             {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                 {/* Student Enrollment Trend */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-900">📈 Student Enrollment Trend</h2>
-                        <span className="text-sm text-gray-500">{selectedYear}</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">📈 Student Enrollment Trend</h2>
+                        <span className="text-xs sm:text-sm text-gray-500">{selectedYear}</span>
                     </div>
-                    <div style={{ height: '300px' }}>
+                    <div style={{ height: '250px' }} className="sm:h-[300px]">
                         <Line data={getStudentEnrollmentData()} options={chartOptions} />
                     </div>
                 </div>
 
                 {/* Attendance Overview */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-900">📊 Attendance Overview</h2>
-                        <span className="text-sm text-gray-500">{selectedYear}</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">📊 Attendance Overview</h2>
+                        <span className="text-xs sm:text-sm text-gray-500">{selectedYear}</span>
                     </div>
-                    <div style={{ height: '300px' }}>
+                    <div style={{ height: '250px' }} className="sm:h-[300px]">
                         <Bar data={getAttendanceData()} options={chartOptions} />
                     </div>
                 </div>
 
                 {/* Fee Collection */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-900">💰 Fee Collection Trend</h2>
-                        <span className="text-sm text-gray-500">{selectedYear}</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">💰 Fee Collection Trend</h2>
+                        <span className="text-xs sm:text-sm text-gray-500">{selectedYear}</span>
                     </div>
-                    <div style={{ height: '300px' }}>
+                    <div style={{ height: '250px' }} className="sm:h-[300px]">
                         <Bar data={getFeeCollectionData()} options={chartOptions} />
                     </div>
                 </div>
 
                 {/* Revenue vs Expenses */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-900">📉 Revenue vs Expenses</h2>
-                        <span className="text-sm text-gray-500">{selectedYear}</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">📉 Revenue vs Expenses</h2>
+                        <span className="text-xs sm:text-sm text-gray-500">{selectedYear}</span>
                     </div>
-                    <div style={{ height: '300px' }}>
+                    <div style={{ height: '250px' }} className="sm:h-[300px]">
                         <Line data={getRevenueExpenseData()} options={chartOptions} />
                     </div>
                 </div>
 
                 {/* Students by Class */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-900">🎯 Students by Class</h2>
-                        <span className="text-sm text-gray-500">Distribution</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">🎯 Students by Class</h2>
+                        <span className="text-xs sm:text-sm text-gray-500">Distribution</span>
                     </div>
-                    <div style={{ height: '300px' }}>
+                    <div style={{ height: '250px' }} className="sm:h-[300px]">
                         <Pie data={getStudentsByClassData()} options={pieChartOptions} />
                     </div>
                 </div>
 
                 {/* Exam Results Distribution */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-900">🏆 Exam Results Distribution</h2>
-                        <span className="text-sm text-gray-500">Grades</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">🏆 Exam Results Distribution</h2>
+                        <span className="text-xs sm:text-sm text-gray-500">Grades</span>
                     </div>
-                    <div style={{ height: '300px' }}>
+                    <div style={{ height: '250px' }} className="sm:h-[300px]">
                         <Doughnut data={getExamResultsData()} options={pieChartOptions} />
                     </div>
                 </div>
 
                 {/* Certificate Types */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-gray-900">🎓 Certificate Types</h2>
-                        <span className="text-sm text-gray-500">Issued</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900">🎓 Certificate Types</h2>
+                        <span className="text-xs sm:text-sm text-gray-500">Issued</span>
                     </div>
-                    <div style={{ height: '300px' }}>
+                    <div style={{ height: '250px' }} className="sm:h-[300px]">
                         <Doughnut data={getCertificateTypesData()} options={pieChartOptions} />
                     </div>
                 </div>
 
                 {/* Summary Statistics */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-6">📋 Quick Statistics</h2>
-                    <div className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-700">Total Exams Conducted</span>
-                            <span className="font-bold text-lg text-gray-900">{exams.length}</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">📋 Quick Statistics</h2>
+                    <div className="space-y-3 sm:space-y-4">
+                        <div className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                            <span className="text-xs sm:text-sm text-gray-700">Total Exams Conducted</span>
+                            <span className="font-bold text-base sm:text-lg text-gray-900">{exams.length}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-700">Total Assignments</span>
-                            <span className="font-bold text-lg text-gray-900">{assignments.length}</span>
+                        <div className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                            <span className="text-xs sm:text-sm text-gray-700">Total Assignments</span>
+                            <span className="font-bold text-base sm:text-lg text-gray-900">{assignments.length}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-700">Attendance Records</span>
-                            <span className="font-bold text-lg text-gray-900">{attendance.length}</span>
+                        <div className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                            <span className="text-xs sm:text-sm text-gray-700">Attendance Records</span>
+                            <span className="font-bold text-base sm:text-lg text-gray-900">{attendance.length}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-700">Fee Transactions</span>
-                            <span className="font-bold text-lg text-gray-900">{fees.length}</span>
+                        <div className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                            <span className="text-xs sm:text-sm text-gray-700">Fee Transactions</span>
+                            <span className="font-bold text-base sm:text-lg text-gray-900">{fees.length}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                            <span className="text-sm text-gray-700">Net Profit</span>
-                            <span className={`font-bold text-lg ${(stats.totalRevenue - stats.totalExpenses) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <div className="flex justify-between items-center p-2 sm:p-3 bg-gray-50 rounded-lg">
+                            <span className="text-xs sm:text-sm text-gray-700">Net Profit</span>
+                            <span className={`font-bold text-base sm:text-lg ${(stats.totalRevenue - stats.totalExpenses) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                 ৳{(stats.totalRevenue - stats.totalExpenses).toLocaleString()}
                             </span>
                         </div>
@@ -688,11 +688,11 @@ const ReportsPage = () => {
             </div>
 
             {/* Footer Info */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-                <p className="text-gray-600">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 text-center">
+                <p className="text-sm sm:text-base text-gray-600">
                     <span className="font-semibold text-gray-900">Last Updated:</span> {new Date().toLocaleString()} |
-                    <span className="ml-2 font-semibold text-gray-900">Data Period:</span> {selectedYear} |
-                    <span className="ml-2 font-semibold text-gray-900">View:</span> {timeFilter}
+                    <span className="ml-1 sm:ml-2 font-semibold text-gray-900">Data Period:</span> {selectedYear} |
+                    <span className="ml-1 sm:ml-2 font-semibold text-gray-900">View:</span> {timeFilter}
                 </p>
             </div>
         </div>

@@ -48,7 +48,7 @@ const Navbar = ({ onOpenLogin }) => {
     return (
         <>
         <nav className="bg-white border-b border-black sticky top-0 z-40">
-            <div className="container mx-auto px-1">
+            <div className="container mx-auto px-2">
                 <div className="flex justify-between items-center h-16 lg:h-18">
                     {/* Logo Section */}
                     <div className="flex-shrink-0 flex items-center">

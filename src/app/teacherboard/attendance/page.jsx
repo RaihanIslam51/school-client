@@ -16,6 +16,7 @@ export default function AttendanceManagement() {
     const [searchQuery, setSearchQuery] = useState('');
     const [savedSheets, setSavedSheets] = useState([]);
     const [showHistory, setShowHistory] = useState(true);
+    const [viewMode, setViewMode] = useState('table');
 
     // Generate dates for the selected month
     const generateDates = (yearMonth) => {
@@ -45,7 +46,7 @@ export default function AttendanceManagement() {
 
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/api/students`);
+            const response = await fetch(`${API_URL}/api/students`, { cache: 'no-store' });
             const data = await response.json();
             
             if (data.success) {
@@ -117,6 +118,11 @@ export default function AttendanceManagement() {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         setTakenBy(user.name || 'Admin');
         fetchSavedSheets();
+    }, []);
+
+    // Set default view mode to table for full sheet view
+    useEffect(() => {
+        setViewMode('table');
     }, []);
 
     // Fetch saved attendance sheets
@@ -344,7 +350,7 @@ export default function AttendanceManagement() {
         
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/api/students`);
+            const response = await fetch(`${API_URL}/api/students`, { cache: 'no-store' });
             const data = await response.json();
             
             if (data.success) {
@@ -464,8 +470,8 @@ export default function AttendanceManagement() {
                     }
                 }
             `}</style>
-            <div className="container mx-auto p-4 sm:p-6">
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+            <div className="container mx-auto p-0">
+                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-0">
                 {/* Header */}
                 <div className="mb-6 no-print">
                     <h2 className="text-2xl font-bold text-blue-900 mb-2 flex items-center">
@@ -474,11 +480,11 @@ export default function AttendanceManagement() {
                         </svg>
                         Attendance Management System
                     </h2>
-                    <p className="text-gray-600">Professional Excel-style attendance tracking</p>
+                    <p className="text-black">Professional Excel-style attendance tracking</p>
                 </div>
 
                 {/* Selection Form */}
-                <div className="bg-white border border-gray-200 p-6 rounded-lg mb-6 no-print">
+                <div className="bg-white border border-gray-200 p-2 rounded-lg mb-6 no-print">
                     <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
                         <svg className="w-5 h-5 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -487,7 +493,7 @@ export default function AttendanceManagement() {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Class *</label>
+                            <label className="block text-sm font-medium text-black mb-2">Class *</label>
                             <select
                                 value={selectedClass}
                                 onChange={(e) => setSelectedClass(e.target.value)}
@@ -511,7 +517,7 @@ export default function AttendanceManagement() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Section *</label>
+                            <label className="block text-sm font-medium text-black mb-2">Section *</label>
                             <select
                                 value={selectedSection}
                                 onChange={(e) => setSelectedSection(e.target.value)}
@@ -526,7 +532,7 @@ export default function AttendanceManagement() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Month *</label>
+                            <label className="block text-sm font-medium text-black mb-2">Month *</label>
                             <input
                                 type="month"
                                 value={selectedMonth}
@@ -563,20 +569,20 @@ export default function AttendanceManagement() {
                         
                         {/* Print Header - Only visible when printing */}
                         <div className="hidden print:block mb-6 text-center">
-                            <h1 className="text-2xl font-bold text-gray-900 mb-2">Attendance Sheet</h1>
-                            <p className="text-lg font-semibold text-gray-700">
+                            <h1 className="text-3xl font-bold text-black mb-2">Attendance Sheet</h1>
+                            <p className="text-xl font-semibold text-black">
                                 {selectedClass} - Section {selectedSection}
                             </p>
-                            <p className="text-md text-gray-600">
+                            <p className="text-lg text-black">
                                 {new Date(selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                             </p>
-                            <p className="text-sm text-gray-500 mt-2">
+                            <p className="text-base text-black mt-2">
                                 Total Students: {students.length} | Total Days: {dates.length}
                             </p>
                         </div>
 
                         {/* Action Bar */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 bg-white border border-gray-200 p-4 rounded no-print">
+                        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 bg-white border border-gray-200 p-4 rounded no-print">
                             <div className="flex-1 min-w-[250px]">
                                 <div className="relative">
                                     <input
@@ -586,53 +592,55 @@ export default function AttendanceManagement() {
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="w-full pl-11 pr-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     />
-                                    <svg className="absolute left-3 top-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="absolute left-3 top-3 w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
                             </div>
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={printSheet}
-                                    className="px-5 py-2.5 bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-all duration-200 font-semibold flex items-center gap-2"
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                                    </svg>
-                                    Print
-                                </button>
-                                <button
-                                    onClick={downloadCSV}
-                                    className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors font-medium flex items-center gap-2"
-                                >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    Download CSV
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Stats */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 no-print">
-                            <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600">Total Present</p>
-                                        <p className="text-2xl font-bold text-gray-900">{stats.totalPresent}</p>
-                                    </div>
-                                    <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                        </svg>
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm font-medium text-black">View:</label>
+                                    <div className="flex bg-gray-100 rounded-lg p-1">
+                                        <button
+                                            onClick={() => setViewMode('table')}
+                                            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === 'table' ? 'bg-white text-blue-900 shadow-sm' : 'text-black hover:bg-gray-200'}`}
+                                        >
+                                            Table
+                                        </button>
+                                        <button
+                                            onClick={() => setViewMode('card')}
+                                            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === 'card' ? 'bg-white text-blue-900 shadow-sm' : 'text-black hover:bg-gray-200'}`}
+                                        >
+                                            Card
+                                        </button>
                                     </div>
                                 </div>
+                                <div className="flex flex-col sm:flex-row gap-2">
+                                    <button
+                                        onClick={printSheet}
+                                        className="px-5 py-2.5 bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-all duration-200 font-semibold flex items-center justify-center gap-2 w-full sm:w-auto"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                        </svg>
+                                        Print
+                                    </button>
+                                    <button
+                                        onClick={downloadCSV}
+                                        className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors font-medium flex items-center justify-center gap-2 w-full sm:w-auto"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        Download CSV
+                                    </button>
+                                </div>
                             </div>
-                            <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
+                            {/* <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">Total Absent</p>
-                                        <p className="text-2xl font-bold text-gray-900">{stats.totalAbsent}</p>
+                                        <p className="text-sm font-medium text-black">Total Absent</p>
+                                        <p className="text-2xl font-bold text-black">{stats.totalAbsent}</p>
                                     </div>
                                     <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
                                         <svg className="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -640,12 +648,12 @@ export default function AttendanceManagement() {
                                         </svg>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
+                            </div> */}
+                            {/* <div className="bg-white border border-gray-200 p-4 rounded shadow-sm">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">Not Marked</p>
-                                        <p className="text-2xl font-bold text-gray-900">{stats.totalNotMarked}</p>
+                                        <p className="text-sm font-medium text-black">Not Marked</p>
+                                        <p className="text-2xl font-bold text-black">{stats.totalNotMarked}</p>
                                     </div>
                                     <div className="w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
                                         <svg className="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -653,10 +661,11 @@ export default function AttendanceManagement() {
                                         </svg>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
-                        {/* Excel-Style Attendance Sheet */}
+
+                        {/* Attendance Sheet */}
                         <div className="bg-white rounded-xl border-2 border-gray-300 overflow-hidden shadow-xl">
                             <div className="bg-blue-900 text-white p-4 no-print">
                                 <div className="flex items-center justify-between">
@@ -674,139 +683,211 @@ export default function AttendanceManagement() {
                                 </div>
                             </div>
                             
-                            <div className="overflow-x-auto">
-                                <table className="w-full border-collapse">
-                                    <thead>
-                                        <tr className="bg-gray-100 border-b-2 border-gray-300">
-                                            <th className="sticky left-0 bg-gray-100 px-4 py-3 text-left text-xs font-bold text-gray-700 border-r-2 border-gray-300 z-10 min-w-[60px]">
-                                                S.No
-                                            </th>
-                                            <th className="sticky left-[60px] bg-gray-100 px-4 py-3 text-left text-xs font-bold text-gray-700 border-r-2 border-gray-300 z-10 min-w-[100px]">
-                                                Roll No
-                                            </th>
-                                            <th className="sticky left-[160px] bg-gray-100 px-4 py-3 text-left text-xs font-bold text-gray-700 border-r-2 border-gray-300 z-10 min-w-[200px]">
-                                                Student Name
-                                            </th>
-                                            {dates.map((date) => {
-                                                const { day, weekday } = formatDate(date);
+                            {viewMode === 'table' ? (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full border-collapse">
+                                        <thead>
+                                            <tr className="bg-gray-100 border-b-2 border-gray-300">
+                                                <th className="sticky left-0 bg-gray-100 px-4 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 z-10 min-w-[60px]">
+                                                    S.No
+                                                </th>
+                                                <th className="sticky left-[60px] bg-gray-100 px-4 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 z-10 min-w-[100px]">
+                                                    Roll No
+                                                </th>
+                                                <th className="sticky left-[160px] bg-gray-100 px-4 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 z-10 min-w-[200px]">
+                                                    Student Name
+                                                </th>
+                                                {dates.map((date) => {
+                                                    const { day, weekday } = formatDate(date);
+                                                    return (
+                                                        <th key={date} className="px-2 py-2 text-center border-r border-gray-200 min-w-[80px] bg-gray-50">
+                                                            <div className="flex flex-col items-center">
+                                                                <span className="text-xs font-semibold text-black">{day}</span>
+                                                                <span className="text-[10px] text-black">{weekday}</span>
+                                                                <div className="flex gap-1 mt-1 no-print">
+                                                                    <button
+                                                                        onClick={() => markAllPresentForDate(date)}
+                                                                        className="text-[10px] px-1.5 py-0.5 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
+                                                                        title="Mark all present"
+                                                                    >
+                                                                        All ✓
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => markAllAbsentForDate(date)}
+                                                                        className="text-[10px] px-1.5 py-0.5 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                                                                        title="Mark all absent"
+                                                                    >
+                                                                        All ✗
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                    );
+                                                })}
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-200">
+                                            {filteredStudents.map((student, index) => {
+                                                const studentStats = getStudentStats(student._id);
                                                 return (
-                                                    <th key={date} className="px-2 py-2 text-center border-r border-gray-200 min-w-[80px] bg-gray-50">
-                                                        <div className="flex flex-col items-center">
-                                                            <span className="text-xs font-semibold text-gray-900">{day}</span>
-                                                            <span className="text-[10px] text-gray-600">{weekday}</span>
-                                                            <div className="flex gap-1 mt-1 no-print">
-                                                                <button
-                                                                    onClick={() => markAllPresentForDate(date)}
-                                                                    className="text-[10px] px-1.5 py-0.5 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
-                                                                    title="Mark all present"
-                                                                >
-                                                                    All ✓
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => markAllAbsentForDate(date)}
-                                                                    className="text-[10px] px-1.5 py-0.5 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
-                                                                    title="Mark all absent"
-                                                                >
-                                                                    All ✗
-                                                                </button>
+                                                <tr key={student._id} className="hover:bg-blue-50 transition-colors">
+                                                    <td className="sticky left-0 bg-white px-4 py-3 text-sm text-black border-r-2 border-gray-300 z-10 font-medium">
+                                                        {index + 1}
+                                                    </td>
+                                                    <td className="sticky left-[60px] bg-white px-4 py-3 text-sm font-semibold text-black border-r-2 border-gray-300 z-10">
+                                                        {student.rollNumber}
+                                                    </td>
+                                                    <td className="sticky left-[160px] bg-white px-4 py-3 border-r-2 border-gray-300 z-10">
+                                                        <div>
+                                                            <div className="text-sm font-medium text-black">{student.name}</div>
+                                                            <div className="flex items-center gap-3 mt-1 text-xs no-print">
+                                                                <span className="text-green-700 font-semibold">P: {studentStats.present}</span>
+                                                                <span className="text-red-700 font-semibold">A: {studentStats.absent}</span>
+                                                                <span className={`px-2 py-0.5 rounded-full font-bold ${
+                                                                    parseFloat(studentStats.percentage) >= 75 
+                                                                        ? 'bg-green-100 text-green-800' 
+                                                                        : parseFloat(studentStats.percentage) >= 50
+                                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                                        : 'bg-red-100 text-red-800'
+                                                                }`}>
+                                                                    {studentStats.percentage}%
+                                                                </span>
                                                             </div>
                                                         </div>
-                                                    </th>
-                                                );
-                                            })}
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-200">
-                                        {filteredStudents.map((student, index) => {
-                                            const studentStats = getStudentStats(student._id);
-                                            return (
-                                            <tr key={student._id} className="hover:bg-blue-50 transition-colors">
-                                                <td className="sticky left-0 bg-white px-4 py-3 text-sm text-gray-900 border-r-2 border-gray-300 z-10 font-medium">
-                                                    {index + 1}
-                                                </td>
-                                                <td className="sticky left-[60px] bg-white px-4 py-3 text-sm font-semibold text-gray-900 border-r-2 border-gray-300 z-10">
-                                                    {student.rollNumber}
-                                                </td>
-                                                <td className="sticky left-[160px] bg-white px-4 py-3 border-r-2 border-gray-300 z-10">
-                                                    <div>
-                                                        <div className="text-sm font-medium text-gray-900">{student.name}</div>
-                                                        <div className="flex items-center gap-3 mt-1 text-xs no-print">
+                                                    </td>
+                                                    {dates.map((date) => {
+                                                        const status = attendanceSheet[student._id]?.[date];
+                                                        return (
+                                                            <td key={date} className="px-2 py-2 text-center border-r border-gray-200">
+                                                                {/* Print-friendly status */}
+                                                                <span className="hidden print:inline-block font-bold text-sm">
+                                                                    {status === 'present' ? '✓' : status === 'absent' ? '✗' : '-'}
+                                                                </span>
+                                                                {/* Interactive buttons for screen */}
+                                                                <div className="flex justify-center gap-1 print:hidden">
+                                                                    <button
+                                                                        onClick={() => markAttendance(student._id, date, 'present')}
+                                                                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all transform hover:scale-110 ${
+                                                                            status === 'present'
+                                                                                ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-300'
+                                                                                : 'bg-gray-100 text-black hover:bg-green-100 hover:text-green-600'
+                                                                        }`}
+                                                                        title="Mark present"
+                                                                    >
+                                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                                        </svg>
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => markAttendance(student._id, date, 'absent')}
+                                                                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all transform hover:scale-110 ${
+                                                                            status === 'absent'
+                                                                                ? 'bg-red-500 text-white shadow-lg ring-2 ring-red-300'
+                                                                                : 'bg-gray-100 text-black hover:bg-red-100 hover:text-red-600'
+                                                                        }`}
+                                                                        title="Mark absent"
+                                                                    >
+                                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        );
+                                                    })}
+                                                </tr>
+                                            )})}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <div className="p-4 space-y-4">
+                                    {filteredStudents.map((student, index) => {
+                                        const studentStats = getStudentStats(student._id);
+                                        return (
+                                            <div key={student._id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-lg font-bold text-blue-900">{index + 1}</span>
+                                                        <div>
+                                                            <h4 className="font-semibold text-black">{student.name}</h4>
+                                                            <p className="text-sm text-black">Roll: {student.rollNumber}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="flex gap-2 text-sm">
                                                             <span className="text-green-700 font-semibold">P: {studentStats.present}</span>
                                                             <span className="text-red-700 font-semibold">A: {studentStats.absent}</span>
-                                                            <span className={`px-2 py-0.5 rounded-full font-bold ${
-                                                                parseFloat(studentStats.percentage) >= 75 
-                                                                    ? 'bg-green-100 text-green-800' 
-                                                                    : parseFloat(studentStats.percentage) >= 50
-                                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                                    : 'bg-red-100 text-red-800'
+                                                            <span className={`px-2 py-1 rounded-full font-bold text-xs ${
+                                                                parseFloat(studentStats.percentage) >= 75 ? 'bg-green-100 text-green-800' : parseFloat(studentStats.percentage) >= 50 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
                                                             }`}>
                                                                 {studentStats.percentage}%
                                                             </span>
                                                         </div>
                                                     </div>
-                                                </td>
-                                                {dates.map((date) => {
-                                                    const status = attendanceSheet[student._id]?.[date];
-                                                    return (
-                                                        <td key={date} className="px-2 py-2 text-center border-r border-gray-200">
-                                                            {/* Print-friendly status */}
-                                                            <span className="hidden print:inline-block font-bold text-sm">
-                                                                {status === 'present' ? '✓' : status === 'absent' ? '✗' : '-'}
-                                                            </span>
-                                                            {/* Interactive buttons for screen */}
-                                                            <div className="flex justify-center gap-1 print:hidden">
-                                                                <button
-                                                                    onClick={() => markAttendance(student._id, date, 'present')}
-                                                                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all transform hover:scale-110 ${
-                                                                        status === 'present'
-                                                                            ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-300'
-                                                                            : 'bg-gray-100 text-gray-400 hover:bg-green-100 hover:text-green-600'
-                                                                    }`}
-                                                                    title="Mark present"
-                                                                >
-                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                                                    </svg>
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => markAttendance(student._id, date, 'absent')}
-                                                                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all transform hover:scale-110 ${
-                                                                        status === 'absent'
-                                                                            ? 'bg-red-500 text-white shadow-lg ring-2 ring-red-300'
-                                                                            : 'bg-gray-100 text-gray-400 hover:bg-red-100 hover:text-red-600'
-                                                                    }`}
-                                                                    title="Mark absent"
-                                                                >
-                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                                                                    </svg>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    );
-                                                })}
-                                            </tr>
-                                        )})}
-                                    </tbody>
-                                </table>
-                            </div>
+                                                </div>
+                                                <div className="overflow-x-auto pb-2">
+                                                    <div className="flex gap-3 min-w-max">
+                                                        {dates.map((date) => {
+                                                            const status = attendanceSheet[student._id]?.[date];
+                                                            const { day, weekday } = formatDate(date);
+                                                            return (
+                                                                <div key={date} className="flex flex-col items-center min-w-[70px]">
+                                                                    <div className="text-center mb-2">
+                                                                        <span className="text-sm font-semibold text-black">{day}</span>
+                                                                        <span className="text-xs text-black block">{weekday}</span>
+                                                                    </div>
+                                                                    <div className="flex gap-2">
+                                                                        <button
+                                                                            onClick={() => markAttendance(student._id, date, 'present')}
+                                                                            className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all transform hover:scale-105 ${
+                                                                                status === 'present' ? 'bg-green-500 text-white shadow-lg' : 'bg-gray-100 text-black hover:bg-green-100'
+                                                                            }`}
+                                                                            title="Present"
+                                                                        >
+                                                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                                            </svg>
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => markAttendance(student._id, date, 'absent')}
+                                                                            className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all transform hover:scale-105 ${
+                                                                                status === 'absent' ? 'bg-red-500 text-white shadow-lg' : 'bg-gray-100 text-black hover:bg-red-100'
+                                                                            }`}
+                                                                            title="Absent"
+                                                                        >
+                                                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
 
                         {/* Submit Button */}
-                        <div className="flex justify-between items-center gap-4 pt-4 border-t-2 no-print">
+                        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 pt-4 border-t-2 no-print">
                             <button
                                 onClick={() => {
                                     setShowSheet(false);
                                     setShowHistory(true);
                                 }}
-                                className="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold flex items-center gap-2"
+                                className="px-6 py-3 bg-white border-2 border-gray-300 text-black rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold flex items-center justify-center gap-2 w-full sm:w-auto"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                                 </svg>
                                 Back to History
                             </button>
-                            <div className="flex gap-3">
+                            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                 <button
                                     onClick={() => {
                                         setShowSheet(false);
@@ -814,13 +895,13 @@ export default function AttendanceManagement() {
                                         setSelectedSection('');
                                         setSearchQuery('');
                                     }}
-                                    className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold"
+                                    className="px-8 py-3 border-2 border-gray-300 text-black rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold w-full sm:w-auto"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={submitAttendance}
-                                    className="px-8 py-3 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-200 font-semibold flex items-center space-x-2"
+                                    className="px-8 py-3 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-200 font-semibold flex items-center justify-center space-x-2 w-full sm:w-auto"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
@@ -836,13 +917,13 @@ export default function AttendanceManagement() {
                 {!showSheet && showHistory && savedSheets.length > 0 && (
                     <div className="mt-8 no-print">
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                            <h3 className="text-2xl font-bold text-black flex items-center gap-3">
                                 <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Attendance History
                             </h3>
-                            <span className="text-sm text-gray-600 bg-blue-50 px-4 py-2 rounded-lg font-semibold">
+                            <span className="text-sm text-black bg-blue-50 px-4 py-2 rounded-lg font-semibold">
                                 {savedSheets.length} Sheet{savedSheets.length !== 1 ? 's' : ''} Found
                             </span>
                         </div>
@@ -862,10 +943,10 @@ export default function AttendanceManagement() {
                                     >
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex-1">
-                                                <h4 className="text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                                                <h4 className="text-xl font-bold text-black mb-1 group-hover:text-blue-600 transition-colors">
                                                     {sheet.className} - Section {sheet.section}
                                                 </h4>
-                                                <p className="text-sm text-gray-600 font-medium">
+                                                <p className="text-sm text-black font-medium">
                                                     {new Date(sheet.month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                                 </p>
                                             </div>
@@ -878,21 +959,21 @@ export default function AttendanceManagement() {
 
                                         <div className="grid grid-cols-3 gap-3 mb-4">
                                             <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
-                                                <p className="text-xs text-gray-600 font-medium mb-1">Present</p>
-                                                <p className="text-2xl font-bold text-gray-900">{presentCount}</p>
+                                                <p className="text-xs text-black font-medium mb-1">Present</p>
+                                                <p className="text-2xl font-bold text-black">{presentCount}</p>
                                             </div>
                                             <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
-                                                <p className="text-xs text-gray-600 font-medium mb-1">Absent</p>
-                                                <p className="text-2xl font-bold text-gray-900">{absentCount}</p>
+                                                <p className="text-xs text-black font-medium mb-1">Absent</p>
+                                                <p className="text-2xl font-bold text-black">{absentCount}</p>
                                             </div>
                                             <div className="bg-white border border-gray-200 rounded-lg p-3 text-center">
-                                                <p className="text-xs text-gray-600 font-medium mb-1">Rate</p>
-                                                <p className="text-2xl font-bold text-gray-900">{attendanceRate}%</p>
+                                                <p className="text-xs text-black font-medium mb-1">Rate</p>
+                                                <p className="text-2xl font-bold text-black">{attendanceRate}%</p>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center justify-between pt-3 border-t-2 border-blue-100">
-                                            <span className="text-xs text-gray-500">
+                                            <span className="text-xs text-black">
                                                 {new Date(sheet.lastUpdated).toLocaleDateString('en-US', { 
                                                     month: 'short', 
                                                     day: 'numeric',
@@ -914,12 +995,12 @@ export default function AttendanceManagement() {
                 )}
 
                 {showSheet && students.length === 0 && (
-                    <div className="text-center py-16 text-gray-500 no-print">
-                        <svg className="w-32 h-32 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="text-center py-16 text-black no-print">
+                        <svg className="w-32 h-32 mx-auto mb-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                         <p className="text-xl font-semibold">No students found</p>
-                        <p className="text-sm text-gray-400 mt-2">for {selectedClass} - Section {selectedSection}</p>
+                        <p className="text-sm text-black mt-2">for {selectedClass} - Section {selectedSection}</p>
                     </div>
                 )}
 
@@ -928,18 +1009,18 @@ export default function AttendanceManagement() {
                         <svg className="w-32 h-32 mx-auto mb-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Select Class to Begin</h3>
-                        <p className="text-gray-600">Choose class, section, and month to load the attendance sheet</p>
+                        <h3 className="text-2xl font-bold text-black mb-2">Select Class to Begin</h3>
+                        <p className="text-black">Choose class, section, and month to load the attendance sheet</p>
                     </div>
                 )}
 
                 {!showSheet && showHistory && savedSheets.length === 0 && (
                     <div className="text-center py-16 no-print">
-                        <svg className="w-32 h-32 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-32 h-32 mx-auto mb-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">No Attendance History Found</h3>
-                        <p className="text-gray-600 mb-6">Start by creating your first attendance sheet above</p>
+                        <h3 className="text-2xl font-bold text-black mb-2">No Attendance History Found</h3>
+                        <p className="text-black mb-6">Start by creating your first attendance sheet above</p>
                     </div>
                 )}
                 </div>

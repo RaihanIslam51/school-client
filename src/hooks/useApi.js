@@ -4,11 +4,22 @@ import { API_BASE_URL } from '../../config/api';
 // Generic API fetch function with caching
 const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
+  
+  // Default headers
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+  
+  // Add cache-busting headers for non-GET requests to ensure immediate updates
+  if (options.method && options.method !== 'GET') {
+    headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+    headers['Pragma'] = 'no-cache';
+    headers['Expires'] = '0';
+  }
+  
   const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
     ...options,
   });
 
@@ -28,9 +39,10 @@ export const useStudents = (filters = {}) => {
       method: 'GET',
       body: null,
     }),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
-    refetchOnWindowFocus: false,
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 };
 
@@ -39,7 +51,8 @@ export const useStudent = (id) => {
     queryKey: ['student', id],
     queryFn: () => apiRequest(`/students/${id}`),
     enabled: !!id,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -51,7 +64,7 @@ export const useCreateStudent = () => {
       body: JSON.stringify(studentData),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['students'] });
+      queryClient.invalidateQueries({ queryKey: ['students'], refetchType: 'active' });
     },
   });
 };
@@ -64,8 +77,8 @@ export const useUpdateStudent = () => {
       body: JSON.stringify(data),
     }),
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['students'] });
-      queryClient.invalidateQueries({ queryKey: ['student', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['students'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['student', variables.id], refetchType: 'active' });
     },
   });
 };
@@ -77,7 +90,7 @@ export const useDeleteStudent = () => {
       method: 'DELETE',
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['students'] });
+      queryClient.invalidateQueries({ queryKey: ['students'], refetchType: 'active' });
     },
   });
 };
@@ -87,8 +100,10 @@ export const useTeachers = () => {
   return useQuery({
     queryKey: ['teachers'],
     queryFn: () => apiRequest('/teachers'),
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 };
 
@@ -97,7 +112,8 @@ export const useTeacher = (id) => {
     queryKey: ['teacher', id],
     queryFn: () => apiRequest(`/teachers/${id}`),
     enabled: !!id,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -109,7 +125,7 @@ export const useCreateTeacher = () => {
       body: JSON.stringify(teacherData),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teachers'] });
+      queryClient.invalidateQueries({ queryKey: ['teachers'], refetchType: 'active' });
     },
   });
 };
@@ -122,8 +138,8 @@ export const useUpdateTeacher = () => {
       body: JSON.stringify(data),
     }),
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['teachers'] });
-      queryClient.invalidateQueries({ queryKey: ['teacher', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['teachers'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['teacher', variables.id], refetchType: 'active' });
     },
   });
 };
@@ -135,7 +151,7 @@ export const useDeleteTeacher = () => {
       method: 'DELETE',
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teachers'] });
+      queryClient.invalidateQueries({ queryKey: ['teachers'], refetchType: 'active' });
     },
   });
 };
@@ -160,8 +176,10 @@ export const useSalaries = (filters = {}) => {
 
       return apiRequest(`/salaries?${params.toString()}`);
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes for salaries (more dynamic)
-    gcTime: 15 * 60 * 1000, // 15 minutes
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 };
 
@@ -170,7 +188,8 @@ export const useSalary = (id) => {
     queryKey: ['salary', id],
     queryFn: () => apiRequest(`/salaries/${id}`),
     enabled: !!id,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -186,7 +205,8 @@ export const useSalaryStatistics = (filters = {}) => {
       });
       return apiRequest(`/salaries/statistics?${params.toString()}`);
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -198,8 +218,8 @@ export const useCreateSalary = () => {
       body: JSON.stringify(salaryData),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -212,9 +232,9 @@ export const useUpdateSalary = () => {
       body: JSON.stringify(data),
     }),
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary', variables.id] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary', variables.id], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -250,8 +270,8 @@ export const useDeleteSalary = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -261,8 +281,10 @@ export const useNotices = () => {
   return useQuery({
     queryKey: ['notices'],
     queryFn: () => apiRequest('/notices'),
-    staleTime: 1 * 60 * 1000, // 1 minute (notices change frequently)
-    gcTime: 10 * 60 * 1000,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 };
 
@@ -274,7 +296,7 @@ export const useCreateNotice = () => {
       body: JSON.stringify(noticeData),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notices'] });
+      queryClient.invalidateQueries({ queryKey: ['notices'], refetchType: 'active' });
     },
   });
 };
@@ -290,8 +312,9 @@ export const useResults = (filters = {}) => {
       });
       return apiRequest(`/results?${params.toString()}`);
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -303,7 +326,7 @@ export const useCreateResult = () => {
       body: JSON.stringify(resultData),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['results'] });
+      queryClient.invalidateQueries({ queryKey: ['results'], refetchType: 'active' });
     },
   });
 };
@@ -319,8 +342,9 @@ export const useFees = (filters = {}) => {
       });
       return apiRequest(`/fees?${params.toString()}`);
     },
-    staleTime: 3 * 60 * 1000,
-    gcTime: 20 * 60 * 1000,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -332,7 +356,7 @@ export const useCreateFee = () => {
       body: JSON.stringify(feeData),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['fees'] });
+      queryClient.invalidateQueries({ queryKey: ['fees'], refetchType: 'active' });
     },
   });
 };
@@ -348,8 +372,9 @@ export const useExpenses = (filters = {}) => {
       });
       return apiRequest(`/expenses?${params.toString()}`);
     },
-    staleTime: 3 * 60 * 1000,
-    gcTime: 20 * 60 * 1000,
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
   });
 };
 
@@ -361,7 +386,7 @@ export const useCreateExpense = () => {
       body: JSON.stringify(expenseData),
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ['expenses'], refetchType: 'active' });
     },
   });
 };
@@ -402,8 +427,8 @@ export const useApproveSalary = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -444,8 +469,8 @@ export const useRejectSalary = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -486,8 +511,8 @@ export const useMarkSalaryAsPaid = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -528,8 +553,8 @@ export const useBulkApproveSalaries = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -566,8 +591,8 @@ export const useBulkDeleteSalaries = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['salaries'] });
-      queryClient.invalidateQueries({ queryKey: ['salary-statistics'] });
+      queryClient.invalidateQueries({ queryKey: ['salaries'], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ['salary-statistics'], refetchType: 'active' });
     },
   });
 };
@@ -577,7 +602,7 @@ export const prefetchSalaries = async (queryClient) => {
   await queryClient.prefetchQuery({
     queryKey: ['salaries'],
     queryFn: () => apiRequest('/salaries'),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Fetch fresh data
   });
 };
 
@@ -585,7 +610,7 @@ export const prefetchStudents = async (queryClient) => {
   await queryClient.prefetchQuery({
     queryKey: ['students'],
     queryFn: () => apiRequest('/students'),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Fetch fresh data
   });
 };
 
@@ -593,6 +618,6 @@ export const prefetchTeachers = async (queryClient) => {
   await queryClient.prefetchQuery({
     queryKey: ['teachers'],
     queryFn: () => apiRequest('/teachers'),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Fetch fresh data
   });
 };

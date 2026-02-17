@@ -13,15 +13,18 @@ const Achievements = () => {
     useEffect(() => {
         const fetchAchievements = async () => {
             try {
-                const response = await fetch(`${API_URL}/api/achievements/active`);
+                console.log('Fetching achievements from:', `${API_URL}/api/achievements`);
+                const response = await fetch(`${API_URL}/api/achievements`, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error('Failed to fetch achievements');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
+                console.log('Achievements response:', data);
                 setAchievements(data.data || []);
             } catch (err) {
                 setError(err.message);
                 console.error('Error fetching achievements:', err);
+                console.error('API_URL:', API_URL);
             } finally {
                 setLoading(false);
             }
@@ -117,7 +120,7 @@ const Achievements = () => {
     if (loading) {
         return (
             <section className="py-12 lg:py-16 bg-white">
-                <div className="container mx-auto px-1">
+                <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                     <div className="text-center mb-10 lg:mb-12">
                         <div className="h-8 bg-gray-200 rounded-lg w-64 mx-auto mb-4"></div>
                         <div className="h-4 bg-gray-200 rounded w-80 mx-auto"></div>
@@ -143,7 +146,7 @@ const Achievements = () => {
 
     return (
         <section className="py-12 lg:py-16 bg-white">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-10 lg:mb-12">
                     <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-3">
@@ -224,7 +227,7 @@ const Achievements = () => {
                                             <ul className="space-y-1">
                                                 {achievement.achievements.slice(0, 2).map((item, idx) => (
                                                     <li key={idx} className="text-xs text-gray-600 flex items-center gap-2">
-                                                        <div className="w-1 h-1 bg-blue-900 rounded-full flex-shrink-0"></div>
+                                                        <div className="w-1 h-1 bg-blue-900 rounded-full shrink-0"></div>
                                                         <span>{item}</span>
                                                     </li>
                                                 ))}

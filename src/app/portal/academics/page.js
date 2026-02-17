@@ -1,8 +1,8 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { API_URL } from '../../../../config/api';
 
-export default function PortalAcademics() {
+export default memo(function PortalAcademics() {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentStudent, setCurrentStudent] = useState(null);
@@ -82,7 +82,7 @@ export default function PortalAcademics() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-1 sm:p-2 lg:p-3">
             <div className="container mx-auto">
                 {/* Header */}
                 <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
@@ -125,7 +125,7 @@ export default function PortalAcademics() {
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left max-w-md mx-auto">
                             <h4 className="font-semibold text-blue-900 mb-2">💡 Note for Testing:</h4>
                             <p className="text-sm text-blue-800">
-                                If you're testing this feature, results need to be created and published by an administrator through the admin panel.
+                                If you are testing this feature, results need to be created and published by an administrator through the admin panel.
                             </p>
                         </div>
                     </div>
@@ -187,25 +187,25 @@ export default function PortalAcademics() {
                                         <table className="w-full">
                                             <thead>
                                                 <tr className="bg-gray-50 border-b border-gray-200">
-                                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Subject</th>
-                                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Marks</th>
-                                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Grade</th>
-                                                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Progress</th>
+                                                    <th className="px-4 sm:px-6 py-3 text-left text-sm font-semibold text-gray-700">Subject</th>
+                                                    <th className="px-4 sm:px-6 py-3 text-left text-sm font-semibold text-gray-700">Marks</th>
+                                                    <th className="px-4 sm:px-6 py-3 text-left text-sm font-semibold text-gray-700">Grade</th>
+                                                    <th className="px-4 sm:px-6 py-3 text-left text-sm font-semibold text-gray-700">Progress</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-gray-200">
                                                 {result.subjects.map((subject, index) => (
                                                     <tr key={index} className="hover:bg-gray-50">
-                                                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{subject.subjectName}</td>
-                                                        <td className="px-6 py-4 text-sm text-gray-900 font-semibold">
+                                                        <td className="px-4 sm:px-6 py-4 text-sm font-medium text-gray-900">{subject.subjectName}</td>
+                                                        <td className="px-4 sm:px-6 py-4 text-sm text-gray-900 font-semibold">
                                                             {subject.marks}/{subject.totalMarks}
                                                         </td>
-                                                        <td className="px-6 py-4">
+                                                        <td className="px-4 sm:px-6 py-4">
                                                             <span className={`inline-block px-3 py-1 rounded-full text-sm font-bold ${getGradeColor(subject.grade)}`}>
                                                                 {subject.grade}
                                                             </span>
                                                         </td>
-                                                        <td className="px-6 py-4">
+                                                        <td className="px-4 sm:px-6 py-4">
                                                             <div className="w-full bg-gray-200 rounded-full h-2">
                                                                 <div
                                                                     className="bg-blue-600 h-2 rounded-full"
@@ -247,4 +247,4 @@ export default function PortalAcademics() {
             </div>
         </div>
     );
-}
+});

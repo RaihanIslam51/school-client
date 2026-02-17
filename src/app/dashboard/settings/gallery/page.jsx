@@ -39,7 +39,7 @@ const GalleryPage = () => {
 
     const fetchGalleries = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/gallery`);
+            const response = await fetch(`${API_URL}/api/gallery`, { cache: 'no-store' });
             const data = await response.json();
             if (data.success) {
                 setGalleries(data.data);
@@ -82,6 +82,7 @@ const GalleryPage = () => {
 
             const response = await fetch(url, {
                 method,
+                cache: 'no-store',
                 body: formDataToSend, // No Content-Type header for FormData
             });
 
@@ -139,6 +140,7 @@ const GalleryPage = () => {
             try {
                 const response = await fetch(`${API_URL}/api/gallery/${id}`, {
                     method: 'DELETE',
+                    cache: 'no-store'
                 });
 
                 const data = await response.json();
@@ -196,17 +198,17 @@ const GalleryPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-white p-8">
+            <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="animate-pulse">
-                        <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
-                        <div className="h-12 bg-gray-300 rounded mb-8"></div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="h-6 sm:h-8 bg-gray-300 rounded w-1/3 mb-6 sm:mb-8"></div>
+                        <div className="h-10 sm:h-12 bg-gray-300 rounded mb-6 sm:mb-8"></div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
-                                    <div className="w-full h-48 bg-gray-300 rounded-lg mb-4"></div>
-                                    <div className="h-6 bg-gray-300 rounded mb-2"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                                <div key={i} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-200">
+                                    <div className="w-full h-32 sm:h-40 lg:h-48 bg-gray-300 rounded-lg mb-4"></div>
+                                    <div className="h-4 sm:h-6 bg-gray-300 rounded mb-2"></div>
+                                    <div className="h-3 sm:h-4 bg-gray-300 rounded w-3/4"></div>
                                 </div>
                             ))}
                         </div>
@@ -217,45 +219,45 @@ const GalleryPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-white p-8">
+        <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
             <div className="container mx-auto">
                 {/* Header */}
-                <div className="mb-8">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="mb-6 sm:mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <h1 className="text-4xl font-bold text-blue-900 mb-2">Gallery Management</h1>
-                            <p className="text-gray-600">Manage school photo galleries and images</p>
+                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-900 mb-2">Gallery Management</h1>
+                            <p className="text-gray-600 text-sm sm:text-base">Manage school photo galleries and images</p>
                         </div>
                         <button
                             onClick={() => {
                                 resetForm();
                                 setShowModal(true);
                             }}
-                            className="inline-flex items-center gap-3 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                            className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2 sm:px-5 sm:py-3 lg:px-6 lg:py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
                         >
-                            <span className="text-xl">+</span>
+                            <span className="text-lg sm:text-xl">+</span>
                             Add Gallery
                         </button>
                     </div>
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 mb-8">
-                    <div className="flex flex-col lg:flex-row gap-4">
+                <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-200 mb-6 sm:mb-8">
+                    <div className="flex flex-col sm:flex-row gap-4">
                         <div className="flex-1">
                             <input
                                 type="text"
                                 placeholder="Search galleries..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-sm sm:text-base"
                             />
                         </div>
-                        <div className="lg:w-64">
+                        <div className="sm:w-64">
                             <select
                                 value={filterCategory}
                                 onChange={(e) => setFilterCategory(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-sm sm:text-base"
                             >
                                 <option value="all">All Categories</option>
                                 {categories.map(category => (
@@ -267,11 +269,11 @@ const GalleryPage = () => {
                 </div>
 
                 {/* Galleries Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                     {filteredGalleries.map((gallery) => {
                         const category = categories.find(cat => cat.value === gallery.category);
                         return (
-                            <div key={gallery._id} className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
+                            <div key={gallery._id} className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
                                 {/* Gallery Images Preview */}
                                 <div className="relative mb-4">
                                     {gallery.images && gallery.images.length > 0 ? (
@@ -296,7 +298,7 @@ const GalleryPage = () => {
                                         </div>
                                     ) : (
                                         <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-                                            <span className="text-gray-500 text-4xl">📷</span>
+                                            <span className="text-gray-500 text-3xl sm:text-4xl">📷</span>
                                         </div>
                                     )}
 
@@ -310,27 +312,27 @@ const GalleryPage = () => {
 
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2">{gallery.title}</h3>
-                                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{gallery.description}</p>
+                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{gallery.title}</h3>
+                                        <p className="text-gray-600 text-xs sm:text-sm mb-3 line-clamp-2">{gallery.description}</p>
                                     </div>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleEdit(gallery)}
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                            className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                                         >
                                             ✏️
                                         </button>
                                         <button
                                             onClick={() => handleDelete(gallery._id)}
-                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
                                         >
                                             🗑️
                                         </button>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 mb-3">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${category?.bgColor} ${category?.textColor} border ${category?.borderColor}`}>
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-3">
+                                    <span className={`px-2 py-1 sm:px-3 rounded-full text-xs font-bold ${category?.bgColor} ${category?.textColor} border ${category?.borderColor} self-start`}>
                                         {category?.icon} {gallery.category}
                                     </span>
                                     <span className="text-xs text-gray-500">
@@ -353,10 +355,10 @@ const GalleryPage = () => {
                 </div>
 
                 {filteredGalleries.length === 0 && (
-                    <div className="text-center py-12">
-                        <div className="text-6xl mb-4">📷</div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">No galleries found</h3>
-                        <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+                    <div className="text-center py-8 sm:py-12">
+                        <div className="text-4xl sm:text-6xl mb-4">📷</div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">No galleries found</h3>
+                        <p className="text-gray-600 text-sm sm:text-base">Try adjusting your search or filter criteria</p>
                     </div>
                 )}
 
@@ -364,9 +366,9 @@ const GalleryPage = () => {
                 {showModal && (
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                         <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-                            <div className="p-8">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-3xl font-bold text-blue-900">
+                            <div className="p-4 sm:p-6 lg:p-8">
+                                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-900">
                                         {editingGallery ? 'Edit Gallery' : 'Add New Gallery'}
                                     </h2>
                                     <button
@@ -377,8 +379,8 @@ const GalleryPage = () => {
                                     </button>
                                 </div>
 
-                                <form onSubmit={handleSubmit} className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                         <div>
                                             <label className="block text-sm font-bold text-gray-900 mb-2">Title *</label>
                                             <input
@@ -386,7 +388,7 @@ const GalleryPage = () => {
                                                 required
                                                 value={formData.title}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-sm sm:text-base"
                                                 placeholder="Gallery title"
                                             />
                                         </div>
@@ -397,7 +399,7 @@ const GalleryPage = () => {
                                                 required
                                                 value={formData.category}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-sm sm:text-base"
                                             >
                                                 {categories.map(category => (
                                                     <option key={category.value} value={category.value}>
@@ -415,7 +417,7 @@ const GalleryPage = () => {
                                             required
                                             value={formData.eventDate}
                                             onChange={(e) => setFormData(prev => ({ ...prev, eventDate: e.target.value }))}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                            className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-sm sm:text-base"
                                         />
                                     </div>
 
@@ -426,7 +428,7 @@ const GalleryPage = () => {
                                             rows={4}
                                             value={formData.description}
                                             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 resize-none"
+                                            className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 resize-none text-sm sm:text-base"
                                             placeholder="Describe the gallery event"
                                         />
                                     </div>
@@ -435,19 +437,19 @@ const GalleryPage = () => {
                                         <label className="block text-sm font-bold text-gray-900 mb-2">Images</label>
 
                                         {/* Manual URL Input */}
-                                        <div className="flex gap-2 mb-3">
+                                        <div className="flex flex-col sm:flex-row gap-2 mb-3">
                                             <input
                                                 type="url"
                                                 value={currentImageUrl}
                                                 onChange={(e) => setCurrentImageUrl(e.target.value)}
                                                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
-                                                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
+                                                className="flex-1 px-3 py-2 sm:px-4 sm:py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 text-sm sm:text-base"
                                                 placeholder="Enter image URL"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={addImage}
-                                                className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg transition-colors duration-200"
+                                                className="px-3 py-2 sm:px-4 bg-blue-900 hover:bg-blue-800 text-white rounded-lg transition-colors duration-200 text-sm sm:text-base whitespace-nowrap"
                                             >
                                                 Add URL
                                             </button>
@@ -483,13 +485,13 @@ const GalleryPage = () => {
                                                 <p className="text-sm text-gray-600 font-medium mb-2">
                                                     Total Images: {formData.images.length}
                                                 </p>
-                                                <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-3">
+                                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 sm:max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-3">
                                                     {formData.images.map((image, index) => (
                                                         <div key={index} className="relative group">
                                                             <img
                                                                 src={image}
                                                                 alt={`Gallery image ${index + 1}`}
-                                                                className="w-full h-20 object-cover rounded-lg border border-gray-200"
+                                                                className="w-full h-16 sm:h-20 object-cover rounded-lg border border-gray-200"
                                                                 onError={(e) => {
                                                                     e.target.src = 'https://via.placeholder.com/100x100?text=Error';
                                                                 }}
@@ -497,7 +499,7 @@ const GalleryPage = () => {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => removeImage(index)}
-                                                                className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                                                                className="absolute -top-2 -right-2 w-5 h-5 sm:w-6 sm:h-6 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
                                                                 title="Remove image"
                                                             >
                                                                 ✕
@@ -509,7 +511,7 @@ const GalleryPage = () => {
                                         )}
                                     </div>
 
-                                    <div className="flex items-center gap-6">
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                                         <div className="flex items-center gap-3">
                                             <input
                                                 type="checkbox"
@@ -533,18 +535,18 @@ const GalleryPage = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-4 pt-6">
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
                                         <button
                                             type="button"
                                             onClick={() => setShowModal(false)}
-                                            className="flex-1 px-6 py-3 bg-gray-100 text-gray-900 font-bold rounded-xl hover:bg-gray-200 transition-colors duration-300"
+                                            className="flex-1 px-4 py-2 sm:px-6 sm:py-3 bg-gray-100 text-gray-900 font-bold rounded-xl hover:bg-gray-200 transition-colors duration-300 text-sm sm:text-base"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="flex-1 px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex-1 px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                                         >
                                             {submitting ? 'Saving...' : (editingGallery ? 'Update' : 'Create')}
                                         </button>

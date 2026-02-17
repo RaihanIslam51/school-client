@@ -74,7 +74,7 @@ export default function DashboardLayout({ children }) {
                     </div>
 
                     {/* User Info */}
-                    <div className="p-4 border-b border-black">
+                    {/* <div className="p-4 border-b border-black">
                         <div className="flex items-center space-x-3 p-3 bg-white border border-black rounded">
                             <div className="w-12 h-12 bg-blue-900 rounded flex items-center justify-center">
                                 <span className="text-white font-bold text-lg">{user.name.charAt(0)}</span>
@@ -84,10 +84,10 @@ export default function DashboardLayout({ children }) {
                                 <p className="text-blue-900 text-xs capitalize">{user.role || 'Admin'}</p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Menu Items */}
-                    <nav className="flex-1 overflow-y-auto p-4 space-y-1 h-[calc(100vh-280px)]">
+                    <nav className="flex-1 overflow-y-auto p-4 space-y-1">
                         {menuItems.map((item) => (
                             <Link
                                 key={item.name}
@@ -126,7 +126,7 @@ export default function DashboardLayout({ children }) {
                 {/* Mobile Sidebar Overlay */}
                 {!isSettings && isSidebarOpen && (
                     <div
-                        className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                        className="fixed inset-0 z-40 bg-black/50"
                         onClick={() => setIsSidebarOpen(false)}
                     ></div>
                 )}

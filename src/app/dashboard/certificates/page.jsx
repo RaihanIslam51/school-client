@@ -938,19 +938,19 @@ const CertificateManagementPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white">
-            <div className="container mx-auto ">
+        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
+            <div className="container mx-auto">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Certificate Management</h1>
-                    <p className="text-gray-600">Create and manage professional certificates for students</p>
+                <div className="mb-3 sm:mb-4 lg:mb-8">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mb-2">Certificate Management</h1>
+                    <p className="text-gray-600 text-xs sm:text-sm">Create and manage professional certificates for students</p>
                 </div>
                 {/* View Mode Buttons */}
-                <div className="mb-6">
-                    <div className="flex flex-wrap gap-3">
+                <div className="mb-3 sm:mb-4 lg:mb-6">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                         <button
                             onClick={() => setViewMode('templates')}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                            className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
                                 viewMode === 'templates'
                                     ? 'bg-blue-900 text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -960,7 +960,7 @@ const CertificateManagementPage = () => {
                         </button>
                         <button
                             onClick={() => setViewMode('cards')}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                            className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
                                 viewMode === 'cards'
                                     ? 'bg-blue-900 text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -970,7 +970,7 @@ const CertificateManagementPage = () => {
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                            className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
                                 viewMode === 'list'
                                     ? 'bg-blue-900 text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -980,7 +980,7 @@ const CertificateManagementPage = () => {
                         </button>
                         <button
                             onClick={() => setShowForm(true)}
-                            className="bg-blue-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-800 transition-colors"
+                            className="bg-blue-900 text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-blue-800 transition-colors text-xs sm:text-sm"
                         >
                             + New Certificate
                         </button>
@@ -988,13 +988,13 @@ const CertificateManagementPage = () => {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-[#1a202c] mb-3 sm:mb-4">Filters</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
                         <select
                             value={filters.type}
                             onChange={(e) => handleFilterChange('type', e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                         >
                             <option value="">All Types</option>
                             {certificateTypes.map(type => (
@@ -1005,7 +1005,7 @@ const CertificateManagementPage = () => {
                         <select
                             value={filters.studentId}
                             onChange={(e) => handleFilterChange('studentId', e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                         >
                             <option value="">All Students</option>
                             {students.map(student => (
@@ -1017,7 +1017,7 @@ const CertificateManagementPage = () => {
                             type="date"
                             value={filters.issueDate}
                             onChange={(e) => handleFilterChange('issueDate', e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                             placeholder="Issue Date"
                         />
 
@@ -1025,21 +1025,21 @@ const CertificateManagementPage = () => {
                             type="text"
                             value={filters.search}
                             onChange={(e) => handleFilterChange('search', e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                             placeholder="Search certificates..."
                         />
                     </div>
 
-                    <div className="flex gap-3">
+                    <div className="flex gap-2 sm:gap-3">
                         <button
                             onClick={applyFilters}
-                            className="bg-blue-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-800 transition-colors"
+                            className="bg-blue-900 text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-blue-800 transition-colors text-sm"
                         >
                             Apply Filters
                         </button>
                         <button
                             onClick={clearFilters}
-                            className="bg-gray-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-600 transition-colors"
+                            className="bg-gray-500 text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors text-sm"
                         >
                             Clear Filters
                         </button>
@@ -1048,11 +1048,11 @@ const CertificateManagementPage = () => {
 
                 {/* Templates View */}
                 {viewMode === 'templates' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-3 sm:mb-4 lg:mb-6">
                         {certificateTemplates.map(template => (
                             <div
                                 key={template.id}
-                                className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer border-2 border-transparent hover:border-blue-900"
+                                className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-md transition-shadow cursor-pointer border-2 border-transparent hover:border-[#1a202c]"
                                 onClick={() => {
                                     setSelectedTemplate(template);
                                     setFormData(prev => ({ ...prev, templateId: template.id }));
@@ -1060,10 +1060,10 @@ const CertificateManagementPage = () => {
                                 }}
                             >
                                 <div className="text-center">
-                                    <div className="text-6xl mb-4">{template.preview}</div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">{template.name}</h3>
-                                    <p className="text-gray-600 text-sm">{template.description}</p>
-                                    <button className="mt-4 bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors">
+                                    <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">{template.preview}</div>
+                                    <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-2">{template.name}</h3>
+                                    <p className="text-gray-600 text-xs sm:text-sm">{template.description}</p>
+                                    <button className="mt-3 sm:mt-4 bg-blue-900 text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-800 transition-colors text-sm">
                                         Use Template
                                     </button>
                                 </div>
@@ -1075,17 +1075,17 @@ const CertificateManagementPage = () => {
 
                 {/* Certificates Display */}
                 {viewMode === 'cards' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                         {certificates.length === 0 ? (
-                            <div className="col-span-full bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-                                <div className="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center">
-                                    <span className="text-5xl">🎓</span>
+                            <div className="col-span-full bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8 lg:p-12 text-center">
+                                <div className="w-16 sm:w-20 lg:w-24 h-16 sm:h-20 lg:h-24 bg-gray-100 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
+                                    <span className="text-3xl sm:text-4xl lg:text-5xl">🎓</span>
                                 </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-3">No Certificates Found</h3>
-                                <p className="text-gray-600 mb-6">Start by creating your first professional certificate for students</p>
+                                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c] mb-3">No Certificates Found</h3>
+                                <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Start by creating your first professional certificate for students</p>
                                 <button
                                     onClick={() => setShowForm(true)}
-                                    className="bg-blue-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-800 transition-all duration-300"
+                                    className="bg-blue-900 text-white px-4 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-lg font-bold hover:bg-blue-800 transition-all duration-300 text-sm sm:text-base"
                                 >
                                     + Create First Certificate
                                 </button>
@@ -1096,7 +1096,7 @@ const CertificateManagementPage = () => {
                                 {/* Compact Certificate Preview */}
                                 <div
                                     id={`certificate-${certificate._id}`}
-                                    className="p-6 text-center relative"
+                                    className="p-3 sm:p-4 lg:p-6 text-center relative"
                                     style={{
                                         ...getCertificateStyle(certificate.templateId),
                                         minHeight: '280px'
@@ -1238,26 +1238,26 @@ const CertificateManagementPage = () => {
                             <table className="w-full">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue Date</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                        <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                        <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                        <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue Date</th>
+                                        <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {certificates.length === 0 ? (
                                         <tr>
-                                            <td colSpan="5" className="px-6 py-12 text-center">
+                                            <td colSpan="5" className="px-2 sm:px-3 lg:px-6 py-6 sm:py-8 lg:py-12 text-center">
                                                 <div className="flex flex-col items-center justify-center">
-                                                    <div className="w-20 h-20 bg-gray-100 rounded-full mb-4 flex items-center justify-center">
-                                                        <span className="text-4xl">🎓</span>
+                                                    <div className="w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 bg-gray-100 rounded-full mb-3 sm:mb-4 flex items-center justify-center">
+                                                        <span className="text-2xl sm:text-3xl lg:text-4xl">🎓</span>
                                                     </div>
-                                                    <h3 className="text-xl font-bold text-gray-900 mb-2">No Certificates Found</h3>
-                                                    <p className="text-gray-600 mb-4">Create your first certificate to get started</p>
+                                                    <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-2">No Certificates Found</h3>
+                                                    <p className="text-gray-600 mb-3 sm:mb-4 text-sm">Create your first certificate to get started</p>
                                                     <button
                                                         onClick={() => setShowForm(true)}
-                                                        className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+                                                        className="bg-blue-900 text-white px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-800 transition-colors text-sm"
                                                     >
                                                         + Create Certificate
                                                     </button>
@@ -1267,23 +1267,23 @@ const CertificateManagementPage = () => {
                                     ) : (
                                         certificates.map(certificate => (
                                         <tr key={certificate._id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 whitespace-nowrap">
                                                 <div>
-                                                    <div className="text-sm font-medium text-gray-900">{certificate.studentName}</div>
-                                                    <div className="text-sm text-gray-500">Class {certificate.studentClass}</div>
+                                                    <div className="text-sm font-medium text-[#1a202c]">{certificate.studentName}</div>
+                                                    <div className="text-xs sm:text-sm text-gray-500">Class {certificate.studentClass}</div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-900">
+                                            <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 whitespace-nowrap">
+                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-900">
                                                     {certificate.certificateType}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{certificate.title}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 whitespace-nowrap text-sm text-[#1a202c]">{certificate.title}</td>
+                                            <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
                                                 {new Date(certificate.issueDate).toLocaleDateString()}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div className="flex gap-2">
+                                            <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
+                                                <div className="flex gap-1 sm:gap-2">
                                                     <button
                                                         onClick={() => editCertificate(certificate)}
                                                         className="text-blue-900 hover:text-blue-800"
@@ -1315,11 +1315,11 @@ const CertificateManagementPage = () => {
 
                 {/* Certificate Form Modal */}
                 {showForm && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
                         <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                            <div className="p-6 border-b border-gray-200">
+                            <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-2xl font-bold text-gray-900">
+                                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">
                                         {editingCertificate ? 'Edit Certificate' : 'Create New Certificate'}
                                     </h2>
                                     <button
@@ -1328,20 +1328,20 @@ const CertificateManagementPage = () => {
                                             setEditingCertificate(null);
                                             resetForm();
                                         }}
-                                        className="text-gray-400 hover:text-gray-600"
+                                        className="w-8 sm:w-10 h-8 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 hover:text-gray-800 transition-all"
                                     >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 sm:w-5 lg:w-6 h-4 sm:h-5 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                         </svg>
                                     </button>
                                 </div>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                            <form onSubmit={handleSubmit} className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
                                 {/* Template Selection */}
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-3">Certificate Template</label>
-                                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-3">Certificate Template</label>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
                                         {certificateTemplates.map(template => (
                                             <div
                                                 key={template.id}
@@ -1364,7 +1364,7 @@ const CertificateManagementPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                     {/* Student Information */}
                                     <div className="space-y-4">
                                         <h3 className="text-lg font-semibold text-gray-800">Student Information</h3>
@@ -1419,7 +1419,7 @@ const CertificateManagementPage = () => {
                                                 <select
                                                     value={formData.studentId}
                                                     onChange={(e) => handleStudentChange(e.target.value)}
-                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                     required
                                                 >
                                                     <option value="">Select Student</option>
@@ -1441,7 +1441,7 @@ const CertificateManagementPage = () => {
                                                 type="text"
                                                 value={formData.studentName}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, studentName: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 placeholder={formData.studentEntryMethod === 'manual' ? "Type student name here" : "Student name will be auto-filled"}
                                                 required
                                             />
@@ -1454,7 +1454,7 @@ const CertificateManagementPage = () => {
                                                     type="text"
                                                     value={formData.studentClass}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, studentClass: e.target.value }))}
-                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                     placeholder="Class"
                                                 />
                                             </div>
@@ -1464,7 +1464,7 @@ const CertificateManagementPage = () => {
                                                     type="text"
                                                     value={formData.studentRoll}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, studentRoll: e.target.value }))}
-                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                     placeholder="Roll"
                                                 />
                                             </div>
@@ -1480,7 +1480,7 @@ const CertificateManagementPage = () => {
                                             <select
                                                 value={formData.certificateType}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, certificateType: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 required
                                             >
                                                 {certificateTypes.map(type => (
@@ -1495,7 +1495,7 @@ const CertificateManagementPage = () => {
                                                 type="text"
                                                 value={formData.title}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 placeholder="Certificate title"
                                                 required
                                             />
@@ -1506,7 +1506,7 @@ const CertificateManagementPage = () => {
                                             <textarea
                                                 value={formData.description}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 rows={3}
                                                 placeholder="Certificate description"
                                             />
@@ -1518,7 +1518,7 @@ const CertificateManagementPage = () => {
                                                 type="text"
                                                 value={formData.achievement}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, achievement: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 placeholder="Special achievement or recognition"
                                             />
                                         </div>
@@ -1529,7 +1529,7 @@ const CertificateManagementPage = () => {
                                                 <select
                                                     value={formData.grade}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, grade: e.target.value }))}
-                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 >
                                                     <option value="">Select Grade</option>
                                                     {grades.map(grade => (
@@ -1543,7 +1543,7 @@ const CertificateManagementPage = () => {
                                                     type="text"
                                                     value={formData.score}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, score: e.target.value }))}
-                                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                     placeholder="Score/Percentage"
                                                 />
                                             </div>
@@ -1562,7 +1562,7 @@ const CertificateManagementPage = () => {
                                                 type="date"
                                                 value={formData.issueDate}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, issueDate: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 required
                                             />
                                         </div>
@@ -1573,7 +1573,7 @@ const CertificateManagementPage = () => {
                                                 type="date"
                                                 value={formData.expiryDate}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, expiryDate: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                             />
                                         </div>
 
@@ -1582,7 +1582,7 @@ const CertificateManagementPage = () => {
                                             <select
                                                 value={formData.teacherId}
                                                 onChange={(e) => handleTeacherChange(e.target.value)}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                             >
                                                 <option value="">Select Teacher</option>
                                                 {teachers.map(teacher => (
@@ -1599,7 +1599,7 @@ const CertificateManagementPage = () => {
                                                 type="text"
                                                 value={formData.signature1}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, signature1: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 placeholder="Principal/Director"
                                             />
                                         </div>
@@ -1609,7 +1609,7 @@ const CertificateManagementPage = () => {
                                                 type="text"
                                                 value={formData.signature2}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, signature2: e.target.value }))}
-                                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                                 placeholder="Teacher/Supervisor"
                                             />
                                         </div>
@@ -1621,7 +1621,7 @@ const CertificateManagementPage = () => {
                                             type="text"
                                             value={formData.event}
                                             onChange={(e) => setFormData(prev => ({ ...prev, event: e.target.value }))}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                             placeholder="Sports event, cultural program, etc."
                                         />
                                     </div>
@@ -1631,7 +1631,7 @@ const CertificateManagementPage = () => {
                                         <textarea
                                             value={formData.notes}
                                             onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent text-sm"
                                             rows={3}
                                             placeholder="Additional notes or remarks"
                                         />
@@ -1639,7 +1639,7 @@ const CertificateManagementPage = () => {
                                 </div>
 
                                 {/* Form Actions */}
-                                <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
+                                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200">
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -1647,14 +1647,14 @@ const CertificateManagementPage = () => {
                                             setEditingCertificate(null);
                                             resetForm();
                                         }}
-                                        className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                        className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="px-6 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="px-4 sm:px-6 py-2 sm:py-3 bg-[#1a202c] text-white rounded-lg hover:bg-[#2d3748] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                                     >
                                         {loading ? 'Saving...' : (editingCertificate ? 'Update Certificate' : 'Create Certificate')}
                                     </button>

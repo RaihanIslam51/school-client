@@ -38,7 +38,7 @@ const AchievementsPage = () => {
 
     const fetchAchievements = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/achievements`);
+            const response = await fetch(`${API_URL}/api/achievements`, { cache: 'no-store' });
             const data = await response.json();
             if (data.success) {
                 setAchievements(data.data);
@@ -50,6 +50,7 @@ const AchievementsPage = () => {
             setLoading(false);
         }
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -64,6 +65,7 @@ const AchievementsPage = () => {
 
             const response = await fetch(url, {
                 method,
+                cache: 'no-store',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -123,6 +125,7 @@ const AchievementsPage = () => {
             try {
                 const response = await fetch(`${API_URL}/api/achievements/${id}`, {
                     method: 'DELETE',
+                    cache: 'no-store'
                 });
 
                 const data = await response.json();
@@ -180,10 +183,10 @@ const AchievementsPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center">
+            <div className="min-h-screen bg-white flex items-center justify-center px-4 py-8">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-900 text-lg">Loading...</p>
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-900 text-base sm:text-lg">Loading...</p>
                 </div>
             </div>
         );
@@ -191,13 +194,13 @@ const AchievementsPage = () => {
 
     return (
         <div className="min-h-screen bg-white">
-            <div className="container mx-auto">
+            <div className="container mx-auto px-3 py-4 sm:px-4 sm:py-5 md:p-6">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-6 sm:mb-8">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-blue-900 mb-2">Achievements Management</h1>
-                            <p className="text-gray-900">Manage school achievements and recognitions</p>
+                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-900 mb-2">Achievements Management</h1>
+                            <p className="text-gray-900 text-sm sm:text-base">Manage school achievements and recognitions</p>
                         </div>
 
                         <button
@@ -205,7 +208,7 @@ const AchievementsPage = () => {
                                 resetForm();
                                 setShowModal(true);
                             }}
-                            className="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                            className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
                         >
                             Add Achievement
                         </button>
@@ -213,7 +216,7 @@ const AchievementsPage = () => {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
                     <div className="flex flex-col lg:flex-row gap-4">
                         <div className="flex-1">
                             <input
@@ -221,14 +224,14 @@ const AchievementsPage = () => {
                                 placeholder="Search achievements..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm sm:text-base"
                             />
                         </div>
                         <div className="lg:w-64">
                             <select
                                 value={filterCategory}
                                 onChange={(e) => setFilterCategory(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm sm:text-base"
                             >
                                 <option value="all">All Categories</option>
                                 {categories.map(category => (
@@ -240,36 +243,36 @@ const AchievementsPage = () => {
                 </div>
 
                 {/* Achievements Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                     {filteredAchievements.map((achievement) => {
                         const category = categories.find(cat => cat.value === achievement.category);
                         return (
-                            <div key={achievement._id} className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="w-12 h-12 rounded-xl bg-blue-900 flex items-center justify-center text-2xl text-white">
+                            <div key={achievement._id} className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
+                                <div className="flex items-start justify-between mb-3 sm:mb-4">
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-900 flex items-center justify-center text-lg sm:text-2xl text-white">
                                         {category?.icon}
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-1 sm:gap-2">
                                         <button
                                             onClick={() => handleEdit(achievement)}
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                            className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                                         >
                                             ✏️
                                         </button>
                                         <button
                                             onClick={() => handleDelete(achievement._id)}
-                                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                                            className="p-1.5 sm:p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
                                         >
                                             🗑️
                                         </button>
                                     </div>
                                 </div>
 
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">{achievement.title}</h3>
-                                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{achievement.description}</p>
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{achievement.title}</h3>
+                                <p className="text-gray-600 text-xs sm:text-sm mb-3 line-clamp-2">{achievement.description}</p>
 
-                                <div className="flex items-center gap-2 mb-3">
-                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-900">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+                                    <span className="px-2 py-1 sm:px-3 rounded-full text-xs font-bold bg-gray-100 text-gray-900 w-fit">
                                         {achievement.category}
                                     </span>
                                     <span className="text-xs text-gray-900">
@@ -279,7 +282,7 @@ const AchievementsPage = () => {
 
                                 {achievement.achievements && achievement.achievements.length > 0 && (
                                     <div className="mt-4">
-                                        <h4 className="text-sm font-bold text-gray-900 mb-2">Highlights:</h4>
+                                        <h4 className="text-xs sm:text-sm font-bold text-gray-900 mb-2">Highlights:</h4>
                                         <ul className="space-y-1">
                                             {achievement.achievements.slice(0, 2).map((item, idx) => (
                                                 <li key={idx} className="text-xs text-gray-900 flex items-center gap-2">
@@ -305,10 +308,10 @@ const AchievementsPage = () => {
                 </div>
 
                 {filteredAchievements.length === 0 && (
-                    <div className="text-center py-12">
-                        <div className="text-6xl mb-4">🏆</div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">No achievements found</h3>
-                        <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+                    <div className="text-center py-8 sm:py-12">
+                        <div className="text-4xl sm:text-6xl mb-4">🏆</div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">No achievements found</h3>
+                        <p className="text-gray-600 text-sm sm:text-base">Try adjusting your search or filter criteria</p>
                     </div>
                 )}
 
@@ -316,9 +319,9 @@ const AchievementsPage = () => {
                 {showModal && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
                         <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-                            <div className="p-8">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-2xl font-bold text-blue-900">
+                            <div className="p-4 sm:p-6 lg:p-8">
+                                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                                    <h2 className="text-xl sm:text-2xl font-bold text-blue-900">
                                         {editingAchievement ? 'Edit Achievement' : 'Add New Achievement'}
                                     </h2>
                                     <button
@@ -329,8 +332,8 @@ const AchievementsPage = () => {
                                     </button>
                                 </div>
 
-                                <form onSubmit={handleSubmit} className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                         <div>
                                             <label className="block text-sm font-semibold text-gray-900 mb-2">Title *</label>
                                             <input
@@ -338,7 +341,7 @@ const AchievementsPage = () => {
                                                 required
                                                 value={formData.title}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm sm:text-base"
                                                 placeholder="Achievement title"
                                             />
                                         </div>
@@ -349,7 +352,7 @@ const AchievementsPage = () => {
                                                 required
                                                 value={formData.category}
                                                 onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm sm:text-base"
                                             >
                                                 {categories.map(category => (
                                                     <option key={category.value} value={category.value}>
@@ -367,7 +370,7 @@ const AchievementsPage = () => {
                                             required
                                             value={formData.date}
                                             onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm sm:text-base"
                                         />
                                     </div>
 
@@ -378,7 +381,7 @@ const AchievementsPage = () => {
                                             rows={4}
                                             value={formData.description}
                                             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 resize-none"
+                                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 resize-none text-sm sm:text-base"
                                             placeholder="Describe the achievement"
                                         />
                                     </div>
@@ -389,7 +392,7 @@ const AchievementsPage = () => {
                                             type="url"
                                             value={formData.image}
                                             onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm sm:text-base"
                                             placeholder="https://example.com/image.jpg"
                                         />
                                     </div>
@@ -402,13 +405,13 @@ const AchievementsPage = () => {
                                                 value={currentSubAchievement}
                                                 onChange={(e) => setCurrentSubAchievement(e.target.value)}
                                                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSubAchievement())}
-                                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                                                className="flex-1 px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 text-sm sm:text-base"
                                                 placeholder="Add a highlight or sub-achievement"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={addSubAchievement}
-                                                className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors"
+                                                className="px-3 py-2 sm:px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors text-sm sm:text-base"
                                             >
                                                 Add
                                             </button>
@@ -416,7 +419,7 @@ const AchievementsPage = () => {
                                         <div className="space-y-2 max-h-32 overflow-y-auto">
                                             {formData.achievements.map((item, index) => (
                                                 <div key={index} className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg">
-                                                    <span className="flex-1 text-sm">{item}</span>
+                                                    <span className="flex-1 text-xs sm:text-sm">{item}</span>
                                                     <button
                                                         type="button"
                                                         onClick={() => removeSubAchievement(index)}
@@ -440,18 +443,18 @@ const AchievementsPage = () => {
                                         <label htmlFor="isActive" className="text-sm font-semibold text-gray-900">Active</label>
                                     </div>
 
-                                    <div className="flex gap-4 pt-6">
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
                                         <button
                                             type="button"
                                             onClick={() => setShowModal(false)}
-                                            className="flex-1 px-6 py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
+                                            className="flex-1 px-4 py-2 sm:px-6 sm:py-3 bg-gray-100 text-gray-900 font-semibold rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="flex-1 px-6 py-3 bg-blue-900 text-white font-semibold rounded-lg hover:bg-blue-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex-1 px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white font-semibold rounded-lg hover:bg-blue-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                                         >
                                             {submitting ? 'Saving...' : (editingAchievement ? 'Update' : 'Create')}
                                         </button>

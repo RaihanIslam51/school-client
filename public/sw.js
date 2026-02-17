@@ -1,8 +1,7 @@
 // Service Worker for caching and offline support
-const CACHE_NAME = 'sunlight-school-v1.0.0';
-const STATIC_CACHE = 'sunlight-static-v1.0.0';
-const DYNAMIC_CACHE = 'sunlight-dynamic-v1.0.0';
-const API_CACHE = 'sunlight-api-v1.0.0';
+const CACHE_NAME = 'sunlight-school-v1.0.1';
+const STATIC_CACHE = 'sunlight-static-v1.0.1';
+const DYNAMIC_CACHE = 'sunlight-dynamic-v1.0.1';
 
 // Resources to cache immediately
 const STATIC_ASSETS = [
@@ -16,45 +15,14 @@ const STATIC_ASSETS = [
   // Add your CSS and JS files here when built
 ];
 
-// API endpoints to cache
-const API_ENDPOINTS = [
-  '/api/teachers',
-  '/api/students',
-  '/api/salaries',
-  '/api/salaries/statistics',
-  '/api/salaries/helpers',
-  '/api/notices',
-  '/api/fees',
-  '/api/expenses',
-];
-
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
   console.log('[Service Worker] Installing...');
   event.waitUntil(
-    Promise.all([
-      caches.open(STATIC_CACHE).then((cache) => {
-        console.log('[Service Worker] Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
-      }),
-      // Pre-cache critical API data
-      caches.open(API_CACHE).then((cache) => {
-        console.log('[Service Worker] Pre-caching API endpoints');
-        return Promise.all(
-          API_ENDPOINTS.map(endpoint => {
-            return fetch(`${self.location.origin}${endpoint}`)
-              .then(response => {
-                if (response.ok) {
-                  cache.put(`${self.location.origin}${endpoint}`, response.clone());
-                }
-              })
-              .catch(() => {
-                // Ignore fetch errors during install
-              });
-          })
-        );
-      })
-    ]).then(() => {
+    caches.open(STATIC_CACHE).then((cache) => {
+      console.log('[Service Worker] Caching static assets');
+      return cache.addAll(STATIC_ASSETS);
+    }).then(() => {
       console.log('[Service Worker] Installation complete');
       return self.skipWaiting();
     })
@@ -68,7 +36,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE && cacheName !== API_CACHE) {
+          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
             console.log('[Service Worker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
@@ -86,9 +54,10 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Handle API requests
+  // SKIP API REQUESTS - Let them go directly to network
+  // This prevents SW from interfering with API calls
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(handleApiRequest(request));
+    // Do not intercept API requests - let them go to network
     return;
   }
 
@@ -123,59 +92,6 @@ self.addEventListener('fetch', (event) => {
       })
   );
 });
-
-// Handle API requests with cache-first strategy
-async function handleApiRequest(request) {
-  try {
-    // Try cache first for GET requests
-    if (request.method === 'GET') {
-      const cachedResponse = await caches.match(request);
-      if (cachedResponse) {
-        // Return cached response and update in background
-        fetch(request).then((networkResponse) => {
-          if (networkResponse.ok) {
-            caches.open(API_CACHE).then((cache) => {
-              cache.put(request, networkResponse.clone());
-            });
-          }
-        }).catch(() => {
-          // Ignore network errors
-        });
-        return cachedResponse;
-      }
-    }
-
-    // Network request
-    const networkResponse = await fetch(request);
-    if (networkResponse.ok && request.method === 'GET') {
-      const responseClone = networkResponse.clone();
-      caches.open(API_CACHE).then((cache) => {
-        cache.put(request, responseClone);
-      });
-    }
-    return networkResponse;
-  } catch (error) {
-    console.log('[Service Worker] API request failed, trying cache:', error);
-    const cachedResponse = await caches.match(request);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
-
-    // Return offline response for API calls
-    return new Response(
-      JSON.stringify({
-        success: false,
-        message: 'You are offline. Please check your internet connection.',
-        offline: true
-      }),
-      {
-        status: 503,
-        statusText: 'Service Unavailable',
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }
-}
 
 // Handle static assets with cache-first strategy
 async function handleStaticRequest(request) {

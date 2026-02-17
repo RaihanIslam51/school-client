@@ -51,8 +51,10 @@ const Hero = () => {
     useEffect(() => {
         const fetchBanner = async () => {
             try {
-                const response = await fetch(`${API_URL}/api/banners`);
+                console.log('Fetching banners from:', `${API_URL}/api/banners`);
+                const response = await fetch(`${API_URL}/api/banners`, { cache: 'no-store' });
                 const data = await response.json();
+                console.log('Banners response:', data);
                 if (data.success && data.data.length > 0) {
                     setBanners(data.data);
                     setIsLoaded(true);
@@ -149,7 +151,7 @@ const Hero = () => {
     // Simple loading skeleton
     if (loading) {
         return (
-            <section className="relative bg-white min-h-screen flex items-center justify-center px-4">
+            <section className="relative bg-white min-h-screen flex items-center justify-center">
                 <div className="text-center space-y-4 sm:space-y-8 w-full max-w-4xl">
                     {/* Skeleton Headline */}
                     <div className="space-y-2 sm:space-y-4">
@@ -180,7 +182,7 @@ const Hero = () => {
     return (
         <section
             ref={sectionRef}
-            className="relative w-full min-h-screen md:min-h-[80vh] lg:h-[600px] flex items-center justify-center overflow-hidden"
+            className="relative w-full min-h-[50vh] md:min-h-[80vh] lg:h-150 flex items-center justify-center overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -250,7 +252,7 @@ const Hero = () => {
             )}
 
             {/* Clean Content Section */}
-            <div className="relative z-10 text-center max-w-6xl mx-auto w-full px-2 sm:px-4">
+            <div className="relative z-10 text-center container mx-auto w-full ">
                 <div className="space-y-4 sm:space-y-6 lg:space-y-12">
                     {/* Simple Headline */}
                     <div className={`transition-all duration-1000 ${

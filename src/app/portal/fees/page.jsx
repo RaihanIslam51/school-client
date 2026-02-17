@@ -1,10 +1,10 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import { API_URL } from '../../../../config/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-export default function StudentFees() {
+export default memo(function StudentFees() {
     const [fees, setFees] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentStudent, setCurrentStudent] = useState(null);
@@ -16,27 +16,7 @@ export default function StudentFees() {
         totalAmount: 0
     });
 
-    useEffect(() => {
-        // Get current student from localStorage
-        const userData = localStorage.getItem('user');
-
-        if (userData) {
-            const user = JSON.parse(userData);
-            setCurrentStudent(user);
-
-            if (user._id) {
-                fetchStudentFees(user._id);
-            } else {
-                setError('User ID not found. Please contact administrator.');
-                setLoading(false);
-            }
-        } else {
-            setError('User not logged in. Please login first.');
-            setLoading(false);
-        }
-    }, []);
-
-    const fetchStudentFees = async (studentId) => {
+    const fetchStudentFees = useCallback(async (studentId) => {
         try {
             setLoading(true);
             setError(null);
@@ -61,7 +41,27 @@ export default function StudentFees() {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        // Get current student from localStorage
+        const userData = localStorage.getItem('user');
+
+        if (userData) {
+            const user = JSON.parse(userData);
+            setCurrentStudent(user);
+
+            if (user._id) {
+                fetchStudentFees(user._id);
+            } else {
+                setError('User ID not found. Please contact administrator.');
+                setLoading(false);
+            }
+        } else {
+            setError('User not logged in. Please login first.');
+            setLoading(false);
+        }
+    }, [fetchStudentFees]);
 
     const calculateSummary = (feeData) => {
         const summary = feeData.reduce((acc, fee) => {
@@ -283,7 +283,7 @@ export default function StudentFees() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+            <div className="min-h-screen bg-gray-50 p-1 sm:p-2 lg:p-3">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center py-12">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
@@ -295,7 +295,7 @@ export default function StudentFees() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-1 sm:p-2 lg:p-3">
             <div className="container mx-auto">
                 {/* Header */}
                 <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
@@ -360,7 +360,7 @@ export default function StudentFees() {
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left max-w-md mx-auto">
                             <h4 className="font-semibold text-blue-900 mb-2">💡 Note for Testing:</h4>
                             <p className="text-sm text-blue-800">
-                                If you're testing this feature, fee records need to be created by an administrator through the admin panel or by using the fee management system.
+                                If you are testing this feature, fee records need to be created by an administrator through the admin panel or by using the fee management system.
                             </p>
                         </div>
                     </div>
@@ -490,4 +490,4 @@ export default function StudentFees() {
             </div>
         </div>
     );
-}
+});

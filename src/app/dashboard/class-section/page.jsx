@@ -282,19 +282,19 @@ export default function ClassRoutineManagement() {
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     return (
-        <div className="p-4 lg:p-8">
-            <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8">
+        <div className="min-h-screen bg-gray-50 p-1 sm:p-6 lg:p-3">
+            <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8">
                 {/* Header */}
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Class Routine Management</h2>
-                        <p className="text-gray-600">Manage class schedules and timetables</p>
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Class Routine Management</h2>
+                        <p className="text-gray-600 text-sm sm:text-base">Manage class schedules and timetables</p>
                     </div>
                     <button
                         onClick={handleAddRoutine}
-                        className="mt-4 lg:mt-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center space-x-2"
+                        className="mt-4 sm:mt-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center space-x-2 text-sm sm:text-base"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
                         <span>Add Routing</span>
@@ -303,13 +303,13 @@ export default function ClassRoutineManagement() {
 
 
                 {/* Filters */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 sm:mb-6">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Class</label>
                         <select
                             value={filterClass}
                             onChange={(e) => setFilterClass(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                         >
                             <option value="">All Classes</option>
                             <option value="Play">Play</option>
@@ -334,7 +334,7 @@ export default function ClassRoutineManagement() {
                         <select
                             value={filterDay}
                             onChange={(e) => setFilterDay(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                         >
                             <option value="">All Days</option>
                             {days.map(day => (
@@ -348,7 +348,7 @@ export default function ClassRoutineManagement() {
                                 setFilterClass('');
                                 setFilterDay('');
                             }}
-                            className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                            className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base"
                         >
                             Clear Filters
                         </button>
@@ -356,67 +356,67 @@ export default function ClassRoutineManagement() {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl border border-indigo-100">
-                        <p className="text-sm text-gray-600">Total Routines</p>
-                        <p className="text-2xl font-bold text-indigo-900">{routines.length}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 sm:mb-6">
+                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-3 sm:p-4 rounded-xl border border-indigo-100">
+                        <p className="text-xs sm:text-sm text-gray-600">Total Routines</p>
+                        <p className="text-xl sm:text-2xl font-bold text-indigo-900">{routines.length}</p>
                     </div>
-                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-100">
-                        <p className="text-sm text-gray-600">Total Classes</p>
-                        <p className="text-2xl font-bold text-blue-900">{Object.keys(groupedRoutines).length}</p>
+                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-3 sm:p-4 rounded-xl border border-blue-100">
+                        <p className="text-xs sm:text-sm text-gray-600">Total Classes</p>
+                        <p className="text-xl sm:text-2xl font-bold text-blue-900">{Object.keys(groupedRoutines).length}</p>
                     </div>
-                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border border-green-100">
-                        <p className="text-sm text-gray-600">Active Routines</p>
-                        <p className="text-2xl font-bold text-green-900">{routines.filter(r => r.status === 'active').length}</p>
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-3 sm:p-4 rounded-xl border border-green-100">
+                        <p className="text-xs sm:text-sm text-gray-600">Active Routines</p>
+                        <p className="text-xl sm:text-2xl font-bold text-green-900">{routines.filter(r => r.status === 'active').length}</p>
                     </div>
                 </div>
 
                 {/* Routine Display */}
                 {loading ? (
-                    <div className="text-center py-12">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">Loading routines...</p>
+                    <div className="text-center py-8 sm:py-12">
+                        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="mt-4 text-gray-600 text-sm sm:text-base">Loading routines...</p>
                     </div>
                 ) : Object.keys(groupedRoutines).length === 0 ? (
-                    <div className="text-center py-12 text-gray-500">
-                        <svg className="w-24 h-24 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="text-center py-8 sm:py-12 text-gray-500">
+                        <svg className="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <p className="text-lg">No class routines found</p>
+                        <p className="text-base sm:text-lg">No class routines found</p>
                     </div>
                 ) : (
                     <div className="space-y-8">
                         {Object.entries(groupedRoutines).map(([classKey, dayRoutines]) => (
-                            <div key={classKey} className="bg-gradient-to-r from-gray-50 to-blue-50 p-6 rounded-2xl border-2 border-blue-100">
-                                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                                    <svg className="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div key={classKey} className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 sm:p-6 rounded-2xl border-2 border-blue-100">
+                                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 flex items-center">
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                     </svg>
                                     {classKey}
                                 </h3>
                                 
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                                     {days.map(day => (
                                         dayRoutines[day] && dayRoutines[day].length > 0 && (
-                                            <div key={day} className="bg-white rounded-xl p-4 shadow-md border border-gray-200">
-                                                <h4 className="font-bold text-blue-900 mb-3 flex items-center border-b pb-2">
-                                                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <div key={day} className="bg-white rounded-xl p-3 sm:p-4 shadow-md border border-gray-200">
+                                                <h4 className="font-bold text-blue-900 mb-3 flex items-center border-b pb-2 text-sm sm:text-base">
+                                                    <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                                                     </svg>
                                                     {day}
                                                 </h4>
                                                 <div className="space-y-3">
                                                     {dayRoutines[day].sort((a, b) => a.startTime.localeCompare(b.startTime)).map(routine => (
-                                                        <div key={routine._id} className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 rounded-lg border border-blue-200 hover:shadow-md transition-shadow">
+                                                        <div key={routine._id} className="bg-gradient-to-r from-blue-50 to-indigo-50 p-2 sm:p-3 rounded-lg border border-blue-200 hover:shadow-md transition-shadow">
                                                             <div className="flex justify-between items-start mb-2">
-                                                                <span className="font-semibold text-gray-900">{routine.subject}</span>
-                                                                <div className="flex space-x-1">
+                                                                <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{routine.subject}</span>
+                                                                <div className="flex space-x-1 ml-2">
                                                                     <button
                                                                         onClick={() => handleEditRoutine(routine)}
                                                                         className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-100 rounded transition-all"
                                                                         title="Edit"
                                                                     >
-                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                                         </svg>
                                                                     </button>
@@ -425,7 +425,7 @@ export default function ClassRoutineManagement() {
                                                                         className="text-red-600 hover:text-red-800 p-1 hover:bg-red-100 rounded transition-all"
                                                                         title="Delete"
                                                                     >
-                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                                         </svg>
                                                                     </button>
@@ -433,26 +433,26 @@ export default function ClassRoutineManagement() {
                                                             </div>
                                                             <div className="text-xs text-gray-600 space-y-1">
                                                                 <div className="flex items-center">
-                                                                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <svg className="w-2 h-2 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                                                     </svg>
                                                                     {routine.teacherName}
                                                                 </div>
                                                                 <div className="flex items-center">
-                                                                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <svg className="w-2 h-2 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                                                     </svg>
                                                                     {routine.startTime} - {routine.endTime}
                                                                 </div>
                                                                 <div className="flex items-center">
-                                                                    <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <svg className="w-2 h-2 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                         <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
                                                                     </svg>
                                                                     Room: {routine.room || 'N/A'}
                                                                 </div>
                                                                 {routine.numberOfStudents > 0 && (
                                                                     <div className="flex items-center">
-                                                                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <svg className="w-2 h-2 sm:w-3 sm:h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                             <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                                                                         </svg>
                                                                         Students: {routine.numberOfStudents}
@@ -474,26 +474,26 @@ export default function ClassRoutineManagement() {
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-2xl">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 sm:p-6 rounded-t-2xl">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-xl font-bold">
+                                <h3 className="text-lg sm:text-xl font-bold">
                                     {isEditMode ? 'Edit Class Routine' : 'Add New Class Routine'}
                                 </h3>
                                 <button
                                     onClick={() => setIsModalOpen(false)}
-                                    className="text-white hover:text-gray-200 transition-colors"
+                                    className="text-white hover:text-gray-200 transition-colors p-1"
                                 >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Class *</label>
                                     <select
@@ -501,7 +501,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.className}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     >
                                         <option value="">Select Class</option>
                                         <option value="Play">Play</option>
@@ -529,7 +529,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.section}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     >
                                         <option value="">Select Section</option>
                                         <option value="A">A</option>
@@ -547,7 +547,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.subject}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="e.g., Mathematics, English"
                                     />
                                 </div>
@@ -559,7 +559,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.teacherId}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     >
                                         <option value="">Select Teacher ID</option>
                                         {teachers.map(teacher => (
@@ -577,7 +577,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.teacherName}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     >
                                         <option value="">Select Teacher Name</option>
                                         {teachers.map(teacher => (
@@ -595,7 +595,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.day}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     >
                                         <option value="">Select Day</option>
                                         {days.map(day => (
@@ -612,7 +612,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.startTime}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     />
                                 </div>
 
@@ -624,7 +624,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.endTime}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     />
                                 </div>
 
@@ -635,7 +635,7 @@ export default function ClassRoutineManagement() {
                                         name="duration"
                                         value={formData.duration}
                                         readOnly
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm sm:text-base"
                                         placeholder="Auto-calculated"
                                     />
                                 </div>
@@ -647,7 +647,7 @@ export default function ClassRoutineManagement() {
                                         name="room"
                                         value={formData.room}
                                         onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="e.g., 101, Lab 1"
                                     />
                                 </div>
@@ -660,7 +660,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.numberOfStudents}
                                         onChange={handleInputChange}
                                         min="0"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                         placeholder="e.g., 30"
                                     />
                                 </div>
@@ -672,7 +672,7 @@ export default function ClassRoutineManagement() {
                                         value={formData.status}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                                     >
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
@@ -680,17 +680,17 @@ export default function ClassRoutineManagement() {
                                 </div>
                             </div>
 
-                            <div className="flex justify-end space-x-3 pt-4 border-t">
+                            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4 sm:pt-6 border-t">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-2 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all duration-200"
+                                    className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm sm:text-base"
                                 >
                                     {isEditMode ? 'Update Routine' : 'Add Routine'}
                                 </button>

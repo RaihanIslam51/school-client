@@ -12,11 +12,13 @@ const Facilities = () => {
     useEffect(() => {
         const fetchFacilities = async () => {
             try {
-                const response = await fetch(`${API_URL}/api/facilities/featured`);
+                console.log('Fetching facilities from:', `${API_URL}/api/facilities`);
+                const response = await fetch(`${API_URL}/api/facilities`, { cache: 'no-store' });
                 if (!response.ok) {
-                    throw new Error('Failed to fetch facilities');
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
+                console.log('Facilities response:', data);
                 setFacilities(data.data || []);
             } catch (err) {
                 setError(err.message);
@@ -32,7 +34,7 @@ const Facilities = () => {
     if (loading) {
         return (
             <section className="py-12 lg:py-16 bg-white">
-                <div className="container mx-auto px-1 ">
+                <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-900 mx-auto"></div>
                         <p className="mt-4 text-gray-700">Loading facilities...</p>
@@ -105,7 +107,7 @@ const Facilities = () => {
 
     return (
         <section className="py-12 lg:py-16 bg-white">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="container mx-auto px-3 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-10 lg:mb-12">
                     <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-3">
@@ -126,7 +128,7 @@ const Facilities = () => {
                             <div className="p-6">
                                 <div className="flex items-start gap-4">
                                     {/* Icon */}
-                                    <div className="flex-shrink-0">
+                                    <div className="shrink-0">
                                         <div className="w-12 h-12 bg-blue-900 text-white rounded-lg flex items-center justify-center text-2xl">
                                             {facility.icon}
                                         </div>

@@ -28,7 +28,7 @@ const Footer = () => {
 
     return (
         <footer className="bg-white text-black border-t border-black">
-            <div className="container mx-auto px-1 py-12 lg:py-16">
+            <div className="container mx-auto px-3 py-12 lg:py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
                     {/* School Info */}
                     <div className="lg:col-span-1">
