@@ -13,40 +13,10 @@ const LayoutClient = ({ children }) => {
     const [updateAvailable, setUpdateAvailable] = useState(false);
     const pathname = usePathname();
     
-    // Aggressively unregister all service workers on every page load
     useEffect(() => {
-        const unregisterAllSW = async () => {
-            if ('serviceWorker' in navigator) {
-                try {
-                    const registrations = await navigator.serviceWorker.getRegistrations();
-                    console.log(`[Layout] Found ${registrations.length} service worker(s) to unregister`);
-                    
-                    for (const registration of registrations) {
-                        const result = await registration.unregister();
-                        console.log('[Layout] Unregistered service worker:', result);
-                    }
-                    
-                    console.log('[Layout] All service workers unregistered from LayoutClient');
-                    
-                    // Also clear all caches to ensure clean state
-                    if ('caches' in window) {
-                        const cacheNames = await caches.keys();
-                        console.log(`[Layout] Found ${cacheNames.length} caches to clear`);
-                        await Promise.all(
-                            cacheNames.map(cacheName => {
-                                console.log(`[Layout] Deleting cache: ${cacheName}`);
-                                return caches.delete(cacheName);
-                            })
-                        );
-                        console.log('[Layout] All caches cleared');
-                    }
-                } catch (error) {
-                    console.error('[Layout] Failed to unregister service workers:', error);
-                }
-            }
-        };
-        
-        unregisterAllSW();
+        const onUpdate = () => setUpdateAvailable(true);
+        swManager.onUpdate(onUpdate);
+        return () => swManager.offUpdate(onUpdate);
     }, []);
 
     // Hide Navbar and Footer for dashboard, portal, and teacherboard routes

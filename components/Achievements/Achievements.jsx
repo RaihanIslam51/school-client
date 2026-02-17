@@ -14,7 +14,7 @@ const Achievements = () => {
         const fetchAchievements = async () => {
             try {
                 console.log('Fetching achievements from:', `${API_URL}/api/achievements`);
-                const response = await fetch(`${API_URL}/api/achievements`, { cache: 'no-store' });
+                const response = await fetch(`${API_URL}/api/achievements`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

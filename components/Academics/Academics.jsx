@@ -15,7 +15,7 @@ const Academics = () => {
             try {
                 setLoading(true);
                 console.log('Fetching academics from:', `${API_URL}/api/academics`);
-                const response = await fetch(`${API_URL}/api/academics`, { cache: 'no-store' });
+                const response = await fetch(`${API_URL}/api/academics`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

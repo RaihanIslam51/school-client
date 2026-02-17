@@ -27,8 +27,8 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-white text-black border-t border-black">
-            <div className="container mx-auto px-3 py-12 lg:py-16">
+        <footer className="bg-white">
+            <div className="container mx-auto px-3 py-8 lg:py-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
                     {/* School Info */}
                     <div className="lg:col-span-1">
@@ -47,7 +47,7 @@ const Footer = () => {
                                 <a
                                     key={social.name}
                                     href={social.href}
-                                    className="w-10 h-10 bg-white border border-black hover:bg-blue-900 hover:border-blue-900 flex items-center justify-center transition-colors duration-200 text-lg"
+                                    className="w-10 h-10 bg-white border hover:bg-blue-900 hover:border-blue-900 flex items-center justify-center transition-colors duration-200 text-lg"
                                     aria-label={social.name}
                                 >
                                     <span className="text-black hover:text-white transition-colors duration-200">{social.icon}</span>
@@ -109,7 +109,7 @@ const Footer = () => {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="w-full px-4 py-3 bg-white border border-black text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm transition-colors duration-200"
+                                className="w-full px-4 py-3 bg-white text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm transition-colors duration-200"
                             />
                             <button className="w-full px-4 py-3 bg-blue-900 hover:bg-black text-white transition-colors duration-200 font-semibold text-sm">
                                 Subscribe
@@ -119,7 +119,7 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-black mt-12 pt-8">
+                <div className=" mt-12 pt-8">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div className="text-black text-sm">
                             © {currentYear} <span className="font-semibold text-blue-900">Sunlight School</span>. All rights reserved.

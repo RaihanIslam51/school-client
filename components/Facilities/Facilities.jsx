@@ -13,7 +13,7 @@ const Facilities = () => {
         const fetchFacilities = async () => {
             try {
                 console.log('Fetching facilities from:', `${API_URL}/api/facilities`);
-                const response = await fetch(`${API_URL}/api/facilities`, { cache: 'no-store' });
+                const response = await fetch(`${API_URL}/api/facilities`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

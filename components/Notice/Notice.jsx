@@ -18,7 +18,7 @@ const Notice = () => {
             try {
                 setLoading(true);
                 console.log('Fetching notices from:', `${API_URL}/api/notices`);
-                const response = await fetch(`${API_URL}/api/notices`, { cache: 'no-store' });
+                const response = await fetch(`${API_URL}/api/notices`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -291,7 +291,7 @@ const Notice = () => {
 
             {/* Notice Detail Modal */}
             {showModal && selectedNotice && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
                     <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                         {/* Modal Header */}
                         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
@@ -338,14 +338,14 @@ const Notice = () => {
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="flex items-center justify-end gap-3 p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
+                        {/* <div className="flex items-center justify-end gap-3 p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
                             <button
                                 onClick={closeModal}
                                 className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
                             >
                                 Close
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             )}

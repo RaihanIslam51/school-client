@@ -4,32 +4,19 @@ class ServiceWorkerManager {
     this.registration = null;
     this.updateAvailable = false;
     this.updateCallbacks = [];
-    // Auto-unregister any existing service workers
-    this.unregisterAll();
   }
 
-  // DISABLED - DO NOT REGISTER SERVICE WORKER
   async register() {
-    console.log('[SW Manager] Service Worker registration is DISABLED');
-    console.log('[SW Manager] Unregistering any existing service workers...');
-    await this.unregisterAll();
-    return null;
-    
-    /* ORIGINAL CODE - DISABLED
     if ('serviceWorker' in navigator) {
       try {
         console.log('[SW Manager] Registering service worker...');
-        this.registration = await navigator.serviceWorker.register('/sw.js', {
-          scope: '/'
-        });
-
+        this.registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
         console.log('[SW Manager] Service worker registered:', this.registration);
 
         // Handle updates
         this.registration.addEventListener('updatefound', () => {
           const newWorker = this.registration.installing;
           console.log('[SW Manager] New service worker found');
-
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               console.log('[SW Manager] New service worker available');
@@ -57,7 +44,6 @@ class ServiceWorkerManager {
       console.warn('[SW Manager] Service workers not supported');
       return null;
     }
-    */
   }
 
   // Unregister the service worker
@@ -208,22 +194,11 @@ const swManager = new ServiceWorkerManager();
 // Export for use in components
 export default swManager;
 
-// Auto-register on module load (client-side only) - DISABLED
-// Service Worker registration is completely disabled
-// if (typeof window !== 'undefined') {
-//   // Register after page load
-//   if (document.readyState === 'loading') {
-//     document.addEventListener('DOMContentLoaded', () => {
-//       swManager.register().catch(console.error);
-//     });
-//   } else {
-//     swManager.register().catch(console.error);
-//   }
-// }
-
-// Instead, actively unregister any existing service workers
-if (typeof window !== 'undefined') {
-  swManager.unregisterAll().then(() => {
-    console.log('[SW Manager] Service workers cleanup completed');
-  }).catch(console.error);
-}
+// Auto-register service worker on module load (client-side)
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => swManager.register().catch(console.error));
+  } else {
+    swManager.register().catch(console.error);
+  }
+} 

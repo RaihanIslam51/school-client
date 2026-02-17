@@ -52,7 +52,7 @@ const Hero = () => {
         const fetchBanner = async () => {
             try {
                 console.log('Fetching banners from:', `${API_URL}/api/banners`);
-                const response = await fetch(`${API_URL}/api/banners`, { cache: 'no-store' });
+                const response = await fetch(`${API_URL}/api/banners`);
                 const data = await response.json();
                 console.log('Banners response:', data);
                 if (data.success && data.data.length > 0) {
@@ -305,18 +305,18 @@ const Hero = () => {
                     <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center pt-4 sm:pt-8 transition-all duration-1000 ${
                         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
                     }`} style={{ transitionDelay: '1s' }}>
-                        <Link
+                        {/* <Link
                             href="/about"
                             className="px-6 sm:px-8 py-3 sm:py-4 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 text-sm sm:text-base"
                         >
                             Discover Excellence
-                        </Link>
-                        <Link
+                        </Link> */}
+                        {/* <Link
                             href="/contact"
                             className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white hover:bg-white hover:text-blue-900 font-semibold rounded-lg transition-all duration-300 text-sm sm:text-base"
                         >
                             Get In Touch
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
             </div>

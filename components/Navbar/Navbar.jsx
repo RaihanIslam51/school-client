@@ -47,7 +47,7 @@ const Navbar = ({ onOpenLogin }) => {
 
     return (
         <>
-        <nav className="bg-white border-b border-black sticky top-0 z-40">
+        <nav className="bg-white  sticky top-0 z-40">
             <div className="container mx-auto px-2">
                 <div className="flex justify-between items-center h-16 lg:h-18">
                     {/* Logo Section */}
@@ -131,10 +131,11 @@ const Navbar = ({ onOpenLogin }) => {
                                 {link.name}
                             </Link>
                         ))}
-                        <div className="pt-3 border-t border-black mt-2">
+                        <div className="pt-3 mt-2">
                             {user ? (
                                 <div className="space-y-2">
                                     <div className="px-4 py-2 text-sm font-semibold text-black text-center">
+                       
                                         {user.name}
                                     </div>
                                     <button

@@ -54,10 +54,59 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // SKIP API REQUESTS - Let them go directly to network
-  // This prevents SW from interfering with API calls
+  // INTERCEPT API GET REQUESTS — apply stale-while-revalidate caching
+  // Skip caching for sensitive/user-specific endpoints
+  const API_NO_CACHE_PREFIXES = [
+    '/api/auth',
+    '/api/messages',
+    '/api/salaries',
+    '/api/fees',
+    '/api/expenses',
+    '/api/attendance',
+    '/api/results'
+  ];
+
   if (url.pathname.startsWith('/api/')) {
-    // Do not intercept API requests - let them go to network
+    // Let non-GET API methods pass through (POST/PUT/DELETE should not be cached)
+    if (request.method !== 'GET') return;
+
+    // Respect the no-cache list from server for sensitive endpoints
+    if (API_NO_CACHE_PREFIXES.some(p => url.pathname.startsWith(p))) {
+      return; // do not intercept/ cache these
+    }
+
+    event.respondWith((async () => {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      const cached = await cache.match(request);
+
+      // Kick off a network fetch to update the cache in background
+      const networkPromise = fetch(request)
+        .then(async (networkResponse) => {
+          if (networkResponse && networkResponse.ok) {
+            await cache.put(request, networkResponse.clone());
+          }
+          return networkResponse;
+        })
+        .catch(() => null);
+
+      // If we have cached data, return it immediately (stale-while-revalidate)
+      if (cached) {
+        // update cache in background (ignore errors)
+        networkPromise.catch(() => {});
+        return cached;
+      }
+
+      // Otherwise wait for network response, fall back to cache if network fails
+      const networkResponse = await networkPromise;
+      if (networkResponse) return networkResponse;
+
+      const fallback = await cache.match(request);
+      return fallback || new Response(JSON.stringify({ success: false, data: [] }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 503
+      });
+    })());
+
     return;
   }
 

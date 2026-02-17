@@ -32,19 +32,40 @@ const apiRequest = async (endpoint, options = {}) => {
 };
 
 // Students Hooks
+// NOTE: React Query sometimes relies on internal helpers when complex objects
+// are used directly in query keys. stringify the filters into a stable string
+// to avoid runtime bundler/serialization issues (and make keys deterministic).
+const buildStableKey = (obj = {}) => {
+  if (!obj || Object.keys(obj).length === 0) return undefined;
+  const sorted = Object.keys(obj).sort().reduce((acc, k) => {
+    acc[k] = obj[k];
+    return acc;
+  }, {});
+  try {
+    return JSON.stringify(sorted);
+  } catch (err) {
+    // Fallback to a simple string representation
+    return String(sorted);
+  }
+};
+
 export const useStudents = (filters = {}) => {
+  const filterKey = buildStableKey(filters);
+  const queryKey = filterKey ? ['students', filterKey] : ['students'];
+
   return useQuery({
-    queryKey: ['students', filters],
-    queryFn: () => apiRequest('/students', {
-      method: 'GET',
-      body: null,
-    }),
-    staleTime: 0, // Always fetch fresh data
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    queryKey,
+    queryFn: () => {
+      const params = new URLSearchParams(filters).toString();
+      return apiRequest(`/students${params ? `?${params}` : ''}`);
+    },
+    staleTime: 0,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
 };
+
+
 
 export const useStudent = (id) => {
   return useQuery({
@@ -52,7 +73,7 @@ export const useStudent = (id) => {
     queryFn: () => apiRequest(`/students/${id}`),
     enabled: !!id,
     staleTime: 0,
-    refetchOnWindowFocus: true,
+    // refetchOnWindowFocus: true,
   });
 };
 
@@ -159,7 +180,8 @@ export const useDeleteTeacher = () => {
 // Salaries Hooks
 export const useSalaries = (filters = {}) => {
   // Create a stable query key from filters
-  const queryKey = ['salaries', filters];
+  const filterKey = buildStableKey(filters);
+  const queryKey = filterKey ? ['salaries', filterKey] : ['salaries'];
 
   return useQuery({
     queryKey,
@@ -194,8 +216,11 @@ export const useSalary = (id) => {
 };
 
 export const useSalaryStatistics = (filters = {}) => {
+  const filterKey = buildStableKey(filters);
+  const queryKey = filterKey ? ['salary-statistics', filterKey] : ['salary-statistics'];
+
   return useQuery({
-    queryKey: ['salary-statistics', filters],
+    queryKey,
     queryFn: () => {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
@@ -303,8 +328,11 @@ export const useCreateNotice = () => {
 
 // Results/Exams Hooks
 export const useResults = (filters = {}) => {
+  const filterKey = buildStableKey(filters);
+  const queryKey = filterKey ? ['results', filterKey] : ['results'];
+
   return useQuery({
-    queryKey: ['results', filters],
+    queryKey,
     queryFn: () => {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
@@ -333,8 +361,11 @@ export const useCreateResult = () => {
 
 // Fees Hooks
 export const useFees = (filters = {}) => {
+  const filterKey = buildStableKey(filters);
+  const queryKey = filterKey ? ['fees', filterKey] : ['fees'];
+
   return useQuery({
-    queryKey: ['fees', filters],
+    queryKey,
     queryFn: () => {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
@@ -363,8 +394,11 @@ export const useCreateFee = () => {
 
 // Expenses Hooks
 export const useExpenses = (filters = {}) => {
+  const filterKey = buildStableKey(filters);
+  const queryKey = filterKey ? ['expenses', filterKey] : ['expenses'];
+
   return useQuery({
-    queryKey: ['expenses', filters],
+    queryKey,
     queryFn: () => {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {

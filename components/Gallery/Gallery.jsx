@@ -17,7 +17,7 @@ const Gallery = () => {
         const fetchGalleries = async () => {
             try {
                 console.log('Fetching galleries from:', `${API_URL}/api/gallery`);
-                const response = await fetch(`${API_URL}/api/gallery`, { cache: 'no-store' });
+                const response = await fetch(`${API_URL}/api/gallery`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
