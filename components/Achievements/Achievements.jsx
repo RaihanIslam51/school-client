@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { API_URL } from '../../config/api';
+import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const Achievements = () => {
     const [achievements, setAchievements] = useState([]);
@@ -9,6 +10,8 @@ const Achievements = () => {
     const [error, setError] = useState(null);
     const [activeCategory, setActiveCategory] = useState('all');
     const [showAll, setShowAll] = useState(false);
+
+    const { t, language } = useLanguage();
 
     useEffect(() => {
         const fetchAchievements = async () => {
@@ -41,6 +44,19 @@ const Achievements = () => {
         ? achievements
         : achievements.filter(item => item.category === activeCategory);
 
+    // Helpers
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const locale = language === 'en' ? 'en-US' : 'bn-BD';
+        return dateString ? new Date(dateString).toLocaleDateString(locale, options) : '';
+    };
+
+    const getCategoryLabel = (category) => {
+        const key = `achievements.categories.${category}`;
+        const label = t(key);
+        return label === key ? category : label;
+    };
+
     // Category icons
     const categoryConfig = {
         'Academic': { icon: '🎓' },
@@ -53,58 +69,13 @@ const Achievements = () => {
 
     // Fallback data if API fails
     const fallbackAchievements = [
-        // {
-        //     _id: '1',
-        //     title: 'National Science Olympiad Winners',
-        //     description: 'Our students secured top positions in the National Science Olympiad 2025, showcasing exceptional scientific knowledge and analytical skills.',
-        //     date: '2025-01-15',
-        //     category: 'Academic',
-        //     achievements: ['Gold Medal - Physics', 'Silver Medal - Chemistry', 'Bronze Medal - Biology'],
-        //     isActive: true
-        // },
-        // {
-        //     _id: '2',
-        //     title: 'Inter-School Football Championship',
-        //     description: 'Champions of the State-level Inter-School Football Championship with outstanding team performance and sportsmanship.',
-        //     date: '2024-12-20',
-        //     category: 'Sports',
-        //     achievements: ['State Champions', 'Best Player Award', 'Fair Play Trophy'],
-        //     isActive: true
-        // },
-        // {
-        //     _id: '3',
-        //     title: 'Cultural Festival Excellence',
-        //     description: 'Grand winners in the Annual Cultural Festival with mesmerizing performances in music, dance, and drama.',
-        //     date: '2024-11-10',
-        //     category: 'Cultural',
-        //     achievements: ['Best Dance Performance', 'Music Competition Winner', 'Overall Championship'],
-        //     isActive: true
-        // },
-        // {
-        //     _id: '4',
-        //     title: 'Robotics Competition Success',
-        //     description: 'First place in the National Robotics Competition with innovative robot designs and programming excellence.',
-        //     date: '2024-10-05',
-        //     category: 'Technology',
-        //     achievements: ['Innovation Award', 'Technical Excellence', 'Best Design'],
-        //     isActive: true
-        // },
-        // {
-        //     _id: '5',
-        //     title: 'Art Exhibition Recognition',
-        //     description: 'Multiple awards in the State Art Exhibition for creative expressions and artistic excellence.',
-        //     date: '2024-09-18',
-        //     category: 'Arts',
-        //     achievements: ['Best Painting', 'Creative Sculpture', 'Young Artist Award'],
-        //     isActive: true
-        // },
         {
             _id: '6',
-            title: 'Mathematics Olympiad Champions',
-            description: 'Outstanding performance in the International Mathematics Olympiad with perfect scores in advanced problems.',
+            title: t('achievements.fallbacks.mathOlympiad.title'),
+            description: t('achievements.fallbacks.mathOlympiad.description'),
             date: '2024-08-25',
             category: 'Academic',
-            achievements: ['Perfect Score', 'Gold Medal', 'Special Recognition'],
+            achievements: t('achievements.fallbacks.mathOlympiad.achievements') || ['Perfect Score', 'Gold Medal', 'Special Recognition'],
             isActive: true
         }
     ];
@@ -150,10 +121,10 @@ const Achievements = () => {
                 {/* Section Header */}
                 <div className="text-center mb-10 lg:mb-12">
                     <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-3">
-                        Our Achievements
+                        {t('achievements.ourAchievements')}
                     </h2>
                     <p className="text-gray-700 text-base lg:text-lg max-w-3xl mx-auto">
-                        Showcasing outstanding achievements across academics, sports, arts, and innovation
+                        {t('achievements.subtitle')}
                     </p>
                 </div>
 
@@ -174,9 +145,9 @@ const Achievements = () => {
                                     {category !== 'all' && (
                                         <span>{categoryConfig[category]?.icon || '🏆'}</span>
                                     )}
-                                    <span>{category === 'all' ? 'All' : category}</span>
+                                    <span>{category === 'all' ? t('achievements.filters.all') : getCategoryLabel(category)}</span>
                                 </button>
-                            ))}
+                            ))} 
                         </div>
                     </div>
                 </div>
@@ -197,7 +168,7 @@ const Achievements = () => {
                                             {config.icon}
                                         </div>
                                         <span className="text-xs font-medium text-gray-600 uppercase">
-                                            {achievement.category}
+                                            {getCategoryLabel(achievement.category)}
                                         </span>
                                     </div>
 
@@ -208,11 +179,7 @@ const Achievements = () => {
 
                                     {/* Date */}
                                     <div className="text-xs text-gray-500 mb-3 font-medium">
-                                        {new Date(achievement.date).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric'
-                                        })}
+                                        {formatDate(achievement.date)}
                                     </div>
 
                                     {/* Description */}
@@ -223,7 +190,7 @@ const Achievements = () => {
                                     {/* Sub-achievements */}
                                     {achievement.achievements && achievement.achievements.length > 0 && (
                                         <div className="space-y-2">
-                                            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Highlights</h4>
+                                            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">{t('achievements.highlights')}</h4>
                                             <ul className="space-y-1">
                                                 {achievement.achievements.slice(0, 2).map((item, idx) => (
                                                     <li key={idx} className="text-xs text-gray-600 flex items-center gap-2">
@@ -234,7 +201,7 @@ const Achievements = () => {
                                             </ul>
                                             {achievement.achievements.length > 2 && (
                                                 <p className="text-xs text-gray-500 font-medium">
-                                                    +{achievement.achievements.length - 2} more
+                                                    +{achievement.achievements.length - 2} {t('achievements.more')}
                                                 </p>
                                             )}
                                         </div>
@@ -252,7 +219,7 @@ const Achievements = () => {
                             onClick={() => setShowAll(true)}
                             className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-lg transition-all duration-200"
                         >
-                            See More Achievements
+                            {t('achievements.buttons.seeMore')}
                         </button>
                     )}
                     {showAll && (
@@ -260,7 +227,7 @@ const Achievements = () => {
                             onClick={() => setShowAll(false)}
                             className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-lg transition-all duration-200"
                         >
-                            See Less
+                            {t('achievements.buttons.seeLess')}
                         </button>
                     )}
                 </div>

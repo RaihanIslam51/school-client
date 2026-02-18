@@ -672,13 +672,39 @@ export default function AttendanceManagement() {
                                     <h3 className="text-xl font-bold">
                                         {selectedClass} - Section {selectedSection} | {new Date(selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                                     </h3>
-                                    <div className="flex items-center space-x-2 text-sm">
-                                        <span className="bg-white text-black bg-opacity-20 px-3 py-1 rounded-full">
-                                            {students.length} Students
-                                        </span>
-                                        <span className="bg-white text-black bg-opacity-20 px-3 py-1 rounded-full">
-                                            {dates.length} Days
-                                        </span>
+                                    {/* Responsive counters: compact on mobile, full pills on sm+ */}
+                                    <div className="flex items-center gap-2 text-sm">
+                                        {/* Desktop / tablet: descriptive pills */}
+                                        <div className="hidden sm:flex items-center gap-2">
+                                            <span className="bg-white text-black bg-opacity-20 px-3 py-1 rounded-full min-w-[88px] text-center">
+                                                {students.length} Students
+                                            </span>
+                                            <span className="bg-white text-black bg-opacity-20 px-3 py-1 rounded-full min-w-[68px] text-center">
+                                                {dates.length} Days
+                                            </span>
+                                        </div>
+
+                                        {/* Mobile: compact icon + number */}
+                                        <div className="flex sm:hidden items-center gap-2">
+                                            <span className="inline-flex items-center bg-white text-black bg-opacity-20 px-2 py-0.5 rounded-full text-xs font-semibold">
+                                                <svg className="w-4 h-4 mr-1 text-black opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                                                    <circle cx="9" cy="7" r="4"></circle>
+                                                </svg>
+                                                <span>{students.length}</span>
+                                                <span className="sr-only"> students</span>
+                                            </span>
+
+                                            <span className="inline-flex items-center bg-white text-black bg-opacity-20 px-2 py-0.5 rounded-full text-xs font-semibold">
+                                                <svg className="w-4 h-4 mr-1 text-black opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                </svg>
+                                                <span>{dates.length}</span>
+                                                <span className="sr-only"> days</span>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -688,13 +714,13 @@ export default function AttendanceManagement() {
                                     <table className="w-full border-collapse">
                                         <thead>
                                             <tr className="bg-gray-100 border-b-2 border-gray-300">
-                                                <th className="sticky left-0 bg-gray-100 px-4 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 z-10 min-w-[60px]">
+                                                <th className="hidden print:table-cell bg-gray-100 px-4 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 min-w-[60px]">
                                                     S.No
                                                 </th>
-                                                <th className="sticky left-[60px] bg-gray-100 px-4 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 z-10 min-w-[100px]">
+                                                <th className="hidden md:table-cell md:sticky md:left-0 md:z-10 bg-gray-100 pl-2 pr-1 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 min-w-[100px] print:table-cell">
                                                     Roll No
                                                 </th>
-                                                <th className="sticky left-[160px] bg-gray-100 px-4 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 z-10 min-w-[200px]">
+                                                <th className="sticky left-0 md:left-[100px] bg-gray-100 pl-2 pr-1 py-3 text-left text-xs font-bold text-black border-r-2 border-gray-300 z-20 min-w-[200px]">
                                                     Student Name
                                                 </th>
                                                 {dates.map((date) => {
@@ -731,16 +757,16 @@ export default function AttendanceManagement() {
                                                 const studentStats = getStudentStats(student._id);
                                                 return (
                                                 <tr key={student._id} className="hover:bg-blue-50 transition-colors">
-                                                    <td className="sticky left-0 bg-white px-4 py-3 text-sm text-black border-r-2 border-gray-300 z-10 font-medium">
+                                                    <td className="hidden print:table-cell bg-white px-4 py-3 text-sm text-black border-r-2 border-gray-300 font-medium">
                                                         {index + 1}
                                                     </td>
-                                                    <td className="sticky left-[60px] bg-white px-4 py-3 text-sm font-semibold text-black border-r-2 border-gray-300 z-10">
+                                                    <td className="hidden md:table-cell md:sticky md:left-0 md:z-10 bg-white pl-2 pr-1 py-3 text-sm font-semibold text-black border-r-2 border-gray-300 print:table-cell">
                                                         {student.rollNumber}
                                                     </td>
-                                                    <td className="sticky left-[160px] bg-white px-4 py-3 border-r-2 border-gray-300 z-10">
+                                                    <td className="sticky left-0 md:left-[100px] bg-white pl-2 pr-1 py-3 border-r-2 border-gray-300 z-20 print:table-cell">
                                                         <div>
                                                             <div className="text-sm font-medium text-black">{student.name}</div>
-                                                            <div className="flex items-center gap-3 mt-1 text-xs no-print">
+                                                            <div className="hidden md:flex items-center gap-3 mt-1 text-xs no-print">
                                                                 <span className="text-green-700 font-semibold">P: {studentStats.present}</span>
                                                                 <span className="text-red-700 font-semibold">A: {studentStats.absent}</span>
                                                                 <span className={`px-2 py-0.5 rounded-full font-bold ${

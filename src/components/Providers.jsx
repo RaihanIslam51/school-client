@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState, useEffect } from 'react';
 import { prefetchCommonData, setupBackgroundSync } from '../prefetch';
+import { LanguageProvider } from '../contexts/LanguageContext';
 
 // Create a client
 function makeQueryClient() {
@@ -70,8 +71,10 @@ export default function Providers({ children }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      <LanguageProvider>
+        {children}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

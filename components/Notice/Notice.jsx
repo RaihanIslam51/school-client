@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { API_URL } from '../../config/api';
+import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const Notice = () => {
     const [activeTab, setActiveTab] = useState('all');
@@ -11,6 +12,7 @@ const Notice = () => {
     const [error, setError] = useState(null);
     const [selectedNotice, setSelectedNotice] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const { t, language } = useLanguage();
 
     // Fetch notices from API
     useEffect(() => {
@@ -71,7 +73,14 @@ const Notice = () => {
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
+        const locale = language === 'en' ? 'en-US' : 'bn-BD';
+        return new Date(dateString).toLocaleDateString(locale, options);
+    };
+
+    const getTypeLabel = (type) => {
+        const key = `notices.types.${type}`;
+        const label = t(key);
+        return label === key ? type : label;
     };
 
     const openModal = (notice) => {
@@ -91,7 +100,7 @@ const Notice = () => {
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8">
                         <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-2">
-                            Notice Board
+                            {t('notices.noticeboard')}
                         </h2>
                         <div className="animate-pulse">
                             <div className="h-4 bg-gray-200 rounded w-80 mx-auto"></div>
@@ -131,7 +140,7 @@ const Notice = () => {
             <section className="py-8 lg:py-12 bg-white">
                 <div className="container mx-auto px-3 sm:px-6 lg:px-8 text-center">
                     <div className="text-4xl mb-4">⚠️</div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">Unable to Load Notices</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">{t('notices.errorTitle')}</h2>
                     <p className="text-gray-700 mb-4">{error}</p>
                     <div className="bg-gray-100 p-4 rounded-lg text-left max-w-2xl mx-auto">
                         <p className="text-sm font-mono"><strong>API URL:</strong> {API_URL}</p>
@@ -149,8 +158,8 @@ const Notice = () => {
             <section className="py-8 lg:py-12 bg-white">
                 <div className="container mx-auto px-3 sm:px-6 lg:px-8 text-center">
                     <div className="text-4xl mb-4">📢</div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">No Notices Available</h2>
-                    <p className="text-gray-700">Check back later for updates.</p>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">{t('notices.emptyTitle')}</h2>
+                    <p className="text-gray-700">{t('notices.emptyMessage')}</p>
                     <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-left max-w-2xl mx-auto mt-4">
                         <p className="text-sm"><strong>Debug Info:</strong></p>
                         <p className="text-sm font-mono">API URL: {API_URL}</p>
@@ -169,22 +178,22 @@ const Notice = () => {
                     {/* Section Header */}
                     <div className="text-center mb-8">
                         <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-2">
-                            Notice Board
+                            {t('notices.noticeboard')}
                         </h2>
                         <p className="text-gray-700 text-base max-w-2xl mx-auto">
-                            Stay informed about important announcements and upcoming events
+                            {t('notices.subtitle')}
                         </p>
                     </div>
 
                     {/* Filter Tabs */}
                     <div className="flex flex-wrap justify-center gap-2 mb-8">
                         {[
-                            { id: 'all', label: 'All', icon: '📋' },
-                            { id: 'exam', label: 'Exams', icon: '📝' },
-                            { id: 'holiday', label: 'Holidays', icon: '🏖️' },
-                            { id: 'general', label: 'General', icon: '📢' },
-                            { id: 'event', label: 'Events', icon: '🎉' },
-                            { id: 'academic', label: 'Academic', icon: '🎓' }
+                            { id: 'all', label: t('notices.tabs.all'), icon: '📋' },
+                            { id: 'exam', label: t('notices.tabs.exams'), icon: '📝' },
+                            { id: 'holiday', label: t('notices.tabs.holidays'), icon: '🏖️' },
+                            { id: 'general', label: t('notices.tabs.general'), icon: '📢' },
+                            { id: 'event', label: t('notices.tabs.events'), icon: '🎉' },
+                            { id: 'academic', label: t('notices.tabs.academic'), icon: '🎓' }
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -209,11 +218,11 @@ const Notice = () => {
                         {displayedNotices.length === 0 ? (
                             <div className="text-center py-12">
                                 <div className="text-4xl mb-4">📭</div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">No Notices Found</h3>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">{t('notices.noNoticesFound')}</h3>
                                 <p className="text-gray-700">
                                     {activeTab === 'all'
-                                        ? 'There are no notices published yet.'
-                                        : `No ${activeTab} notices available at the moment.`
+                                        ? t('notices.emptyAll')
+                                        : t('notices.emptyFiltered').replace('%s', t(`notices.tabs.${activeTab}`))
                                     }
                                 </p>
                             </div>
@@ -238,11 +247,11 @@ const Notice = () => {
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-2 mb-1">
                                                             <span className="text-xs font-medium text-blue-900 uppercase tracking-wide">
-                                                                {notice.type}
+                                                                {getTypeLabel(notice.type)}
                                                             </span>
                                                             {notice.important && (
                                                                 <span className="text-xs font-bold text-red-600 uppercase">
-                                                                    Important
+                                                                    {t('notices.important')}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -264,7 +273,7 @@ const Notice = () => {
                                                         onClick={() => openModal(notice)}
                                                         className="text-blue-900 font-medium text-sm hover:text-blue-800 transition-colors duration-200"
                                                     >
-                                                        Read More →
+                                                        {t('notices.readMore')}
                                                     </button>
                                                 </div>
                                             </div>
@@ -282,7 +291,7 @@ const Notice = () => {
                                 onClick={() => setShowAll(!showAll)}
                                 className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-lg transition-all duration-200"
                             >
-                                {showAll ? 'Show Less' : `View All Notices (${filteredNotices.length})`}
+                                {showAll ? t('notices.showLess') : `${t('notices.viewAll')} (${filteredNotices.length})`}
                             </button>
                         </div>
                     )}
@@ -291,7 +300,7 @@ const Notice = () => {
 
             {/* Notice Detail Modal */}
             {showModal && selectedNotice && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
+                <div className="fixed inset-0 z-9999 flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
                     <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                         {/* Modal Header */}
                         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
@@ -301,11 +310,11 @@ const Notice = () => {
                                 </div>
                                 <div>
                                     <span className="text-sm font-medium text-blue-900 uppercase">
-                                        {selectedNotice.type}
+                                        {getTypeLabel(selectedNotice.type)}
                                     </span>
                                     {selectedNotice.important && (
                                         <span className="ml-2 text-sm font-bold text-red-600 uppercase">
-                                            Important
+                                            {t('notices.important')}
                                         </span>
                                     )}
                                 </div>
@@ -327,7 +336,7 @@ const Notice = () => {
                             </h2>
 
                             <div className="text-sm text-gray-600 mb-4">
-                                Published on {formatDate(selectedNotice.createdAt || selectedNotice.date)}
+                                {t('notices.publishedOn')} {formatDate(selectedNotice.createdAt || selectedNotice.date)}
                             </div>
 
                             <div className="prose prose-gray max-w-none">

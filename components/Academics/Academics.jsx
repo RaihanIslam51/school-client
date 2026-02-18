@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { API_URL } from '../../config/api';
+import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const Academics = () => {
     const [academics, setAcademics] = useState([]);
@@ -9,6 +10,8 @@ const Academics = () => {
     const [error, setError] = useState(null);
     const [activeMedium, setActiveMedium] = useState('english');
     const [activeTab, setActiveTab] = useState('classes');
+
+    const { t, language } = useLanguage();
 
     useEffect(() => {
         const fetchAcademics = async () => {
@@ -45,47 +48,14 @@ const Academics = () => {
 
     // Fallback data if no API data
     const fallbackClasses = [
-        // {
-        //     _id: '1',
-        //     title: 'Pre-Primary',
-        //     description: 'Building foundation through play-based learning and creative exploration',
-        //     level: 'Pre-Primary',
-        //     grades: ['Play', 'Nursery', 'KG'],
-        //     icon: '🎨',
-        //     ageGroup: 'Ages 2-5',
-        //     type: 'class',
-        //     stats: { students: '120+', teachers: '8', activities: '15+' }
-        // },
-        // {
-        //     _id: '2',
-        //     title: 'Primary',
-        //     description: 'Developing core academic and social skills with interactive learning',
-        //     level: 'Primary',
-        //     grades: ['Class 1-5'],
-        //     icon: '📚',
-        //     ageGroup: 'Ages 6-10',
-        //     type: 'class',
-        //     stats: { students: '250+', teachers: '15', activities: '20+' }
-        // },
-        // {
-        //     _id: '3',
-        //     title: 'Secondary',
-        //     description: 'Preparing for board examinations with advanced curriculum',
-        //     level: 'Secondary',
-        //     grades: ['Class 6-10'],
-        //     icon: '🎓',
-        //     ageGroup: 'Ages 11-15',
-        //     type: 'class',
-        //     stats: { students: '300+', teachers: '20', activities: '25+' }
-        // },
         {
             _id: '4',
-            title: 'Higher Secondary',
-            description: 'Specialization in Science, Arts & Commerce streams',
-            level: 'Higher Secondary',
-            grades: ['Class 11-12'],
+            title: t('academics.fallbacks.higherSecondary.title'),
+            description: t('academics.fallbacks.higherSecondary.description'),
+            level: t('academics.levels.higherSecondary'),
+            grades: t('academics.fallbacks.higherSecondary.grades'),
             icon: '🏆',
-            ageGroup: 'Ages 16-17',
+            ageGroup: t('academics.fallbacks.higherSecondary.ageGroup'),
             type: 'class',
             stats: { students: '180+', teachers: '12', activities: '18+' }
         }
@@ -179,9 +149,9 @@ const Academics = () => {
     const displayActivities = activities.length > 0 ? activities : fallbackActivities;
 
     const tabs = [
-        { id: 'classes', label: 'Academic Levels', icon: '🏫', count: displayClasses.length },
-        { id: 'subjects', label: 'Core Subjects', icon: '📚', count: displaySubjects.length },
-        { id: 'activities', label: 'Co-Curricular', icon: '🎨', count: displayActivities.length }
+        { id: 'classes', label: t('academics.tabs.classes'), icon: '🏫', count: displayClasses.length },
+        { id: 'subjects', label: t('academics.tabs.subjects'), icon: '📚', count: displaySubjects.length },
+        { id: 'activities', label: t('academics.tabs.activities'), icon: '🎨', count: displayActivities.length }
     ];
 
     if (loading) {
@@ -218,11 +188,10 @@ const Academics = () => {
                 {/* Section Header */}
                 <div className="text-center mb-6 lg:mb-12">
                     <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-3">
-                        Our Academics
+                        {t('academics.pageTitle')}
                     </h2>
                     <p className="text-gray-700 text-base lg:text-lg max-w-3xl mx-auto">
-                        Comprehensive education from Pre-Primary to Higher Secondary with world-class curriculum,
-                        experienced faculty, and cutting-edge learning methodologies
+                        {t('academics.subtitle')}
                     </p>
                 </div>
 
@@ -300,15 +269,15 @@ const Academics = () => {
                                             <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200">
                                                 <div className="text-center">
                                                     <div className="text-lg font-bold text-gray-900">{classLevel.stats.students}</div>
-                                                    <div className="text-xs font-medium text-gray-600 uppercase">Students</div>
+                                                    <div className="text-xs font-medium text-gray-600 uppercase">{t('academics.stats.students')}</div>
                                                 </div>
                                                 <div className="text-center">
                                                     <div className="text-lg font-bold text-gray-900">{classLevel.stats.teachers}</div>
-                                                    <div className="text-xs font-medium text-gray-600 uppercase">Teachers</div>
+                                                    <div className="text-xs font-medium text-gray-600 uppercase">{t('academics.stats.teachers')}</div>
                                                 </div>
                                                 <div className="text-center">
                                                     <div className="text-lg font-bold text-gray-900">{classLevel.stats.activities}</div>
-                                                    <div className="text-xs font-medium text-gray-600 uppercase">Activities</div>
+                                                    <div className="text-xs font-medium text-gray-600 uppercase">{t('academics.stats.activities')}</div>
                                                 </div>
                                             </div>
                                         )}
@@ -324,10 +293,10 @@ const Academics = () => {
                     <div>
                         <div className="text-center mb-8">
                             <h3 className="text-2xl lg:text-3xl font-bold text-blue-900 mb-3">
-                                Core Subjects
+                                {t('academics.coreSubjects')}
                             </h3>
                             <p className="text-gray-700 text-base max-w-2xl mx-auto mb-6">
-                                Comprehensive curriculum with English and Bangla medium options
+                                {t('academics.subjectsSubtitle')}
                             </p>
 
                             {/* Medium Toggle */}
@@ -341,7 +310,7 @@ const Academics = () => {
                                     }`}
                                 >
                                     <span>🇺🇸</span>
-                                    <span>English Medium</span>
+                                    <span>{t('academics.mediums.english')}</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveMedium('bangla')}
@@ -352,7 +321,7 @@ const Academics = () => {
                                     }`}
                                 >
                                     <span>🇧🇩</span>
-                                    <span>Bangla Medium</span>
+                                    <span>{t('academics.mediums.bangla')}</span>
                                 </button>
                             </div>
                         </div>
@@ -386,15 +355,15 @@ const Academics = () => {
                                         <div className="flex justify-center gap-6 pt-4 border-t border-gray-200">
                                             <div className="text-center">
                                                 <div className="text-lg font-bold text-gray-900">A+</div>
-                                                <div className="text-xs font-medium text-gray-600 uppercase">Grade</div>
+                                                    <div className="text-xs font-medium text-gray-600 uppercase">{t('academics.subjectStats.grade')}</div>
                                             </div>
                                             <div className="text-center">
-                                                <div className="text-lg font-bold text-gray-900">Expert</div>
-                                                <div className="text-xs font-medium text-gray-600 uppercase">Faculty</div>
+                                                <div className="text-lg font-bold text-gray-900">{t('academics.subjectStats.expert')}</div>
+                                                    <div className="text-xs font-medium text-gray-600 uppercase">{t('academics.subjectStats.faculty')}</div>
                                             </div>
                                             <div className="text-center">
                                                 <div className="text-lg font-bold text-gray-900">100%</div>
-                                                <div className="text-xs font-medium text-gray-600 uppercase">Pass Rate</div>
+                                                    <div className="text-xs font-medium text-gray-600 uppercase">{t('academics.subjectStats.passRate')}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -404,22 +373,22 @@ const Academics = () => {
 
                         {/* Additional Info Section */}
                         <div className="mt-12 bg-gray-50 rounded-lg p-8">
-                            <h4 className="text-xl font-bold text-blue-900 mb-6 text-center">Why Choose Our Core Subjects?</h4>
+                            <h4 className="text-xl font-bold text-blue-900 mb-6 text-center">{t('academics.coreBenefits.title')}</h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="text-center">
                                     <div className="w-12 h-12 bg-blue-900 text-white rounded-lg flex items-center justify-center text-xl mx-auto mb-3">🎯</div>
-                                    <h5 className="text-lg font-bold text-gray-900 mb-2">Targeted Learning</h5>
-                                    <p className="text-gray-700 text-sm">Focused curriculum designed for academic excellence and real-world application</p>
+                                    <h5 className="text-lg font-bold text-gray-900 mb-2">{t('academics.coreBenefits.targeted.title')}</h5>
+                                    <p className="text-gray-700 text-sm">{t('academics.coreBenefits.targeted.desc')}</p>
                                 </div>
                                 <div className="text-center">
                                     <div className="w-12 h-12 bg-blue-900 text-white rounded-lg flex items-center justify-center text-xl mx-auto mb-3">👨‍🏫</div>
-                                    <h5 className="text-lg font-bold text-gray-900 mb-2">Expert Faculty</h5>
-                                    <p className="text-gray-700 text-sm">Highly qualified teachers with years of experience and innovative teaching methods</p>
+                                    <h5 className="text-lg font-bold text-gray-900 mb-2">{t('academics.coreBenefits.expert.title')}</h5>
+                                    <p className="text-gray-700 text-sm">{t('academics.coreBenefits.expert.desc')}</p>
                                 </div>
                                 <div className="text-center">
                                     <div className="w-12 h-12 bg-blue-900 text-white rounded-lg flex items-center justify-center text-xl mx-auto mb-3">📊</div>
-                                    <h5 className="text-lg font-bold text-gray-900 mb-2">Proven Results</h5>
-                                    <p className="text-gray-700 text-sm">Consistent high performance with 100% pass rates and excellent board results</p>
+                                    <h5 className="text-lg font-bold text-gray-900 mb-2">{t('academics.coreBenefits.proven.title')}</h5>
+                                    <p className="text-gray-700 text-sm">{t('academics.coreBenefits.proven.desc')}</p>
                                 </div>
                             </div>
                         </div>
@@ -431,10 +400,10 @@ const Academics = () => {
                     <div>
                         <div className="text-center mb-8">
                             <h3 className="text-2xl lg:text-3xl font-bold text-blue-900 mb-3">
-                                Co-Curricular Activities
+                                {t('academics.activitiesTitle')}
                             </h3>
                             <p className="text-gray-700 text-base max-w-2xl mx-auto">
-                                Nurturing talents beyond academics for holistic development
+                                {t('academics.activitiesSubtitle')}
                             </p>
                         </div>
 
@@ -484,7 +453,7 @@ const Academics = () => {
                                                 {activity.participants && (
                                                     <div className="text-center md:text-left">
                                                         <span className="text-sm font-medium text-gray-600">
-                                                            {activity.participants} Participants
+                                                            {activity.participants} {t('academics.participants')}
                                                         </span>
                                                     </div>
                                                 )}

@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { API_URL } from '../../config/api';
 import Swal from 'sweetalert2';
+import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
+    const { t } = useLanguage();
     const [formData, setFormData] = useState({
         email: '',
         id: ''
@@ -164,8 +166,8 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                     <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span className="text-3xl">👤</span>
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-                    <p className="text-gray-600">Login to your account</p>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">{t('auth.loginTitle')}</h2>
+                    <p className="text-gray-600">{t('auth.loginTitle')}</p>
                 </div>
 
                 {/* Error Message */}
@@ -179,7 +181,7 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Email
+                            {t('auth.email')}
                         </label>
                         <input
                             type="email"
@@ -188,7 +190,7 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                            placeholder="Enter your email"
+                            placeholder={t('auth.email')}
                         />
                     </div>
 
@@ -230,7 +232,7 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                         disabled={loading}
                         className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg disabled:opacity-50"
                     >
-                        {loading ? 'Logging in...' : 'Login'}
+                        {loading ? `${t('common.loading')}` : t('auth.loginButton')}
                     </button>
                 </form>
 

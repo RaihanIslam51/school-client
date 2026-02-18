@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { API_URL } from '../../config/api';
+import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const Gallery = () => {
     const [galleries, setGalleries] = useState([]);
@@ -12,28 +13,77 @@ const Gallery = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [lightboxIndex, setLightboxIndex] = useState(0);
 
+    const { t, language } = useLanguage();
+
+    const formatDate = (dateString, opts = { month: 'short', day: 'numeric', year: 'numeric' }) => {
+        if (!dateString) return '';
+        const locale = language === 'en' ? 'en-US' : 'bn-BD';
+        try {
+            return new Date(dateString).toLocaleDateString(locale, opts);
+        } catch (e) {
+            return dateString;
+        }
+    };
+
+    const getCategoryLabel = (category) => {
+        const key = `gallery.categories.${category}`;
+        const label = t(key);
+        return label === key ? category : label;
+    };
+
+
+    // Fetch helper with simple retry for 5xx responses
+    const fetchWithRetry = async (url, options = {}, retries = 2, backoff = 500) => {
+        try {
+            const res = await fetch(url, options);
+            if (!res.ok) {
+                if (res.status >= 500 && retries > 0) {
+                    await new Promise((r) => setTimeout(r, backoff));
+                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                }
+                return res; // return non-2xx response for caller to handle
+            }
+            return res;
+        } catch (err) {
+            if (retries > 0) {
+                await new Promise((r) => setTimeout(r, backoff));
+                return fetchWithRetry(url, options, retries - 1, backoff * 2);
+            }
+            throw err;
+        }
+    };
+
+    const fetchGalleries = async () => {
+        const url = `${API_URL}/api/gallery`;
+        try {
+            setLoading(true);
+            setError(null);
+            console.info('Fetching galleries from:', url);
+            const response = await fetchWithRetry(url, {}, 2, 500);
+
+            if (!response.ok) {
+                // server returned non-2xx (e.g. 503) after retries — show friendly message and use fallback
+                console.warn('Gallery fetch returned non-2xx:', response.status);
+                setError(t('gallery.errorLoading'));
+                return;
+            }
+
+            const data = await response.json();
+            console.debug('Galleries response:', data);
+            setGalleries(data.data || []);
+        } catch (err) {
+            // network error or exhausted retries
+            console.warn('Gallery fetch failed, using fallback:', err?.message || err);
+            setError(t('gallery.errorLoading'));
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchGalleries = async () => {
-            try {
-                console.log('Fetching galleries from:', `${API_URL}/api/gallery`);
-                const response = await fetch(`${API_URL}/api/gallery`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('Galleries response:', data);
-                setGalleries(data.data || []);
-            } catch (err) {
-                setError(err.message);
-                console.error('Error fetching galleries:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchGalleries();
     }, []);
+
 
     // Get unique categories
     const categories = ['all', ...new Set(galleries.map(item => item.category))];
@@ -129,8 +179,8 @@ const Gallery = () => {
         // },
         {
             _id: '6',
-            title: 'Technology Innovation Day',
-            description: 'Presenting cutting-edge technology projects, coding competitions, and digital innovation showcases.',
+            title: t('gallery.fallbacks.techDay.title'),
+            description: t('gallery.fallbacks.techDay.description'),
             category: 'Technology',
             images: [
                 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400',
@@ -213,15 +263,27 @@ const Gallery = () => {
     return (
         <section className="py-6 lg:py-8 bg-white">
             <div className="container mx-auto px-3 sm:px-6 lg:px-8">
+                {/* Error banner (non-blocking) */}
+                {error && (
+                    <div className="mb-6 max-w-3xl mx-auto">
+                        <div className="flex items-center justify-between gap-4 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded p-3">
+                            <div className="text-sm">{t('gallery.errorLoading')}</div>
+                            <div className="flex items-center gap-2">
+                                <button onClick={fetchGalleries} className="px-3 py-1 bg-blue-900 text-white rounded text-sm">{t('gallery.retry')}</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Section Header */}
-                <div className="text-center mb-10 lg:mb-12">
+                <div className="text-center mb-6 lg:mb-10">
                     <h2 className="text-3xl lg:text-4xl font-bold text-blue-900 mb-3">
-                        Our Gallery
+                        {t('gallery.title')}
                     </h2>
                     <p className="text-gray-700 text-base lg:text-lg max-w-3xl mx-auto">
-                        Explore our vibrant collection of school events, achievements, and memorable moments that define our community
+                        {t('gallery.subtitle')}
                     </p>
-                </div>
+                </div> 
 
                 {/* Category Filter */}
                 <div className="flex justify-center mb-8">
@@ -240,11 +302,11 @@ const Gallery = () => {
                                     {category !== 'all' && (
                                         <span>{categoryConfig[category]?.icon || '📁'}</span>
                                     )}
-                                    <span>{category === 'all' ? 'All' : category}</span>
+                                    <span>{category === 'all' ? t('gallery.filters.all') : getCategoryLabel(category)}</span>
                                 </button>
                             ))}
                         </div>
-                    </div>
+                    </div> 
                 </div>
 
                 {/* Gallery Grid */}
@@ -270,17 +332,17 @@ const Gallery = () => {
                                     <div className="absolute top-3 left-3 flex gap-2">
                                         {gallery.featured && (
                                             <div className="bg-blue-900 text-white px-2 py-1 rounded text-xs font-medium">
-                                                Featured
+                                                {t('gallery.featured')}
                                             </div>
-                                        )}
+                                        )} 
                                     </div>
 
                                     {/* Image Counter */}
                                     {gallery.images && gallery.images.length > 1 && (
                                         <div className="absolute top-3 right-3 bg-black/60 text-white px-2 py-1 rounded text-xs font-medium">
-                                            {gallery.images.length} photos
+                                            {gallery.images.length} {t('gallery.photos')}
                                         </div>
-                                    )}
+                                    )} 
 
                                     {/* View Gallery Button */}
                                     <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-all duration-200 flex items-center justify-center opacity-0 hover:opacity-100">
@@ -288,8 +350,8 @@ const Gallery = () => {
                                             onClick={() => openLightbox(gallery, 0)}
                                             className="bg-white text-gray-900 px-4 py-2 rounded-lg font-medium text-sm hover:bg-gray-50 transition-all duration-200"
                                         >
-                                            View Gallery
-                                        </button>
+                                            {t('gallery.viewGallery')}
+                                        </button> 
                                     </div>
                                 </div>
 
@@ -302,16 +364,12 @@ const Gallery = () => {
                                                 {config.icon}
                                             </div>
                                             <span className="text-xs font-medium text-gray-600 uppercase">
-                                                {gallery.category}
+                                                {getCategoryLabel(gallery.category)}
                                             </span>
                                         </div>
                                         <div className="text-xs text-gray-500 font-medium">
-                                            {new Date(gallery.eventDate).toLocaleDateString('en-US', {
-                                                month: 'short',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            })}
-                                        </div>
+                                            {formatDate(gallery.eventDate)}
+                                        </div> 
                                     </div>
 
                                     {/* Title */}
@@ -336,7 +394,7 @@ const Gallery = () => {
                             onClick={() => setShowAll(true)}
                             className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-lg transition-all duration-200"
                         >
-                            See More Galleries
+                            {t('gallery.buttons.seeMore')}
                         </button>
                     )}
                     {showAll && (
@@ -344,9 +402,9 @@ const Gallery = () => {
                             onClick={() => setShowAll(false)}
                             className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-lg transition-all duration-200"
                         >
-                            See Less
+                            {t('gallery.buttons.seeLess')}
                         </button>
-                    )}
+                    )} 
                 </div>
             </div>
 
@@ -414,16 +472,11 @@ const Gallery = () => {
                                         <div className="w-6 h-6 bg-blue-900 text-white rounded flex items-center justify-center text-sm">
                                             {categoryConfig[selectedImage.category]?.icon}
                                         </div>
-                                        <span className="text-sm font-medium text-gray-600">{selectedImage.category}</span>
+                                        <span className="text-sm font-medium text-gray-600">{getCategoryLabel(selectedImage.category)}</span>
                                     </div>
                                     <div className="text-sm text-gray-500 font-medium">
-                                        {new Date(selectedImage.eventDate).toLocaleDateString('en-US', {
-                                            weekday: 'long',
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        })}
-                                    </div>
+                                        {formatDate(selectedImage.eventDate, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                    </div> 
                                 </div>
                             </div>
 

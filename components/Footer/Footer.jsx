@@ -1,24 +1,26 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
+import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const Footer = () => {
+    const { t } = useLanguage();
     const currentYear = new Date().getFullYear();
 
     const quickLinks = [
-        { name: 'Home', href: '/' },
-        { name: 'About Us', href: '/about' },
-        { name: 'Academics', href: '/academics' },
-        { name: 'Admissions', href: '/admissions' },
-        { name: 'Notices', href: '/notices' },
-        { name: 'Contact', href: '/contact' },
+        { name: t('nav.home'), href: '/' },
+        { name: t('nav.aboutUs'), href: '/about' },
+        { name: t('nav.academics'), href: '/academics' },
+        { name: t('nav.admissions'), href: '/admissions' },
+        { name: t('nav.notices'), href: '/notices' },
+        { name: t('nav.contact'), href: '/contact' },
     ];
 
     const contactInfo = [
-        { icon: '📍', text: '123 Education Street, City, State 12345' },
-        { icon: '📞', text: '+1 (555) 123-4567' },
-        { icon: '✉️', text: 'info@sunlightschool.edu' },
+        { icon: '📍', text: t('footer.address') },
+        { icon: '📞', text: t('footer.phone') },
+        { icon: '✉️', text: t('footer.email') },
     ];
-
     const socialLinks = [
         { name: 'Facebook', href: '#', icon: '📘' },
         { name: 'Twitter', href: '#', icon: '🐦' },
@@ -36,11 +38,10 @@ const Footer = () => {
                             <div className="w-12 h-12 bg-blue-900 rounded flex items-center justify-center">
                                 <span className="text-white font-bold text-xl">S</span>
                             </div>
-                            <h3 className="text-2xl font-bold text-blue-900">Sunlight School</h3>
+                            <h3 className="text-2xl font-bold text-blue-900">{t('common.schoolName')}</h3>
                         </div>
                         <p className="text-black text-sm leading-relaxed mb-6">
-                            Nurturing young minds and building bright futures through excellence in education,
-                            character development, and innovative learning experiences.
+                            {t('common.tagline')} - {t('footer.description')}
                         </p>
                         <div className="flex space-x-3">
                             {socialLinks.map((social) => (
@@ -60,7 +61,7 @@ const Footer = () => {
                     <div>
                         <h4 className="text-lg font-bold mb-6 text-blue-900 flex items-center gap-2">
                             <span className="w-1 h-6 bg-blue-900"></span>
-                            Quick Links
+                            {t('footer.quickLinks')}
                         </h4>
                         <ul className="space-y-3">
                             {quickLinks.map((link) => (
@@ -80,12 +81,12 @@ const Footer = () => {
                     <div>
                         <h4 className="text-lg font-bold mb-6 text-blue-900 flex items-center gap-2">
                             <span className="w-1 h-6 bg-blue-900"></span>
-                            Contact Info
+                            {t('footer.contactInfo')}
                         </h4>
                         <ul className="space-y-4">
                             {contactInfo.map((info, index) => (
                                 <li key={index} className="flex items-start space-x-3">
-                                    <span className="text-blue-900 text-lg flex-shrink-0 mt-0.5">
+                                    <span className="text-blue-900 text-lg shrink-0 mt-0.5">
                                         {info.icon}
                                     </span>
                                     <span className="text-black text-sm leading-relaxed">
@@ -100,19 +101,19 @@ const Footer = () => {
                     <div>
                         <h4 className="text-lg font-bold mb-6 text-blue-900 flex items-center gap-2">
                             <span className="w-1 h-6 bg-blue-900"></span>
-                            Stay Connected
+                            {t('footer.stayConnected')}
                         </h4>
                         <p className="text-black text-sm mb-4 leading-relaxed">
-                            Subscribe to our newsletter for the latest updates, events, and school news.
+                            {t('footer.newsletterText')}
                         </p>
                         <div className="space-y-3">
                             <input
                                 type="email"
-                                placeholder="Enter your email"
+                                placeholder={t('footer.enterEmailPlaceholder')}
                                 className="w-full px-4 py-3 bg-white text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm transition-colors duration-200"
                             />
                             <button className="w-full px-4 py-3 bg-blue-900 hover:bg-black text-white transition-colors duration-200 font-semibold text-sm">
-                                Subscribe
+                                {t('footer.subscribe')}
                             </button>
                         </div>
                     </div>
@@ -122,17 +123,17 @@ const Footer = () => {
                 <div className=" mt-12 pt-8">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div className="text-black text-sm">
-                            © {currentYear} <span className="font-semibold text-blue-900">Sunlight School</span>. All rights reserved.
+                            © {currentYear} <span className="font-semibold text-blue-900">{t('common.schoolName')}</span>. {t('footer.allRightsReserved')}.
                         </div>
                         <div className="flex flex-wrap justify-center gap-6 text-sm">
                             <Link href="/privacy" className="text-black hover:text-blue-900 transition-colors duration-200">
-                                Privacy Policy
+                                {t('footer.privacyPolicy')}
                             </Link>
                             <Link href="/terms" className="text-black hover:text-blue-900 transition-colors duration-200">
-                                Terms of Service
+                                {t('footer.termsOfService')}
                             </Link>
                             <Link href="/accessibility" className="text-black hover:text-blue-900 transition-colors duration-200">
-                                Accessibility
+                                {t('footer.accessibility')}
                             </Link>
                         </div>
                     </div>

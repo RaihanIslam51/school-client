@@ -1,0 +1,261 @@
+{
+  "common": {
+    "schoolName": "Sunlight School",
+    "tagline": "Excellence in Education",
+    "login": "Login",
+    "logout": "Logout",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "download": "Download",
+    "upload": "Upload",
+    "select": "Select",
+    "close": "Close"
+  },
+  "nav": {
+    "home": "Home",
+    "aboutUs": "About Us",
+    "academics": "Academics",
+    "admissions": "Admissions",
+    "notices": "Notices",
+    "contact": "Contact",
+    "adminDashboard": "Admin Dashboard",
+    "teacherboard": "Teacherboard",
+    "portal": "Portal"
+  },
+  "hero": {
+    "welcomeTitle": "Welcome to Sunlight School",
+    "welcomeSubtitle": "Nurturing Excellence, Building Future Leaders",
+    "exploreMore": "Explore More",
+    "contactUs": "Contact Us"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Learn more about our institution",
+    "mission": "Mission",
+    "vision": "Vision",
+    "history": "History"
+  },
+  "academics": {
+    "title": "Academics",
+    "pageTitle": "Our Academics",
+    "subtitle": "Comprehensive education from Pre-Primary to Higher Secondary with world-class curriculum, experienced faculty, and cutting-edge learning methodologies",
+    "tabs": {
+      "classes": "Academic Levels",
+      "subjects": "Core Subjects",
+      "activities": "Co-Curricular"
+    },
+    "mediums": {
+      "english": "English Medium",
+      "bangla": "Bangla Medium"
+    },
+    "coreSubjects": "Core Subjects",
+    "subjectsSubtitle": "Comprehensive curriculum with English and Bangla medium options",
+    "coreBenefits": {
+      "title": "Why Choose Our Core Subjects?",
+      "targeted": { "title": "Targeted Learning", "desc": "Focused curriculum designed for academic excellence and real-world application" },
+      "expert": { "title": "Expert Faculty", "desc": "Highly qualified teachers with years of experience and innovative teaching methods" },
+      "proven": { "title": "Proven Results", "desc": "Consistent high performance with excellent board results" }
+    },
+    "activitiesTitle": "Co-Curricular Activities",
+    "activitiesSubtitle": "Nurturing talents beyond academics for holistic development",
+    "participants": "Participants",
+    "subjectStats": { "grade": "Grade", "expert": "Expert", "faculty": "Faculty", "passRate": "Pass Rate" },
+    "stats": { "students": "Students", "teachers": "Teachers", "activities": "Activities" },
+    "fallbacks": {
+      "higherSecondary": {
+        "title": "Higher Secondary",
+        "description": "Specialization in Science, Arts & Commerce streams",
+        "ageGroup": "Ages 16-17",
+        "grades": ["Class 11-12"],
+        "stats": { "students": "180+", "teachers": "12", "activities": "18+" }
+      },
+      "scienceClub": {
+        "title": "Science Club",
+        "description": "Hands-on experiments, research, and science competitions",
+        "details": ["Science Olympiads", "Research Projects", "Science Fairs", "Lab Experiments"],
+        "category": "Science",
+        "participants": "100+"
+      }
+    }
+  },
+  "notices": {
+    "title": "Notices",
+    "latestNotices": "Latest Notices",
+    "noticeboard": "Notice board",
+    "subtitle": "Stay informed about important announcements and upcoming events",
+    "date": "Date",
+    "description": "Description",
+    "tabs": {
+      "all": "All",
+      "exams": "Exams",
+      "holidays": "Holidays",
+      "general": "General",
+      "events": "Events",
+      "academic": "Academic"
+    },
+    "errorTitle": "Unable to Load Notices",
+    "emptyTitle": "No Notices Available",
+    "emptyMessage": "Check back later for updates.",
+    "emptyAll": "There are no notices published yet.",
+    "emptyFiltered": "No %s notices available at the moment.",
+    "noNoticesFound": "No Notices Found",
+    "readMore": "Read More →",
+    "viewAll": "View All Notices",
+    "showLess": "Show Less",
+    "types": {
+      "exam": "Exams",
+      "holiday": "Holidays",
+      "general": "General",
+      "event": "Events",
+      "academic": "Academic",
+      "urgent": "Urgent",
+      "default": "Notice"
+    },
+    "important": "Important",
+    "publishedOn": "Published on"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "sendMessage": "Send Message",
+    "name": "Name",
+    "message": "Message",
+    "subject": "Subject"
+  },
+  "dashboard": {
+    "welcome": "Welcome to Dashboard",
+    "students": "Students",
+    "teachers": "Teachers",
+    "classes": "Classes",
+    "subjects": "Subjects",
+    "attendance": "Attendance",
+    "results": "Results",
+    "fees": "Fees",
+    "salary": "Salary",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "settings": "Settings",
+    "profile": "Profile",
+    "statistics": "Statistics",
+    "overview": "Overview"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "importantLinks": "Important Links",
+    "contactInfo": "Contact Information",
+    "followUs": "Follow Us",
+    "stayConnected": "Stay Connected",
+    "newsletterText": "Subscribe to our newsletter for the latest updates, events, and school news.",
+    "enterEmailPlaceholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "description": "Nurturing young minds and building bright futures through excellence in education, character development, and innovative learning experiences.",
+    "address": "123 Education Street, City, State 12345",
+    "phone": "+1 (555) 123-4567",
+    "email": "info@sunlightschool.edu",
+    "accessibility": "Accessibility",
+    "allRightsReserved": "All rights reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  },
+  "auth": {
+    "loginTitle": "Login to Your Account",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember Me",
+    "forgotPassword": "Forgot Password?",
+    "loginButton": "Login",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "role": "Role",
+    "selectRole": "Select Role",
+    "admin": "Admin",
+    "teacher": "Teacher",
+    "student": "Student"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Explore our vibrant collection of school events, achievements, and memorable moments that define our community",
+    "viewAll": "View All Photos",
+    "schoolEvents": "School Events",
+    "activities": "Activities",
+    "filters": { "all": "All" },
+    "buttons": { "seeMore": "See More Galleries", "seeLess": "See Less" },
+    "featured": "Featured",
+    "photos": "photos",
+    "viewGallery": "View Gallery",
+    "errorLoading": "Unable to load gallery — showing fallback content.",
+    "retry": "Retry",
+    "categories": {
+      "Events": "Events",
+      "Sports": "Sports",
+      "Cultural": "Cultural",
+      "Academic": "Academic",
+      "Infrastructure": "Infrastructure",
+      "Technology": "Technology",
+      "Arts": "Arts",
+      "Science": "Science"
+    },
+    "fallbacks": {
+      "techDay": {
+        "title": "Technology Innovation Day",
+        "description": "Presenting cutting-edge technology projects, coding competitions, and digital innovation showcases.",
+        "eventDate": "2024-11-15",
+        "category": "Technology"
+      }
+    }
+  },
+  "achievements": {
+    "title": "Achievements",
+    "ourAchievements": "Our Achievements",
+    "subtitle": "Showcasing outstanding achievements across academics, sports, arts, and innovation",
+    "awards": "Awards",
+    "competitions": "Competitions",
+    "filters": { "all": "All" },
+    "buttons": { "seeMore": "See More Achievements", "seeLess": "See Less" },
+    "highlights": "Highlights",
+    "more": "more",
+    "categories": {
+      "Academic": "Academic",
+      "Sports": "Sports",
+      "Cultural": "Cultural",
+      "Science": "Science",
+      "Arts": "Arts",
+      "Technology": "Technology"
+    },
+    "fallbacks": {
+      "mathOlympiad": {
+        "title": "Mathematics Olympiad Champions",
+        "description": "Outstanding performance in the International Mathematics Olympiad with perfect scores in advanced problems.",
+        "achievements": ["Perfect Score", "Gold Medal", "Special Recognition"],
+        "date": "2024-08-25",
+        "category": "Academic"
+      }
+    }
+  },
+  "facilities": {
+    "title": "Facilities",
+    "ourFacilities": "Our Facilities",
+    "subtitle": "Experience excellence with our modern facilities designed to provide the best learning environment",
+    "loading": "Loading facilities...",
+    "errorLoading": "Error loading facilities",
+    "seeMore": "See More Facilities",
+    "showLess": "Show Less",
+    "library": "Library",
+    "laboratory": "Laboratory",
+    "playground": "Playground",
+    "computerLab": "Computer Lab",
+    "transportation": "Transportation",
+    "transportationDescription": "Safe and reliable bus service covering all major routes with GPS tracking.",
+    "transportationFeatures": ["GPS Tracking", "Safe Routes", "Trained Drivers"]
+  }
+}

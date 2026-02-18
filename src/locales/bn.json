@@ -1,0 +1,261 @@
+{
+  "common": {
+    "schoolName": "সানলাইট স্কুল",
+    "tagline": "শিক্ষায় শ্রেষ্ঠত্ব",
+    "login": "লগইন",
+    "logout": "লগ আউট",
+    "loading": "লোড হচ্ছে...",
+    "error": "ত্রুটি",
+    "success": "সফল",
+    "submit": "জমা দিন",
+    "cancel": "বাতিল",
+    "save": "সংরক্ষণ করুন",
+    "delete": "মুছুন",
+    "edit": "সম্পাদনা",
+    "view": "দেখুন",
+    "search": "অনুসন্ধান",
+    "download": "ডাউনলোড",
+    "upload": "আপলোড",
+    "select": "নির্বাচন করুন",
+    "close": "বন্ধ করুন"
+  },
+  "nav": {
+    "home": "হোম",
+    "aboutUs": "আমাদের সম্পর্কে",
+    "academics": "শিক্ষা",
+    "admissions": "ভর্তি",
+    "notices": "নোটিশ",
+    "contact": "যোগাযোগ",
+    "adminDashboard": "অ্যাডমিন ড্যাশবোর্ড",
+    "teacherboard": "শিক্ষক বোর্ড",
+    "portal": "পোর্টাল"
+  },
+  "hero": {
+    "welcomeTitle": "সানলাইট স্কুলে স্বাগতম",
+    "welcomeSubtitle": "শ্রেষ্ঠত্ব লালন, ভবিষ্যৎ নেতৃত্ব নির্মাণ",
+    "exploreMore": "আরও জানুন",
+    "contactUs": "যোগাযোগ করুন"
+  },
+  "about": {
+    "title": "আমাদের সম্পর্কে",
+    "subtitle": "আমাদের প্রতিষ্ঠান সম্পর্কে আরও জানুন",
+    "mission": "লক্ষ্য",
+    "vision": "দৃষ্টিভঙ্গি",
+    "history": "ইতিহাস"
+  },
+  "academics": {
+    "title": "শিক্ষা",
+    "pageTitle": "আমাদের শিক্ষা ব্যবস্থা",
+    "subtitle": "প্রাক-প্রাথমিক থেকে উচ্চ মাধ্যমিক পর্যন্ত সমগ্র শিক্ষা, বিশ্বমানের পাঠ্যক্রম, অভিজ্ঞ শিক্ষক ও আধুনিক শিক্ষণ পদ্ধতি",
+    "tabs": {
+      "classes": "শিক্ষাগত স্তর",
+      "subjects": "কোর বিষয়",
+      "activities": "কো-কারিকুলার"
+    },
+    "mediums": {
+      "english": "ইংরেজি মাধ্যম",
+      "bangla": "বাংলা মাধ্যম"
+    },
+    "coreSubjects": "কোর বিষয়",
+    "subjectsSubtitle": "ইংরেজি ও বাংলা মাধ্যম অপশনের সাথে বিস্তৃত পাঠ্যক্রম",
+    "coreBenefits": {
+      "title": "কেন আমাদের কোর বিষয়গুলো বেছে নেবেন?",
+      "targeted": { "title": "লক্ষ্যমাত্রা ভিত্তিক শিক্ষা", "desc": "সুনির্দিষ্ট পাঠ্যক্রম একাডেমিক উৎকর্ষতা এবং বাস্তব জীবনের প্রয়োগের জন্য ডিজাইন করা হয়েছে" },
+      "expert": { "title": "দক্ষ শিক্ষকবৃন্দ", "desc": "বহু বছরের অভিজ্ঞতা ও উদ্ভাবনী শিক্ষণ পদ্ধতির সাথে দক্ষ শিক্ষকবৃন্দ" },
+      "proven": { "title": "প্রমাণিত ফলাফল", "desc": "উচ্চ ফলাফল এবং চমৎকার বোর্ড রেজাল্ট" }
+    },
+    "activitiesTitle": "কো-কারিকুলার কার্যক্রম",
+    "activitiesSubtitle": "একাডেমিকের বাইরেও প্রতিভা গড়ে তোলা",
+    "participants": "অংশগ্রহণকারী",
+    "subjectStats": { "grade": "গ্রেড", "expert": "বিশেষজ্ঞ", "faculty": "শিক্ষক", "passRate": "পাশ রেট" },
+    "stats": { "students": "শিক্ষার্থী", "teachers": "শিক্ষক", "activities": "কার্যক্রম" },
+    "fallbacks": {
+      "higherSecondary": {
+        "title": "উচ্চ মাধ্যমিক",
+        "description": "বিজ্ঞান, কলা ও বাণিজ্যে বিশেষায়ন",
+        "ageGroup": "বয়স ১৬-১৭ বছর",
+        "grades": ["ক্লাস ১১-১২"],
+        "stats": { "students": "180+", "teachers": "12", "activities": "18+" }
+      },
+      "scienceClub": {
+        "title": "সায়েন্স ক্লাব",
+        "description": "হাতেকলমে পরীক্ষা, গবেষণা এবং বিজ্ঞান প্রতিযোগিতা",
+        "details": ["সায়েন্স অলিম্পিয়াড", "গবেষণা প্রকল্প", "বিজ্ঞান মেলা", "ল্যাব পরীক্ষা"],
+        "category": "বিজ্ঞান",
+        "participants": "১০০+"
+      }
+    }
+  },
+  "notices": {
+    "title": "নোটিস",
+    "latestNotices": "সর্বশেষ নোটিস",
+    "viewAll": "সব নোটিস দেখুন",
+    "noticeboard": "নোটিশ বোর্ড",
+    "subtitle": "গুরুত্বপূর্ণ বিজ্ঞপ্তি এবং আগত ইভেন্ট সম্পর্কে অবহিত থাকুন",
+    "date": "তারিখ",
+    "description": "বিবরণ",
+    "tabs": {
+      "all": "সব",
+      "exams": "পরীক্ষা",
+      "holidays": "ছুটি",
+      "general": "সাধারণ",
+      "events": "ইভেন্ট",
+      "academic": "শিক্ষা সংক্রান্ত"
+    },
+    "errorTitle": "নোটিস লোড করা যাচ্ছে না",
+    "emptyTitle": "কোনো নোটিস নেই",
+    "emptyMessage": "আপডেটের জন্য পরে আবার দেখুন।",
+    "emptyAll": "এখনও কোনো নোটিস প্রকাশ করা হয়নি।",
+    "emptyFiltered": "%s ধরনের কোনো নোটিস বর্তমানে নেই।",
+    "noNoticesFound": "কোনো নোটিস পাওয়া যায়নি",
+    "readMore": "আরও পড়ুন →",
+    "showLess": "কম দেখুন",
+    "types": {
+      "exam": "পরীক্ষা",
+      "holiday": "ছুটি",
+      "general": "সাধারণ",
+      "event": "ইভেন্ট",
+      "academic": "শিক্ষা",
+      "urgent": "জরুরি",
+      "default": "নোটিশ"
+    },
+    "important": "গুরুত্বপূর্ণ",
+    "publishedOn": "প্রকাশিত"
+  },
+  "contact": {
+    "title": "যোগাযোগ করুন",
+    "address": "ঠিকানা",
+    "phone": "ফোন",
+    "email": "ইমেইল",
+    "sendMessage": "বার্তা পাঠান",
+    "name": "নাম",
+    "message": "বার্তা",
+    "subject": "বিষয়"
+  },
+  "dashboard": {
+    "welcome": "ড্যাশবোর্ডে স্বাগতম",
+    "students": "শিক্ষার্থী",
+    "teachers": "শিক্ষক",
+    "classes": "ক্লাস",
+    "subjects": "বিষয়",
+    "attendance": "উপস্থিতি",
+    "results": "ফলাফল",
+    "fees": "ফি",
+    "salary": "বেতন",
+    "expenses": "খরচ",
+    "reports": "রিপোর্ট",
+    "settings": "সেটিংস",
+    "profile": "প্রোফাইল",
+    "statistics": "পরিসংখ্যান",
+    "overview": "সারসংক্ষেপ"
+  },
+  "footer": {
+    "quickLinks": "দ্রুত লিংক",
+    "importantLinks": "গুরুত্বপূর্ণ লিংক",
+    "contactInfo": "যোগাযোগের তথ্য",
+    "followUs": "আমাদের অনুসরণ করুন",
+    "stayConnected": "সংযুক্ত থাকুন",
+    "newsletterText": "সর্বশেষ আপডেট, ইভেন্ট এবং স্কুল সংবাদ পেতে আমাদের নিউজলেটারে সাবস্ক্রাইব করুন।",
+    "enterEmailPlaceholder": "আপনার ইমেইল লিখুন",
+    "subscribe": "সাবস্ক্রাইব",
+    "description": "শিক্ষার উৎকৃষ্টতা, চরিত্র গঠন এবং উদ্ভাবনী শিক্ষণ অভিজ্ঞতার মাধ্যমে তরুণ মেধাকে লালন করে উজ্জ্বল ভবিষ্যৎ গড়া।",
+    "address": "১২৩ এডুকেশন স্ট্রীট, সিটি, স্টেট 12345",
+    "phone": "+১ (৫৫৫) 123-4567",
+    "email": "info@sunlightschool.edu",
+    "accessibility": "প্রবেশযোগ্যতা",
+    "allRightsReserved": "সর্বস্বত্ব সংরক্ষিত",
+    "privacyPolicy": "গোপনীয়তা নীতি",
+    "termsOfService": "সেবার শর্তাবলী"
+  },
+  "auth": {
+    "loginTitle": "আপনার অ্যাকাউন্টে লগইন করুন",
+    "email": "ইমেইল",
+    "password": "পাসওয়ার্ড",
+    "rememberMe": "আমাকে মনে রাখুন",
+    "forgotPassword": "পাসওয়ার্ড ভুলে গেছেন?",
+    "loginButton": "লগইন",
+    "noAccount": "অ্যাকাউন্ট নেই?",
+    "signUp": "সাইন আপ",
+    "role": "ভূমিকা",
+    "selectRole": "ভূমিকা নির্বাচন করুন",
+    "admin": "অ্যাডমিন",
+    "teacher": "শিক্ষক",
+    "student": "শিক্ষার্থী"
+  },
+  "gallery": {
+    "title": "গ্যালারি",
+    "subtitle": "স্কুল ইভেন্ট, অর্জন এবং স্মরণীয় মুহূর্তগুলোর রঙিন সংগ্রহ অন্বেষণ করুন",
+    "viewAll": "সব ছবি দেখুন",
+    "schoolEvents": "স্কুলের ইভেন্ট",
+    "activities": "কার্যক্রম",
+    "filters": { "all": "সব" },
+    "buttons": { "seeMore": "আরও গ্যালারি দেখুন", "seeLess": "কম দেখুন" },
+    "featured": "বিশেষ",
+    "photos": "ছবি",
+    "viewGallery": "গ্যালারি দেখুন",
+    "errorLoading": "গ্যালারি লোড করা যাচ্ছে না — বিকল্প কন্টেন্ট দেখানো হচ্ছে।",
+    "retry": "পুনরায় চেষ্টা করুন",
+    "categories": {
+      "Events": "ইভেন্ট",
+      "Sports": "ক্রীড়া",
+      "Cultural": "সাংস্কৃতিক",
+      "Academic": "একাডেমিক",
+      "Infrastructure": "ভবনসমূহ",
+      "Technology": "প্রযুক্তি",
+      "Arts": "শিল্প",
+      "Science": "বিজ্ঞান"
+    },
+    "fallbacks": {
+      "techDay": {
+        "title": "প্রযুক্তি উদ্ভাবন দিবস",
+        "description": "কোডিং প্রতিযোগিতা, ডিজিটাল উদ্ভাবন ও প্রযুক্তি প্রকল্প প্রদর্শনী।",
+        "eventDate": "2024-11-15",
+        "category": "Technology"
+      }
+    }
+  },
+  "achievements": {
+    "title": "অর্জন",
+    "ourAchievements": "আমাদের অর্জন",
+    "subtitle": "একাডেমিক, ক্রীড়া, শিল্প ও উদ্ভাবনে অসাধারণ অর্জনগুলো প্রদর্শন করা হচ্ছে",
+    "awards": "পুরস্কার",
+    "competitions": "প্রতিযোগিতা",
+    "filters": { "all": "সব" },
+    "buttons": { "seeMore": "আরও অর্জন দেখুন", "seeLess": "কম দেখুন" },
+    "highlights": "উল্লেখযোগ্য অর্জন",
+    "more": "আরও",
+    "categories": {
+      "Academic": "একাডেমিক",
+      "Sports": "ক্রীড়া",
+      "Cultural": "সাংস্কৃতিক",
+      "Science": "বিজ্ঞান",
+      "Arts": "শিল্প",
+      "Technology": "প্রযুক্তি"
+    },
+    "fallbacks": {
+      "mathOlympiad": {
+        "title": "গণিত অলিম্পিয়াড চ্যাম্পিয়ন",
+        "description": "আন্তর্জাতিক গণিত অলিম্পিয়াডে অসাধারণ পারফরম্যান্স এবং উন্নত সমস্যা সমাধানে চমৎকার ফলাফল।",
+        "achievements": ["সম্পূর্ণ নম্বর", "স্বর্ণ পদক", "বিশেষ সম্মাননা"],
+        "date": "2024-08-25",
+        "category": "Academic"
+      }
+    }
+  },
+  "facilities": {
+    "title": "সুবিধা",
+    "ourFacilities": "আমাদের সুবিধাসমূহ",
+    "subtitle": "সেরা শেখার পরিবেশ নিশ্চিত করার জন্য আমাদের আধুনিক সুবিধাসমূহ উপভোগ করুন",
+    "loading": "সুবিধাসমূহ লোড করা হচ্ছে...",
+    "errorLoading": "সুবিধা লোড করতে সমস্যা হয়েছে",
+    "seeMore": "আরও সুবিধা দেখুন",
+    "showLess": "কম দেখুন",
+    "library": "গ্রন্থাগার",
+    "laboratory": "পরীক্ষাগার",
+    "playground": "খেলার মাঠ",
+    "computerLab": "কম্পিউটার ল্যাব",
+    "transportation": "পরিবহন",
+    "transportationDescription": "GPS ট্র্যাকিং সহ নিরাপদ ও নির্ভরযোগ্য বাস পরিষেবা।",
+    "transportationFeatures": ["GPS ট্র্যাকিং", "নিরাপদ রুট", "প্রশিক্ষিত চালক"]
+  }
+}

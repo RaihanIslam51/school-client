@@ -3,20 +3,22 @@ import React, { useState, useEffect, useRef, Fragment, useCallback, useMemo } fr
 import Link from 'next/link';
 import Image from 'next/image';
 import { API_URL } from '../../config/api';
+import { useLanguage } from '../../src/contexts/LanguageContext';
+
+const Hero = () => {
+    const { t } = useLanguage();
 
 // Simple fallback data
 const defaultBanners = [{
     images: ['/school1.jpg'],
-    headline: 'Welcome to Sunlight School',
-    subheadline: 'Nurturing Knowledge, Character & Excellence',
+    headline: t('hero.welcomeTitle'),
+    subheadline: t('hero.welcomeSubtitle'),
     stats: [
-        { number: '25+', label: 'Years of Excellence' },
-        { number: '2000+', label: 'Students' },
+        { number: '25+', label: t('hero.welcomeTitle') },
+        { number: '2000+', label: t('dashboard.students') },
         { number: '98%', label: 'Success Rate' }
     ]
 }];
-
-const Hero = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [banners, setBanners] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -219,7 +221,7 @@ const Hero = () => {
                 <>
                     <button
                         onClick={prevSlide}
-                        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white/90 hover:bg-white text-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+                        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12  hover:bg-white text-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
                         aria-label="Previous slide"
                     >
                         <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -229,7 +231,7 @@ const Hero = () => {
 
                     <button
                         onClick={nextSlide}
-                        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white/90 hover:bg-white text-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+                        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12  hover:bg-white text-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
                         aria-label="Next slide"
                     >
                         <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
