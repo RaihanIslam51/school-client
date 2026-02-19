@@ -1,13 +1,13 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { API_URL } from '../../config/api';
+import { useGallery } from '../../src/hooks/useApi';
 import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const Gallery = () => {
-    const [galleries, setGalleries] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data: galleriesData, isLoading: loading, error: fetchError } = useGallery();
+    const galleries = galleriesData?.data || [];
+    const error = fetchError?.message || null;
     const [activeCategory, setActiveCategory] = useState('all');
     const [showAll, setShowAll] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -30,60 +30,6 @@ const Gallery = () => {
         const label = t(key);
         return label === key ? category : label;
     };
-
-
-    // Fetch helper with simple retry for 5xx responses
-    const fetchWithRetry = async (url, options = {}, retries = 2, backoff = 500) => {
-        try {
-            const res = await fetch(url, options);
-            if (!res.ok) {
-                if (res.status >= 500 && retries > 0) {
-                    await new Promise((r) => setTimeout(r, backoff));
-                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
-                }
-                return res; // return non-2xx response for caller to handle
-            }
-            return res;
-        } catch (err) {
-            if (retries > 0) {
-                await new Promise((r) => setTimeout(r, backoff));
-                return fetchWithRetry(url, options, retries - 1, backoff * 2);
-            }
-            throw err;
-        }
-    };
-
-    const fetchGalleries = async () => {
-        const url = `${API_URL}/api/gallery`;
-        try {
-            setLoading(true);
-            setError(null);
-            console.info('Fetching galleries from:', url);
-            const response = await fetchWithRetry(url, {}, 2, 500);
-
-            if (!response.ok) {
-                // server returned non-2xx (e.g. 503) after retries — show friendly message and use fallback
-                console.warn('Gallery fetch returned non-2xx:', response.status);
-                setError(t('gallery.errorLoading'));
-                return;
-            }
-
-            const data = await response.json();
-            console.debug('Galleries response:', data);
-            setGalleries(data.data || []);
-        } catch (err) {
-            // network error or exhausted retries
-            console.warn('Gallery fetch failed, using fallback:', err?.message || err);
-            setError(t('gallery.errorLoading'));
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchGalleries();
-    }, []);
-
 
     // Get unique categories
     const categories = ['all', ...new Set(galleries.map(item => item.category))];

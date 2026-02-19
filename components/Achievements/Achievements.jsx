@@ -1,40 +1,18 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { API_URL } from '../../config/api';
 import { useLanguage } from '../../src/contexts/LanguageContext';
+import { useAchievements } from '../../src/hooks/useApi';
 
 const Achievements = () => {
-    const [achievements, setAchievements] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [activeCategory, setActiveCategory] = useState('all');
     const [showAll, setShowAll] = useState(false);
 
     const { t, language } = useLanguage();
 
-    useEffect(() => {
-        const fetchAchievements = async () => {
-            try {
-                console.log('Fetching achievements from:', `${API_URL}/api/achievements`);
-                const response = await fetch(`${API_URL}/api/achievements`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('Achievements response:', data);
-                setAchievements(data.data || []);
-            } catch (err) {
-                setError(err.message);
-                console.error('Error fetching achievements:', err);
-                console.error('API_URL:', API_URL);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAchievements();
-    }, []);
+    const { data: achievementsData, isLoading: loading, error: fetchError } = useAchievements();
+    const achievements = achievementsData?.data || [];
+    const error = fetchError?.message || null;
 
     // Get unique categories
     const categories = ['all', ...new Set(achievements.map(item => item.category))];

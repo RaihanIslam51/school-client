@@ -1,9 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../../../../config/api';
 
 const AcademicsPage = () => {
+    const queryClient = useQueryClient();
     const [academics, setAcademics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -109,6 +111,7 @@ const AcademicsPage = () => {
                 // Reset form
                 resetForm();
                 fetchAcademics();
+                queryClient.invalidateQueries({ queryKey: ['academics'] });
             } else {
                 throw new Error(data.message);
             }
@@ -276,6 +279,7 @@ const AcademicsPage = () => {
                         showConfirmButton: false
                     });
                     fetchAcademics();
+                    queryClient.invalidateQueries({ queryKey: ['academics'] });
                 } else {
                     throw new Error('Failed to delete academic entry');
                 }

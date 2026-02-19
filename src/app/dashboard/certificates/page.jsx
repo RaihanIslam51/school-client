@@ -906,31 +906,31 @@ const CertificateManagementPage = () => {
             classic: {
                 border: '10px double #8B4513',
                 background: 'linear-gradient(135deg, #fefefe 0%, #f8f9fa 100%)',
-                fontFamily: 'Georgia, serif',
+                fontFamily: "Tiro Bangla, Tiro Bangla Static, serif",
                 boxShadow: 'inset 0 0 50px rgba(139, 69, 19, 0.1)'
             },
             modern: {
                 border: '6px solid #2563eb',
                 background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
-                fontFamily: 'Arial, sans-serif',
+                fontFamily: "Tiro Bangla, Tiro Bangla Static, serif",
                 boxShadow: 'inset 0 0 50px rgba(37, 99, 235, 0.1)'
             },
             achievement: {
                 border: '8px solid #f59e0b',
                 background: 'linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)',
-                fontFamily: 'Verdana, sans-serif',
+                fontFamily: "Tiro Bangla, Tiro Bangla Static, serif",
                 boxShadow: 'inset 0 0 50px rgba(245, 158, 11, 0.15)'
             },
             sports: {
                 border: '8px solid #dc2626',
                 background: 'linear-gradient(135deg, #fef2f2 0%, #ffffff 100%)',
-                fontFamily: 'Arial, sans-serif',
+                fontFamily: "Tiro Bangla, Tiro Bangla Static, serif",
                 boxShadow: 'inset 0 0 50px rgba(220, 38, 38, 0.15)'
             },
             cultural: {
                 border: '8px solid #7c3aed',
                 background: 'linear-gradient(135deg, #faf5ff 0%, #ffffff 100%)',
-                fontFamily: 'Georgia, serif',
+                fontFamily: "Tiro Bangla, Tiro Bangla Static, serif",
                 boxShadow: 'inset 0 0 50px rgba(124, 58, 237, 0.15)'
             }
         };

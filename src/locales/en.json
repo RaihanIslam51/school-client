@@ -41,7 +41,116 @@
     "subtitle": "Learn more about our institution",
     "mission": "Mission",
     "vision": "Vision",
-    "history": "History"
+    "history": "History",
+    "pageTitle": "About Sunlight School",
+    "heroDescription": "Illuminating minds and shaping futures since 1995. Where excellence meets innovation, and every student discovers their limitless potential.",
+    "stats": {
+      "students": "Students",
+      "teachers": "Expert Teachers",
+      "years": "Years of Excellence",
+      "graduation": "Graduation Rate"
+    },
+    "missionText": "To provide exceptional education that empowers students to become confident, compassionate, and capable individuals who contribute positively to society. We strive to create a nurturing environment where every student can discover their potential and achieve academic excellence through innovative teaching and personalized learning experiences.",
+    "visionText": "To be a leading educational institution recognized for academic excellence, innovative teaching methods, and holistic development of students. We envision a future where our graduates become leaders, innovators, and responsible citizens who make meaningful contributions to their communities and the world.",
+    "whyTitle": "Why Choose Sunlight School?",
+    "why": {
+      "personalized": "Personalized learning approach",
+      "facilities": "State-of-the-art facilities",
+      "experienced": "Experienced faculty",
+      "extracurricular": "Comprehensive extracurricular programs",
+      "community": "Strong community partnerships"
+    },
+    "legacy": {
+      "title": "Our Legacy of Excellence",
+      "subtitle": "Three decades of commitment to educational excellence and student success"
+    },
+    "history": {
+      "1995": {
+        "title": "1995: Humble Beginnings",
+        "text": "Founded with a vision to provide quality education to 50 local students, starting in a modest building with dedicated educators."
+      },
+      "2010": {
+        "title": "2010: Expansion & Growth",
+        "text": "Expanded to serve over 500 students with new facilities, advanced curriculum, and modern teaching methodologies."
+      },
+      "2024": {
+        "title": "2024: Excellence Today",
+        "text": "A comprehensive educational center serving 1,000+ students with cutting-edge technology and innovative programs."
+      }
+    },
+    "journey": {
+      "title": "Our Journey",
+      "text": "Over the past three decades, Sunlight School has evolved from a small community school into a beacon of educational excellence. We've maintained our commitment to quality while embracing modern teaching methodologies and technological advancements.",
+      "years": "Years of Service",
+      "growth": "Student Growth"
+    },
+    "programs": {
+      "title": "Comprehensive Academic Programs",
+      "subtitle": "From foundation to advanced learning, we offer complete educational pathways",
+      "primary": {
+        "title": "Primary Education",
+        "desc": "Comprehensive foundation program for grades K-5, focusing on core subjects and fundamental skills development through play-based learning.",
+        "features": [
+          "Interactive learning methods",
+          "Arts and creativity programs",
+          "Physical education",
+          "Basic STEM introduction"
+        ]
+      },
+      "middle": {
+        "title": "Middle School",
+        "desc": "Advanced curriculum for grades 6-8, preparing students for high school with specialized subjects and extracurricular activities.",
+        "features": [
+          "Advanced mathematics & science",
+          "Foreign language programs",
+          "Leadership development",
+          "Competitive sports teams"
+        ]
+      },
+      "high": {
+        "title": "High School",
+        "desc": "College preparatory program for grades 9-12, offering advanced placement courses and comprehensive career guidance.",
+        "features": [
+          "AP & honors courses",
+          "College counseling",
+          "Research opportunities",
+          "Internship programs"
+        ]
+      }
+    },
+    "achievements": {
+      "academicTitle": "Academic Excellence Award",
+      "academicDesc": "Recognized for outstanding academic performance",
+      "stemTitle": "STEM Innovation Prize",
+      "stemDesc": "Winner of regional STEM competition",
+      "communityTitle": "Community Service Award",
+      "communityDesc": "Excellence in community engagement",
+      "sportsTitle": "Sports Championship",
+      "sportsDesc": "State champions in basketball and soccer"
+    },
+    "coreValues": {
+      "title": "Our Core Values",
+      "subtitle": "The principles that guide everything we do at Sunlight School",
+      "excellence": { "title": "Excellence", "text": "We strive for the highest standards in education, fostering a culture of continuous improvement and achievement in everything we do." },
+      "compassion": { "title": "Compassion", "text": "We create a caring and supportive environment where every student feels valued, respected, and empowered to reach their full potential." },
+      "community": { "title": "Community", "text": "We build strong partnerships with parents, staff, and the community to support student success and foster lifelong learning." }
+    },
+    "contactSubtitle": "Ready to join our community of excellence? Get in touch today.",
+    "contact": {
+      "visitTitle": "Visit Our Campus",
+      "getInTouchTitle": "Get in Touch",
+      "hoursTitle": "School Hours",
+      "addressLine1": "123 Education Street",
+      "addressLine2": "Knowledge City, KC 12345",
+      "country": "United States",
+      "admissionsLabel": "Admissions",
+      "weekdays": "Monday - Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "closed": "Closed",
+      "admissionsOfficeLabel": "Admissions Office",
+      "admissionsOfficeHours": "Monday - Friday: 9:00 AM - 5:00 PM"
+    }
   },
   "academics": {
     "title": "Academics",
@@ -124,13 +233,82 @@
   },
   "contact": {
     "title": "Contact Us",
+    "pageTitle": "Get In Touch",
+    "heroSubtitle": "Ready to start your child's educational journey? Our dedicated team is here to guide you through every step.",
+    "multipleWaysTitle": "Multiple Ways to Connect",
+    "multipleWaysSubtitle": "Choose the method that works best for you. Our team is ready to assist",
     "address": "Address",
     "phone": "Phone",
     "email": "Email",
     "sendMessage": "Send Message",
     "name": "Name",
     "message": "Message",
-    "subject": "Subject"
+    "subject": "Subject",
+    "cards": {
+      "visitTitle": "Visit Our Campus",
+      "addressLine1": "123 Education Street",
+      "addressLine2": "Knowledge City, KC 12345",
+      "country": "United States",
+      "callTitle": "Call Us",
+      "mainLabel": "Main",
+      "admissionsLabel": "Admissions",
+      "emergencyLabel": "Emergency",
+      "emailTitle": "Email Us",
+      "emailGeneralLabel": "General",
+      "emailAdmissionsLabel": "Admissions",
+      "emailSupportLabel": "Support",
+      "hoursTitle": "Office Hours",
+      "hoursWeekdaysLabel": "Mon-Fri",
+      "hoursSaturdayLabel": "Sat",
+      "hoursSundayLabel": "Sun",
+      "closedLabel": "Closed"
+    },
+    "form": {
+      "title": "Send us a Message",
+      "subtitle": "Have questions about admissions, programs, or anything else? We'd love to hear from you.",
+      "nameLabel": "Full Name *",
+      "emailLabel": "Email Address *",
+      "phoneLabel": "Phone Number",
+      "subjectLabel": "Subject *",
+      "placeholders": {
+        "name": "Your full name",
+        "email": "your.email@example.com",
+        "phone": "(555) 123-4567",
+        "message": "Please describe how we can help you..."
+      },
+      "selectSubject": "Select a subject",
+      "subjects": {
+        "admissions": "Admissions Inquiry",
+        "academic": "Academic Programs",
+        "facilities": "Facilities & Resources",
+        "events": "School Events",
+        "support": "Student Support",
+        "other": "Other"
+      },
+      "sendButton": "Send Message",
+      "messageLabel": "Message *"
+    },
+    "map": {
+      "title": "Find Our Campus",
+      "openInMaps": "Open in Google Maps",
+      "name": "Sunlight School",
+      "coordinates": "Latitude: 25.6333° N · Longitude: 88.6333° E",
+      "addressShort": "123 Education Street, Knowledge City"
+    },
+    "quick": {
+      "title": "Quick Connect Options",
+      "liveChat": { "title": "Live Chat Support", "subtitle": "Available Mon-Fri, 9 AM - 5 PM" },
+      "tour": { "title": "Schedule Campus Tour", "subtitle": "Book a personalized campus visit" },
+      "request": { "title": "Request Information", "subtitle": "Get our digital brochure and details" }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Quick answers to common questions about Sunlight School",
+      "q1": { "question": "How do I apply for admission?", "answer": "Contact our admissions office at (555) 123-4568 or email admissions@sunlightschool.edu. We'll guide you through the application process and schedule a campus visit." },
+      "q2": { "question": "What are the school hours?", "answer": "Regular school hours are 8:00 AM to 3:00 PM, Monday through Friday. Saturday sessions run from 9:00 AM to 12:00 PM for special programs." },
+      "q3": { "question": "Do you offer transportation?", "answer": "Yes, we provide safe and reliable transportation services for students within a 20-mile radius. Contact our transportation office for routes and schedules." },
+      "q4": { "question": "What extracurricular activities are available?", "answer": "We offer a wide range of activities including sports teams, arts programs, clubs, and community service opportunities. Visit our activities page for details." }
+    }
   },
   "dashboard": {
     "welcome": "Welcome to Dashboard",
@@ -256,6 +434,14 @@
     "computerLab": "Computer Lab",
     "transportation": "Transportation",
     "transportationDescription": "Safe and reliable bus service covering all major routes with GPS tracking.",
-    "transportationFeatures": ["GPS Tracking", "Safe Routes", "Trained Drivers"]
+    "transportationFeatures": ["GPS Tracking", "Safe Routes", "Trained Drivers"],
+    "smartClassrooms": "Smart Classrooms",
+    "smartClassroomsDesc": "Interactive whiteboards, digital projectors, and modern furniture for optimal learning",
+    "scienceLabs": "Science Labs",
+    "scienceLabsDesc": "Fully equipped physics, chemistry, and biology labs with latest technology",
+    "sportsComplex": "Sports Complex",
+    "sportsComplexDesc": "Basketball court, gymnasium, swimming pool, and outdoor athletic fields",
+    "digitalLibrary": "Digital Library",
+    "digitalLibraryDesc": "Extensive collection with digital resources, e-books, and research databases"
   }
 }

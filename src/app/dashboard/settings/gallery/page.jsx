@@ -1,10 +1,12 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../../../../config/api';
 import ImgBBUpload from '../../../../../components/ImgBBUpload';
 
 const GalleryPage = () => {
+    const queryClient = useQueryClient();
     const [galleries, setGalleries] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -97,6 +99,7 @@ const GalleryPage = () => {
                     showConfirmButton: false
                 });
                 fetchGalleries();
+                queryClient.invalidateQueries({ queryKey: ['gallery'] });
                 resetForm();
                 setShowModal(false);
             } else {
@@ -148,6 +151,7 @@ const GalleryPage = () => {
                 if (data.success) {
                     Swal.fire('Deleted!', 'Gallery has been deleted.', 'success');
                     fetchGalleries();
+                    queryClient.invalidateQueries({ queryKey: ['gallery'] });
                 } else {
                     throw new Error(data.message);
                 }

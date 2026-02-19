@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef, Fragment, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { API_URL } from '../../config/api';
 import { useLanguage } from '../../src/contexts/LanguageContext';
+import { useBanners } from '../../src/hooks/useApi';
 
 const Hero = () => {
     const { t } = useLanguage();
@@ -20,8 +20,8 @@ const defaultBanners = [{
     ]
 }];
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [banners, setBanners] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { data: bannersData, isLoading: loading } = useBanners();
+    const banners = bannersData?.data || [];
     const [isVisible, setIsVisible] = useState(false);
     const [progress, setProgress] = useState(0);
     const [touchStart, setTouchStart] = useState(0);
@@ -51,28 +51,11 @@ const defaultBanners = [{
 
     // Fetch banner data
     useEffect(() => {
-        const fetchBanner = async () => {
-            try {
-                console.log('Fetching banners from:', `${API_URL}/api/banners`);
-                const response = await fetch(`${API_URL}/api/banners`);
-                const data = await response.json();
-                console.log('Banners response:', data);
-                if (data.success && data.data.length > 0) {
-                    setBanners(data.data);
-                    setIsLoaded(true);
-                } else {
-                    setIsLoaded(true);
-                }
-            } catch (error) {
-                console.error('Error fetching banner:', error);
-                setIsLoaded(true);
-            } finally {
-                setLoading(false);
-                setTimeout(() => setIsVisible(true), 100);
-            }
-        };
-        fetchBanner();
-    }, []);
+        if (!loading) {
+            setIsLoaded(true);
+            setTimeout(() => setIsVisible(true), 100);
+        }
+    }, [loading]);
 
     const activeBanners = banners.length > 0 ? banners : defaultBanners;
     const slides = useMemo(() => {

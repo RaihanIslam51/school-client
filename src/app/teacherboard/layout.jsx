@@ -12,15 +12,12 @@ export default function TeacherboardLayout({ children }) {
     const menuItems = [
         { name: 'Dashboard Home', path: '/teacherboard', icon: '🏠' },
         { name: 'My Profile', path: '/teacherboard/TeacherProfile', icon: '👨‍🏫' },
+        { name: 'Exam Schedule', path: '/teacherboard/exams', icon: '📋' },
         { name: 'Assignments', path: '/teacherboard/assignments', icon: '📝' },
         { name: 'Messages', path: '/teacherboard/Message', icon: '💬' },
         { name: 'Attendance', path: '/teacherboard/attendance', icon: '✅' },
         { name: 'Marks & Results', path: '/teacherboard/marks-results', icon: '📊' },
-        // { name: 'Class Schedule', path: '/teacherboard/schedule', icon: '📅' },
         { name: 'Students', path: '/teacherboard/students', icon: '👥' },
-        // { name: 'Notices', path: '/teacherboard/notices', icon: '📢' },
-        // { name: 'Salary', path: '/teacherboard/salary', icon: '💰' },
-        // { name: 'Reports', path: '/teacherboard/reports', icon: '📋' },
     ];
 
     useEffect(() => {

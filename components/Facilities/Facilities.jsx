@@ -1,37 +1,16 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { API_URL } from '../../config/api';
+import React, { useState } from 'react';
 import { useLanguage } from '../../src/contexts/LanguageContext';
+import { useFacilities } from '../../src/hooks/useApi';
 
 
 const Facilities = () => {
     const { t } = useLanguage();
-    const [facilities, setFacilities] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [showAll, setShowAll] = useState(false);
 
-    useEffect(() => {
-        const fetchFacilities = async () => {
-            try {
-                console.log('Fetching facilities from:', `${API_URL}/api/facilities`);
-                const response = await fetch(`${API_URL}/api/facilities`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('Facilities response:', data);
-                setFacilities(data.data || []);
-            } catch (err) {
-                setError(err.message);
-                console.error('Error fetching facilities:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchFacilities();
-    }, []);
+    const { data: facilitiesData, isLoading: loading, error: fetchError } = useFacilities();
+    const facilities = facilitiesData?.data || [];
+    const error = fetchError?.message || null;
 
     if (loading) {
         return (

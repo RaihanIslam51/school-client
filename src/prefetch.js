@@ -1,39 +1,22 @@
 // Prefetching utilities for React Query
 import { QueryClient } from '@tanstack/react-query';
+import { API_BASE_URL } from '../config/api';
 
 // Prefetch common data that users are likely to need
 export const prefetchCommonData = async (queryClient) => {
   const prefetchPromises = [];
 
-  // Prefetch user data if authenticated
-  if (typeof window !== 'undefined' && localStorage.getItem('token')) {
-    prefetchPromises.push(
-      queryClient.prefetchQuery({
-        queryKey: ['user'],
-        queryFn: async () => {
-          const response = await fetch('/api/auth/me', {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          if (!response.ok) throw new Error('Failed to fetch user');
-          return response.json();
-        },
-        staleTime: 5 * 60 * 1000, // 5 minutes
-      })
-    );
-  }
-
-  // Prefetch static data that doesn't change often
-  const staticQueries = [
-    { key: ['notices'], url: '/api/notices' },
-    { key: ['facilities'], url: '/api/facilities' },
-    { key: ['academics'], url: '/api/academics' },
-    { key: ['achievements'], url: '/api/achievements' },
-    { key: ['banners'], url: '/api/banners' },
+  // Prefetch public data on startup — notices, facilities, academics, achievements, banners, gallery
+  const publicQueries = [
+    { key: ['notices'],      url: `${API_BASE_URL}/notices` },
+    { key: ['facilities'],   url: `${API_BASE_URL}/facilities` },
+    { key: ['academics'],    url: `${API_BASE_URL}/academics` },
+    { key: ['achievements'], url: `${API_BASE_URL}/achievements` },
+    { key: ['banners'],      url: `${API_BASE_URL}/banners` },
+    { key: ['gallery'],      url: `${API_BASE_URL}/gallery` },
   ];
 
-  staticQueries.forEach(({ key, url }) => {
+  publicQueries.forEach(({ key, url }) => {
     prefetchPromises.push(
       queryClient.prefetchQuery({
         queryKey: key,
@@ -42,10 +25,27 @@ export const prefetchCommonData = async (queryClient) => {
           if (!response.ok) throw new Error(`Failed to fetch ${key[0]}`);
           return response.json();
         },
-        staleTime: 30 * 60 * 1000, // 30 minutes for static data
+        staleTime: 0, // Always re-fetch when a component actually mounts
       })
     );
   });
+
+  // Prefetch user data if authenticated
+  if (typeof window !== 'undefined' && localStorage.getItem('token')) {
+    prefetchPromises.push(
+      queryClient.prefetchQuery({
+        queryKey: ['user'],
+        queryFn: async () => {
+          const response = await fetch('/api/auth/me', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          });
+          if (!response.ok) throw new Error('Failed to fetch user');
+          return response.json();
+        },
+        staleTime: 5 * 60 * 1000,
+      })
+    );
+  }
 
   try {
     await Promise.all(prefetchPromises);
@@ -57,26 +57,23 @@ export const prefetchCommonData = async (queryClient) => {
 
 // Prefetch data for specific routes
 export const prefetchRouteData = async (queryClient, route) => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
   const routePrefetchMap = {
-    '/dashboard': [
-      { key: ['dashboard-stats'], url: '/api/dashboard/stats' },
-    ],
     '/dashboard/students': [
-      { key: ['students'], url: '/api/students' },
+      { key: ['students'], url: `${API_BASE_URL}/students` },
     ],
     '/dashboard/teachers': [
-      { key: ['teachers'], url: '/api/teachers' },
+      { key: ['teachers'], url: `${API_BASE_URL}/teachers` },
     ],
     '/dashboard/salary': [
-      { key: ['salaries'], url: '/api/salaries' },
-      { key: ['salary-statistics'], url: '/api/salaries/statistics' },
-      { key: ['salary-helpers'], url: '/api/salaries/helpers' },
+      { key: ['salaries'], url: `${API_BASE_URL}/salaries` },
     ],
     '/dashboard/fees': [
-      { key: ['fees'], url: '/api/fees' },
+      { key: ['fees'], url: `${API_BASE_URL}/fees` },
     ],
     '/dashboard/expenses': [
-      { key: ['expenses'], url: '/api/expenses' },
+      { key: ['expenses'], url: `${API_BASE_URL}/expenses` },
     ],
   };
 
@@ -88,15 +85,12 @@ export const prefetchRouteData = async (queryClient, route) => {
       await queryClient.prefetchQuery({
         queryKey: key,
         queryFn: async () => {
-          const response = await fetch(url, {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
+          const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+          const response = await fetch(url, { headers });
           if (!response.ok) throw new Error(`Failed to fetch ${key[0]}`);
           return response.json();
         },
-        staleTime: 5 * 60 * 1000, // 5 minutes
+        staleTime: 0,
       });
     } catch (error) {
       console.warn(`[Prefetch] Failed to prefetch ${key[0]}:`, error);

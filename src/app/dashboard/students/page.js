@@ -23,8 +23,8 @@ export default function StudentManagement() {
     const updateStudentMutation = useUpdateStudent();
     const deleteStudentMutation = useDeleteStudent();
 
-    // Filter students from the data (assuming API returns all users)
-    const students = studentsData?.data?.filter(user => user.role === 'student') || [];
+    // API returns only students from the students collection (no role filter needed)
+    const students = studentsData?.data || [];
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
@@ -67,14 +67,14 @@ export default function StudentManagement() {
 
     // Generate unique student ID
     const generateStudentId = () => {
-        const currentYear = new Date().getFullYear().toString().slice(-2); // Get last 2 digits of year
-        const existingIds = students
-            .map(student => student.studentId)
-            .filter(id => id && id.startsWith(`${currentYear}-`))
+        const currentYear = new Date().getFullYear().toString().slice(-2);
+        // Find the max sequence number across ALL existing student IDs (any year)
+        const existingNumbers = students
+            .map(s => s.studentId)
+            .filter(id => id && /^\d{2}-\d+$/.test(id))
             .map(id => parseInt(id.split('-')[1]))
             .filter(num => !isNaN(num));
-
-        const nextNumber = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
+        const nextNumber = existingNumbers.length > 0 ? Math.max(...existingNumbers) + 1 : 1;
         return `${currentYear}-${nextNumber.toString().padStart(4, '0')}`;
     };
 
@@ -134,6 +134,8 @@ export default function StudentManagement() {
         e.preventDefault();
 
         try {
+            const wasEditMode = isEditMode;
+
             if (isEditMode) {
                 // Update existing student
                 await updateStudentMutation.mutateAsync({
@@ -160,19 +162,10 @@ export default function StudentManagement() {
                 });
             }
 
-            await Swal.fire({
-                icon: 'success',
-                title: isEditMode ? 'Updated!' : 'Added!',
-                text: isEditMode ? 'Student updated successfully' : 'Student added successfully. Default password is the roll number.',
-                timer: 2000,
-                showConfirmButton: false,
-                customClass: { container: 'swal-high-z-index' }
-            });
-
+            // Close modal — cache is updated immediately by onSuccess in the hook
             setIsModalOpen(false);
             setIsEditMode(false);
             setCurrentStudent(null);
-            // Reset form data
             setFormData({
                 studentId: '',
                 name: '',
@@ -186,6 +179,15 @@ export default function StudentManagement() {
                 address: '',
                 imageUrl: '',
                 status: 'active'
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: wasEditMode ? 'Updated!' : 'Added!',
+                text: wasEditMode ? 'Student updated successfully' : 'Student added successfully. Default password is the roll number.',
+                timer: 2000,
+                showConfirmButton: false,
+                customClass: { container: 'swal-high-z-index' }
             });
         } catch (error) {
             console.error('Error:', error);
@@ -215,6 +217,7 @@ export default function StudentManagement() {
             try {
                 await deleteStudentMutation.mutateAsync(id);
 
+                // Cache is updated immediately by onSuccess in the hook
                 Swal.fire({
                     icon: 'success',
                     title: 'Deleted!',
@@ -245,7 +248,7 @@ export default function StudentManagement() {
             printDiv.style.top = '-9999px';
             printDiv.style.width = '800px';
             printDiv.style.backgroundColor = 'white';
-            printDiv.style.fontFamily = 'Arial, sans-serif';
+            printDiv.style.fontFamily = "'Tiro Bangla','Tiro Bangla Static',serif";
             printDiv.innerHTML = `
                 <div style="padding: 30px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; text-align: center; margin-bottom: 20px;">
                     <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Sunlight School</h1>

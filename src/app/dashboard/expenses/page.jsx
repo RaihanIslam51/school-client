@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
 import { API_BASE_URL } from '../../../../config/api';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const ExpensesManagementPage = () => {
     // State management
@@ -689,32 +688,98 @@ const ExpensesManagementPage = () => {
             return;
         }
 
-        Swal.fire({
-            title: 'Generating PDF...',
-            text: 'Please wait',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        const element = document.getElementById('expenses-table');
-        
-        html2canvas(element, { scale: 2 }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
+        try {
             const pdf = new jsPDF('l', 'mm', 'a4');
-            const imgWidth = 280;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
-            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 10;
+
+            // Header background
+            pdf.setFillColor(26, 32, 44);
+            pdf.rect(0, 0, pageWidth, 18, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Expense Management Report', margin, 12);
+            pdf.setFontSize(9);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`Generated: ${new Date().toLocaleString()}`, pageWidth - margin, 12, { align: 'right' });
+
+            // Table header
+            const headers = ['#', 'Expense ID', 'Title', 'Category', 'Vendor', 'Amount (BDT)', 'Date', 'Department', 'Status', 'Priority'];
+            const colWidths = [8, 28, 52, 26, 30, 28, 24, 28, 22, 22];
+            let y = 26;
+
+            pdf.setFillColor(26, 32, 44);
+            pdf.rect(margin, y - 5, pageWidth - margin * 2, 8, 'F');
+            pdf.setTextColor(255, 255, 255);
+            pdf.setFontSize(8);
+            pdf.setFont('helvetica', 'bold');
+            let x = margin;
+            headers.forEach((header, i) => {
+                pdf.text(header, x + 1, y);
+                x += colWidths[i];
+            });
+            y += 5;
+
+            // Table rows
+            pdf.setFont('helvetica', 'normal');
+            expenses.forEach((expense, index) => {
+                if (y > pageHeight - 15) {
+                    pdf.addPage();
+                    y = 15;
+                    // Re-draw header on new page
+                    pdf.setFillColor(26, 32, 44);
+                    pdf.rect(margin, y - 5, pageWidth - margin * 2, 8, 'F');
+                    pdf.setTextColor(255, 255, 255);
+                    pdf.setFont('helvetica', 'bold');
+                    x = margin;
+                    headers.forEach((header, i) => {
+                        pdf.text(header, x + 1, y);
+                        x += colWidths[i];
+                    });
+                    y += 5;
+                    pdf.setFont('helvetica', 'normal');
+                }
+
+                const rowColor = index % 2 === 0 ? [248, 249, 250] : [255, 255, 255];
+                pdf.setFillColor(...rowColor);
+                pdf.rect(margin, y - 4, pageWidth - margin * 2, 7, 'F');
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFontSize(7.5);
+
+                const row = [
+                    String(index + 1),
+                    expense.expenseId || '-',
+                    (expense.title || '').substring(0, 30),
+                    expense.category || '-',
+                    (expense.vendor || '-').substring(0, 18),
+                    `${Number(expense.amount || 0).toFixed(2)}`,
+                    expense.expenseDate ? new Date(expense.expenseDate).toLocaleDateString() : '-',
+                    expense.department || '-',
+                    expense.status || '-',
+                    expense.priority || '-',
+                ];
+
+                x = margin;
+                row.forEach((cell, i) => {
+                    pdf.text(String(cell), x + 1, y);
+                    x += colWidths[i];
+                });
+                y += 7;
+            });
+
+            // Footer
+            pdf.setFontSize(8);
+            pdf.setTextColor(100, 100, 100);
+            pdf.text(`Total Expenses: ${expenses.length}`, margin, pageHeight - 5);
+
             pdf.save(`Expenses_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-            
-            Swal.close();
             Swal.fire('Success', 'PDF exported successfully', 'success');
-        }).catch(error => {
+        } catch (error) {
             console.error('PDF generation error:', error);
             Swal.fire('Error', 'Failed to generate PDF', 'error');
-        });
+        }
     };
 
     // Get status color
@@ -1372,6 +1437,7 @@ const ExpensesManagementPage = () => {
                                                         <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold ${getStatusColor(expense.status)}`}>
                                                             {expense.status}
                                                         </span>
+                   
                                                     </td>
                                                     <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center">
                                                         <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold ${getPriorityColor(expense.priority)}`}>
@@ -1542,7 +1608,7 @@ const ExpensesManagementPage = () => {
                                         </div>
                                         <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Expenses Found</h3>
                                         <p className="text-black text-sm sm:text-base mb-6 sm:mb-8 max-w-md mx-auto">
-                                            {searchTerm || filters.category || filters.status || filters.priority || filters.department
+                                            {filters?.search || filters?.category || filters?.status || filters?.priority || filters?.department
                                                 ? "No expenses match your current filters. Try adjusting your search criteria."
                                                 : "Start by adding your first expense to track your organization's spending."}
                                         </p>

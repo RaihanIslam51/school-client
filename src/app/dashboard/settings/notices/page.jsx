@@ -1,9 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../../../../config/api';
 
 const NoticesPage = () => {
+    const queryClient = useQueryClient();
     const [notices, setNotices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -93,6 +95,7 @@ const NoticesPage = () => {
                 // Reset form
                 resetForm();
                 fetchNotices();
+                queryClient.invalidateQueries({ queryKey: ['notices'] });
             } else {
                 throw new Error(data.message);
             }
@@ -204,6 +207,7 @@ const NoticesPage = () => {
                         showConfirmButton: false
                     });
                     fetchNotices();
+                    queryClient.invalidateQueries({ queryKey: ['notices'] });
                 } else {
                     throw new Error('Failed to delete notice');
                 }

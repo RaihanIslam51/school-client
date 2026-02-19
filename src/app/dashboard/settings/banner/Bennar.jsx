@@ -1,9 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../../../../config/api';
 
 const Bennar = () => {
+    const queryClient = useQueryClient();
     const [banners, setBanners] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -141,6 +143,7 @@ const Bennar = () => {
             const data = await response.json();
             if (data.success) {
                 await fetchBanners();
+                queryClient.invalidateQueries({ queryKey: ['banners'] });
                 setIsModalOpen(false);
                 resetForm();
                 setEditingBanner(null);
@@ -188,6 +191,7 @@ const Bennar = () => {
                 const data = await response.json();
                 if (data.success) {
                     await fetchBanners();
+                    queryClient.invalidateQueries({ queryKey: ['banners'] });
                     Swal.fire('Deleted!', 'Banner has been deleted.', 'success');
                 } else {
                     Swal.fire('Error', 'Failed to delete banner', 'error');
@@ -216,6 +220,7 @@ const Bennar = () => {
             const data = await response.json();
             if (data.success) {
                 await fetchBanners();
+                queryClient.invalidateQueries({ queryKey: ['banners'] });
                 Swal.fire('Success', `Banner ${action}d successfully!`, 'success');
             } else {
                 Swal.fire('Error', `Failed to ${action} banner`, 'error');

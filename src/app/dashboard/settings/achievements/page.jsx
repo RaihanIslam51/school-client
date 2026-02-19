@@ -1,9 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../../../../config/api';
 
 const AchievementsPage = () => {
+    const queryClient = useQueryClient();
     const [achievements, setAchievements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -83,6 +85,7 @@ const AchievementsPage = () => {
                     showConfirmButton: false
                 });
                 fetchAchievements();
+                queryClient.invalidateQueries({ queryKey: ['achievements'] });
                 resetForm();
                 setShowModal(false);
             } else {
@@ -133,6 +136,7 @@ const AchievementsPage = () => {
                 if (data.success) {
                     Swal.fire('Deleted!', 'Achievement has been deleted.', 'success');
                     fetchAchievements();
+                    queryClient.invalidateQueries({ queryKey: ['achievements'] });
                 } else {
                     throw new Error(data.message);
                 }

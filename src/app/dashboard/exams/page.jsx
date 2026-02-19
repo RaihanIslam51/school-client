@@ -395,10 +395,71 @@ export default function ExamManagement() {
         }
     };
 
+    const getTeacherName = (id) => {
+        if (!id) return 'Not assigned';
+        const t = teachers.find(t => t._id === id || t._id?.toString() === id?.toString());
+        return t ? t.name : 'Unknown';
+    };
+
+    const formatDatePdf = (dateStr) => {
+        if (!dateStr) return '—';
+        return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    };
+
+    const formatTimePdf = (t) => {
+        if (!t) return '—';
+        const [h, m] = t.split(':');
+        const hour = parseInt(h);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const h12 = hour % 12 || 12;
+        return `${h12}:${m} ${ampm}`;
+    };
+
+    const downloadExamPDF = (exam) => {
+        import('jspdf').then(({ default: jsPDF }) => {
+            import('html2canvas').then(({ default: html2canvas }) => {
+                const el = document.getElementById(`admin-exam-pdf-${exam._id}`);
+                if (!el) return;
+                html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#fff' }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save(`${exam.examName.replace(/\s+/g, '_')}_${exam.class}_${exam.section}.pdf`);
+                });
+            });
+        });
+    };
+
+    const downloadAllExamsPDF = () => {
+        import('jspdf').then(({ default: jsPDF }) => {
+            import('html2canvas').then(({ default: html2canvas }) => {
+                const el = document.getElementById('admin-all-exams-pdf');
+                if (!el) return;
+                html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#fff' }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                    let heightLeft = pdfHeight;
+                    let position = 0;
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                    heightLeft -= pdf.internal.pageSize.getHeight();
+                    while (heightLeft > 0) {
+                        position = heightLeft - pdfHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                        heightLeft -= pdf.internal.pageSize.getHeight();
+                    }
+                    pdf.save(`All_Exams_${new Date().toLocaleDateString('en-GB').replace(/\//g, '-')}.pdf`);
+                });
+            });
+        });
+    };
+
     const deleteExam = async (examId) => {
         const result = await Swal.fire({
-            icon: 'warning',
-            title: 'Are you sure?',
             text: 'This will delete the exam permanently!',
             showCancelButton: true,
             confirmButtonColor: '#d33',
@@ -447,6 +508,7 @@ export default function ExamManagement() {
                     </h2>
                     <p className="text-sm sm:text-base text-black">Professional exam setup, scheduling & mark distribution</p>
                 </div>
+
 
                 {/* Tab Navigation */}
                 <div className="flex flex-wrap gap-1 sm:gap-2 border-b border-gray-300 p-3 sm:p-4 lg:p-6">
@@ -1197,9 +1259,19 @@ export default function ExamManagement() {
                         <div className="space-y-4">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
                                 <h3 className="text-xl sm:text-2xl font-bold text-[#1a202c]">All Exams</h3>
-                                <span className="text-xs sm:text-sm text-black bg-gray-100 px-4 py-2 rounded font-semibold">
-                                    {exams.length} Exam{exams.length !== 1 ? 's' : ''} Found
-                                </span>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-xs sm:text-sm text-black bg-gray-100 px-4 py-2 rounded font-semibold">
+                                        {exams.length} Exam{exams.length !== 1 ? 's' : ''} Found
+                                    </span>
+                                    {exams.length > 0 && (
+                                        <button
+                                            onClick={downloadAllExamsPDF}
+                                            className="px-3 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition-all text-xs sm:text-sm font-semibold flex items-center gap-1"
+                                        >
+                                            📥 Download All PDF
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                             {exams.length === 0 ? (
@@ -1248,16 +1320,130 @@ export default function ExamManagement() {
                                                     <option value="Completed">Completed</option>
                                                 </select>
                                                 <button
+                                                    onClick={() => downloadExamPDF(exam)}
+                                                    className="px-3 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition-all text-xs sm:text-sm font-semibold"
+                                                >
+                                                    📥 PDF
+                                                </button>
+                                                <button
                                                     onClick={() => deleteExam(exam._id)}
                                                     className="px-3 sm:px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-all text-xs sm:text-sm font-semibold"
                                                 >
                                                     Delete
                                                 </button>
                                             </div>
+
+                                            {/* Hidden PDF template for this exam */}
+                                            <div id={`admin-exam-pdf-${exam._id}`} style={{ position: 'fixed', left: '-9999px', top: 0, width: '794px', padding: '40px', background: '#fff', fontFamily: 'Arial, sans-serif', color: '#000' }}>
+                                                {/* Header */}
+                                                <div style={{ textAlign: 'center', borderBottom: '3px solid #1a202c', paddingBottom: '16px', marginBottom: '24px' }}>
+                                                    <h1 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1a202c', margin: 0 }}>EXAM SCHEDULE</h1>
+                                                    <p style={{ fontSize: '13px', color: '#555', margin: '4px 0 0' }}>Academic Year {exam.academicYear}</p>
+                                                </div>
+                                                {/* Exam Info Grid */}
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '24px', background: '#f8f9fa', padding: '16px', borderRadius: '6px' }}>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Exam Name:</span> <span>{exam.examName}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Type:</span> <span>{exam.examType}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Class:</span> <span>{exam.class} — Section {exam.section}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Category:</span> <span>{exam.examCategory}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Start Date:</span> <span>{formatDatePdf(exam.startDate)}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>End Date:</span> <span>{formatDatePdf(exam.endDate)}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Total Marks:</span> <span>{exam.totalMarks}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Pass Marks:</span> <span>{exam.passMarks}</span></div>
+                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Status:</span> <span style={{ fontWeight: 'bold', color: exam.status === 'Published' ? '#065f46' : exam.status === 'Ongoing' ? '#1e40af' : '#374151' }}>{exam.status}</span></div>
+                                                </div>
+                                                {/* Subjects Table */}
+                                                {exam.subjects && exam.subjects.length > 0 && (
+                                                    <div>
+                                                        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1a202c', marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '6px' }}>Subject Schedule</h3>
+                                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                                                            <thead>
+                                                                <tr style={{ background: '#1a202c', color: '#fff' }}>
+                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Subject</th>
+                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Date</th>
+                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Time</th>
+                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Duration</th>
+                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Room</th>
+                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Invigilator</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {exam.subjects.map((sub, idx) => (
+                                                                    <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd', fontWeight: '600' }}>{sub.subjectName}</td>
+                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{formatDatePdf(sub.examDate)}</td>
+                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{formatTimePdf(sub.startTime)}{sub.endTime ? ` – ${formatTimePdf(sub.endTime)}` : ''}</td>
+                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{sub.duration ? `${sub.duration} min` : '—'}</td>
+                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{sub.roomNumber || '—'}</td>
+                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{getTeacherName(sub.invigilator)}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                )}
+                                                {/* Footer */}
+                                                <div style={{ marginTop: '32px', borderTop: '1px solid #ccc', paddingTop: '12px', fontSize: '11px', color: '#777', textAlign: 'center' }}>
+                                                    Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })} | School Management System
+                                                </div>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
                             )}
+
+                            {/* Hidden PDF element for Download All */}
+                            <div id="admin-all-exams-pdf" style={{ position: 'fixed', left: '-9999px', top: 0, width: '1050px', padding: '40px', background: '#fff', fontFamily: 'Arial, sans-serif', color: '#000' }}>
+                                <div style={{ textAlign: 'center', borderBottom: '3px solid #1a202c', paddingBottom: '16px', marginBottom: '28px' }}>
+                                    <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a202c', margin: 0 }}>ALL EXAM SCHEDULES</h1>
+                                    <p style={{ fontSize: '13px', color: '#555', margin: '4px 0 0' }}>Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                                </div>
+                                {exams.map((exam, examIdx) => (
+                                    <div key={exam._id} style={{ marginBottom: '36px', pageBreakInside: 'avoid' }}>
+                                        <div style={{ background: '#1a202c', color: '#fff', padding: '10px 16px', borderRadius: '4px 4px 0 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <span style={{ fontWeight: 'bold', fontSize: '15px' }}>{examIdx + 1}. {exam.examName}</span>
+                                            <span style={{ fontSize: '12px', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '12px' }}>{exam.status}</span>
+                                        </div>
+                                        <div style={{ border: '1px solid #ddd', borderTop: 'none', padding: '12px 16px', background: '#f9fafb', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', fontSize: '12px' }}>
+                                            <div><b>Class:</b> {exam.class} — Sec {exam.section}</div>
+                                            <div><b>Type:</b> {exam.examType}</div>
+                                            <div><b>Year:</b> {exam.academicYear}</div>
+                                            <div><b>Start:</b> {formatDatePdf(exam.startDate)}</div>
+                                            <div><b>End:</b> {formatDatePdf(exam.endDate)}</div>
+                                            <div><b>Total / Pass:</b> {exam.totalMarks} / {exam.passMarks}</div>
+                                        </div>
+                                        {exam.subjects && exam.subjects.length > 0 && (
+                                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                                                <thead>
+                                                    <tr style={{ background: '#374151', color: '#fff' }}>
+                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Subject</th>
+                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Date</th>
+                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Time</th>
+                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Duration</th>
+                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Room</th>
+                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Invigilator</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {exam.subjects.map((sub, idx) => (
+                                                        <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f3f4f6' }}>
+                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd', fontWeight: '600' }}>{sub.subjectName}</td>
+                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{formatDatePdf(sub.examDate)}</td>
+                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{formatTimePdf(sub.startTime)}{sub.endTime ? ` – ${formatTimePdf(sub.endTime)}` : ''}</td>
+                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{sub.duration ? `${sub.duration} min` : '—'}</td>
+                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{sub.roomNumber || '—'}</td>
+                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{getTeacherName(sub.invigilator)}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        )}
+                                    </div>
+                                ))}
+                                <div style={{ borderTop: '1px solid #ccc', paddingTop: '12px', fontSize: '11px', color: '#777', textAlign: 'center' }}>
+                                    School Management System — Confidential
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

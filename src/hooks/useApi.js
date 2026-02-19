@@ -84,8 +84,18 @@ export const useCreateStudent = () => {
       method: 'POST',
       body: JSON.stringify(studentData),
     }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['students'], refetchType: 'active' });
+    onSuccess: (response) => {
+      const newStudent = response?.data;
+      if (newStudent) {
+        // Immediately add student to cache — no wait for network round-trip
+        queryClient.setQueryData(['students'], (old) => {
+          if (!old) return { success: true, count: 1, data: [newStudent] };
+          const existingData = old?.data || [];
+          return { ...old, count: existingData.length + 1, data: [...existingData, newStudent] };
+        });
+      }
+      // Background sync to ensure server consistency
+      queryClient.invalidateQueries({ queryKey: ['students'] });
     },
   });
 };
@@ -97,9 +107,21 @@ export const useUpdateStudent = () => {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['students'], refetchType: 'active' });
-      queryClient.invalidateQueries({ queryKey: ['student', variables.id], refetchType: 'active' });
+    onSuccess: (response, variables) => {
+      const updatedStudent = response?.data;
+      if (updatedStudent) {
+        // Immediately update the student in cache
+        queryClient.setQueryData(['students'], (old) => {
+          if (!old?.data) return old;
+          return { ...old, data: old.data.map(s => s._id === variables.id ? updatedStudent : s) };
+        });
+        queryClient.setQueryData(['student', variables.id], (old) => {
+          if (!old) return old;
+          return { ...old, data: updatedStudent };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['students'] });
+      queryClient.invalidateQueries({ queryKey: ['student', variables.id] });
     },
   });
 };
@@ -110,8 +132,14 @@ export const useDeleteStudent = () => {
     mutationFn: (id) => apiRequest(`/students/${id}`, {
       method: 'DELETE',
     }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['students'], refetchType: 'active' });
+    onSuccess: (response, id) => {
+      // Immediately remove student from cache
+      queryClient.setQueryData(['students'], (old) => {
+        if (!old?.data) return old;
+        const filtered = old.data.filter(s => String(s._id) !== String(id));
+        return { ...old, count: filtered.length, data: filtered };
+      });
+      queryClient.invalidateQueries({ queryKey: ['students'] });
     },
   });
 };
@@ -320,8 +348,238 @@ export const useCreateNotice = () => {
       method: 'POST',
       body: JSON.stringify(noticeData),
     }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notices'], refetchType: 'active' });
+    onSuccess: (response) => {
+      const newNotice = response?.data;
+      if (newNotice) {
+        queryClient.setQueryData(['notices'], (old) => {
+          if (!old) return { success: true, data: [newNotice] };
+          return { ...old, data: [newNotice, ...(old.data || [])] };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['notices'] });
+    },
+  });
+};
+
+export const useUpdateNotice = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...data }) => apiRequest(`/notices/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+    onSuccess: (response, variables) => {
+      const updated = response?.data;
+      if (updated) {
+        queryClient.setQueryData(['notices'], (old) => {
+          if (!old?.data) return old;
+          return { ...old, data: old.data.map(n => n._id === variables.id ? updated : n) };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['notices'] });
+    },
+  });
+};
+
+export const useDeleteNotice = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => apiRequest(`/notices/${id}`, { method: 'DELETE' }),
+    onSuccess: (response, id) => {
+      queryClient.setQueryData(['notices'], (old) => {
+        if (!old?.data) return old;
+        const filtered = old.data.filter(n => String(n._id) !== String(id));
+        return { ...old, count: filtered.length, data: filtered };
+      });
+      queryClient.invalidateQueries({ queryKey: ['notices'] });
+    },
+  });
+};
+
+// Facilities Hooks
+export const useFacilities = () => {
+  return useQuery({
+    queryKey: ['facilities'],
+    queryFn: () => apiRequest('/facilities'),
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+};
+
+export const useCreateFacility = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => apiRequest('/facilities', { method: 'POST', body: JSON.stringify(data) }),
+    onSuccess: (response) => {
+      const item = response?.data;
+      if (item) {
+        queryClient.setQueryData(['facilities'], (old) => {
+          if (!old) return { success: true, data: [item] };
+          return { ...old, count: (old.count || 0) + 1, data: [...(old.data || []), item] };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['facilities'] });
+    },
+  });
+};
+
+export const useUpdateFacility = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...data }) => apiRequest(`/facilities/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    onSuccess: (response, variables) => {
+      const updated = response?.data;
+      if (updated) {
+        queryClient.setQueryData(['facilities'], (old) => {
+          if (!old?.data) return old;
+          return { ...old, data: old.data.map(f => f._id === variables.id ? updated : f) };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['facilities'] });
+    },
+  });
+};
+
+export const useDeleteFacility = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => apiRequest(`/facilities/${id}`, { method: 'DELETE' }),
+    onSuccess: (response, id) => {
+      queryClient.setQueryData(['facilities'], (old) => {
+        if (!old?.data) return old;
+        const filtered = old.data.filter(f => String(f._id) !== String(id));
+        return { ...old, count: filtered.length, data: filtered };
+      });
+      queryClient.invalidateQueries({ queryKey: ['facilities'] });
+    },
+  });
+};
+
+// Academics Hooks
+export const useAcademics = (filters = {}) => {
+  const filterKey = buildStableKey(filters);
+  const queryKey = filterKey ? ['academics', filterKey] : ['academics'];
+  return useQuery({
+    queryKey,
+    queryFn: () => {
+      const params = new URLSearchParams(filters).toString();
+      return apiRequest(`/academics${params ? `?${params}` : ''}`);
+    },
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+};
+
+export const useCreateAcademic = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => apiRequest('/academics', { method: 'POST', body: JSON.stringify(data) }),
+    onSuccess: (response) => {
+      const item = response?.data;
+      if (item) {
+        queryClient.setQueryData(['academics'], (old) => {
+          if (!old) return { success: true, data: [item] };
+          return { ...old, count: (old.count || 0) + 1, data: [...(old.data || []), item] };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['academics'] });
+    },
+  });
+};
+
+export const useUpdateAcademic = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...data }) => apiRequest(`/academics/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    onSuccess: (response, variables) => {
+      const updated = response?.data;
+      if (updated) {
+        queryClient.setQueryData(['academics'], (old) => {
+          if (!old?.data) return old;
+          return { ...old, data: old.data.map(a => a._id === variables.id ? updated : a) };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['academics'] });
+    },
+  });
+};
+
+export const useDeleteAcademic = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => apiRequest(`/academics/${id}`, { method: 'DELETE' }),
+    onSuccess: (response, id) => {
+      queryClient.setQueryData(['academics'], (old) => {
+        if (!old?.data) return old;
+        const filtered = old.data.filter(a => String(a._id) !== String(id));
+        return { ...old, count: filtered.length, data: filtered };
+      });
+      queryClient.invalidateQueries({ queryKey: ['academics'] });
+    },
+  });
+};
+
+// Achievements Hooks
+export const useAchievements = () => {
+  return useQuery({
+    queryKey: ['achievements'],
+    queryFn: () => apiRequest('/achievements'),
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+};
+
+export const useCreateAchievement = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => apiRequest('/achievements', { method: 'POST', body: JSON.stringify(data) }),
+    onSuccess: (response) => {
+      const item = response?.data;
+      if (item) {
+        queryClient.setQueryData(['achievements'], (old) => {
+          if (!old) return { success: true, data: [item] };
+          return { ...old, count: (old.count || 0) + 1, data: [...(old.data || []), item] };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['achievements'] });
+    },
+  });
+};
+
+export const useUpdateAchievement = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...data }) => apiRequest(`/achievements/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    onSuccess: (response, variables) => {
+      const updated = response?.data;
+      if (updated) {
+        queryClient.setQueryData(['achievements'], (old) => {
+          if (!old?.data) return old;
+          return { ...old, data: old.data.map(a => a._id === variables.id ? updated : a) };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['achievements'] });
+    },
+  });
+};
+
+export const useDeleteAchievement = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => apiRequest(`/achievements/${id}`, { method: 'DELETE' }),
+    onSuccess: (response, id) => {
+      queryClient.setQueryData(['achievements'], (old) => {
+        if (!old?.data) return old;
+        const filtered = old.data.filter(a => String(a._id) !== String(id));
+        return { ...old, count: filtered.length, data: filtered };
+      });
+      queryClient.invalidateQueries({ queryKey: ['achievements'] });
     },
   });
 };
@@ -637,6 +895,128 @@ export const prefetchSalaries = async (queryClient) => {
     queryKey: ['salaries'],
     queryFn: () => apiRequest('/salaries'),
     staleTime: 0, // Fetch fresh data
+  });
+};
+
+// Gallery Hooks
+export const useGallery = () => {
+  return useQuery({
+    queryKey: ['gallery'],
+    queryFn: () => apiRequest('/gallery'),
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+};
+
+export const useCreateGallery = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => apiRequest('/gallery', { method: 'POST', body: JSON.stringify(data) }),
+    onSuccess: (response) => {
+      const item = response?.data;
+      if (item) {
+        queryClient.setQueryData(['gallery'], (old) => {
+          if (!old) return { success: true, data: [item] };
+          return { ...old, count: (old.count || 0) + 1, data: [...(old.data || []), item] };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['gallery'] });
+    },
+  });
+};
+
+export const useUpdateGallery = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...data }) => apiRequest(`/gallery/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    onSuccess: (response, variables) => {
+      const updated = response?.data;
+      if (updated) {
+        queryClient.setQueryData(['gallery'], (old) => {
+          if (!old?.data) return old;
+          return { ...old, data: old.data.map(g => g._id === variables.id ? updated : g) };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['gallery'] });
+    },
+  });
+};
+
+export const useDeleteGallery = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => apiRequest(`/gallery/${id}`, { method: 'DELETE' }),
+    onSuccess: (response, id) => {
+      queryClient.setQueryData(['gallery'], (old) => {
+        if (!old?.data) return old;
+        const filtered = old.data.filter(g => String(g._id) !== String(id));
+        return { ...old, count: filtered.length, data: filtered };
+      });
+      queryClient.invalidateQueries({ queryKey: ['gallery'] });
+    },
+  });
+};
+
+// Banner Hooks
+export const useBanners = () => {
+  return useQuery({
+    queryKey: ['banners'],
+    queryFn: () => apiRequest('/banners'),
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+  });
+};
+
+export const useCreateBanner = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => apiRequest('/banners', { method: 'POST', body: JSON.stringify(data) }),
+    onSuccess: (response) => {
+      const item = response?.data;
+      if (item) {
+        queryClient.setQueryData(['banners'], (old) => {
+          if (!old) return { success: true, data: [item] };
+          return { ...old, count: (old.count || 0) + 1, data: [...(old.data || []), item] };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['banners'] });
+    },
+  });
+};
+
+export const useUpdateBanner = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...data }) => apiRequest(`/banners/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    onSuccess: (response, variables) => {
+      const updated = response?.data;
+      if (updated) {
+        queryClient.setQueryData(['banners'], (old) => {
+          if (!old?.data) return old;
+          return { ...old, data: old.data.map(b => b._id === variables.id ? updated : b) };
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['banners'] });
+    },
+  });
+};
+
+export const useDeleteBanner = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => apiRequest(`/banners/${id}`, { method: 'DELETE' }),
+    onSuccess: (response, id) => {
+      queryClient.setQueryData(['banners'], (old) => {
+        if (!old?.data) return old;
+        const filtered = old.data.filter(b => String(b._id) !== String(id));
+        return { ...old, count: filtered.length, data: filtered };
+      });
+      queryClient.invalidateQueries({ queryKey: ['banners'] });
+    },
   });
 };
 

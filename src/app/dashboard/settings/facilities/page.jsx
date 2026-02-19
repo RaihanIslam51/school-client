@@ -1,9 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import { API_URL } from '../../../../../config/api';
 
 const FacilitiesPage = () => {
+    const queryClient = useQueryClient();
     const [facilities, setFacilities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
@@ -105,6 +107,7 @@ const FacilitiesPage = () => {
                 // Reset form
                 resetForm();
                 fetchFacilities();
+                queryClient.invalidateQueries({ queryKey: ['facilities'] });
             } else {
                 throw new Error(data.message);
             }
@@ -280,6 +283,7 @@ const FacilitiesPage = () => {
                         console.log('Facilities after filter:', filtered.length);
                         return filtered;
                     });
+                    queryClient.invalidateQueries({ queryKey: ['facilities'] });
 
                     Swal.fire({
                         icon: 'success',

@@ -189,7 +189,7 @@ async function handleNavigationRequest(request) {
           <title>Offline - Sunlight School</title>
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <style>
-            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            body { font-family: 'Tiro Bangla','Tiro Bangla Static',serif; text-align: center; padding: 50px; }
             h1 { color: #ef4444; }
             p { color: #666; }
           </style>

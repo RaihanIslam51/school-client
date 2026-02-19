@@ -19,6 +19,7 @@ export default function DashboardLayout({ children }) {
         { name: 'Fees Management', path: '/dashboard/fees', icon: '💰' },
         { name: 'Expense Management', path: '/dashboard/expenses', icon: '💳' },
         { name: 'Salary Management', path: '/dashboard/salary', icon: '💵' },
+        { name: 'Admit & Id Gen:', path: '/dashboard/admin-id-generate', icon: '🎓' },
         { name: 'Certificate Generator', path: '/dashboard/certificates', icon: '🎓' },
         { name: 'Reports & Analytics', path: '/dashboard/reports', icon: '📊' },
         { name: 'System Settings', path: '/dashboard/settings', icon: '⚙️' },

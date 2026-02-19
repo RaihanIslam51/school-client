@@ -25,6 +25,7 @@ const MarksResultsPage = () => {
     const [marksData, setMarksData] = useState([]);
     
     const [loading, setLoading] = useState(false);
+    const [savingIndex, setSavingIndex] = useState(null); // index of student being saved individually
     const [viewMode, setViewMode] = useState('entry'); // 'entry' or 'view'
 
 
@@ -68,9 +69,7 @@ const MarksResultsPage = () => {
                     studentId: student._id,
                     studentName: student.name,
                     rollNumber: student.rollNumber,
-                    subjectName: '',
-                    marks: '',
-                    totalMarks: 100
+                    subjects: [{ subjectName: '', marks: '', totalMarks: 100 }]
                 }));
                 setMarksData(initialMarksData);
             }
@@ -82,24 +81,60 @@ const MarksResultsPage = () => {
         }
     };
 
-    // Update subject name
-    const updateSubjectName = (studentIndex, value) => {
+    // Get safe subjects array for a student entry
+    const getSafeSubjects = (student) =>
+        Array.isArray(student.subjects) && student.subjects.length
+            ? student.subjects
+            : [{ subjectName: '', marks: '', totalMarks: 100 }];
+
+    // Add a subject row to a student
+    const addSubject = (studentIndex) => {
         const updatedMarksData = [...marksData];
-        updatedMarksData[studentIndex].subjectName = value;
+        const existing = getSafeSubjects(updatedMarksData[studentIndex]);
+        updatedMarksData[studentIndex] = {
+            ...updatedMarksData[studentIndex],
+            subjects: [...existing, { subjectName: '', marks: '', totalMarks: 100 }]
+        };
+        setMarksData(updatedMarksData);
+    };
+
+    // Remove a subject row from a student (min 1)
+    const removeSubject = (studentIndex, subjectIndex) => {
+        const updatedMarksData = [...marksData];
+        const subs = [...getSafeSubjects(updatedMarksData[studentIndex])];
+        if (subs.length === 1) {
+            subs[0] = { subjectName: '', marks: '', totalMarks: 100 };
+        } else {
+            subs.splice(subjectIndex, 1);
+        }
+        updatedMarksData[studentIndex] = { ...updatedMarksData[studentIndex], subjects: subs };
+        setMarksData(updatedMarksData);
+    };
+
+    // Update subject name
+    const updateSubjectName = (studentIndex, subjectIndex, value) => {
+        const updatedMarksData = [...marksData];
+        const subs = [...getSafeSubjects(updatedMarksData[studentIndex])];
+        subs[subjectIndex] = { ...subs[subjectIndex], subjectName: value };
+        updatedMarksData[studentIndex] = { ...updatedMarksData[studentIndex], subjects: subs };
         setMarksData(updatedMarksData);
     };
 
     // Update marks
-    const updateMarks = (studentIndex, value) => {
+    const updateMarks = (studentIndex, subjectIndex, value) => {
         const updatedMarksData = [...marksData];
-        updatedMarksData[studentIndex].marks = value;
+        const subs = [...getSafeSubjects(updatedMarksData[studentIndex])];
+        subs[subjectIndex] = { ...subs[subjectIndex], marks: value };
+        updatedMarksData[studentIndex] = { ...updatedMarksData[studentIndex], subjects: subs };
         setMarksData(updatedMarksData);
     };
 
     // Update total marks
-    const updateTotalMarks = (studentIndex, value) => {
+    const updateTotalMarks = (studentIndex, subjectIndex, value) => {
         const updatedMarksData = [...marksData];
-        updatedMarksData[studentIndex].totalMarks = parseInt(value) || 100;
+        const subs = [...getSafeSubjects(updatedMarksData[studentIndex])];
+        subs[subjectIndex] = { ...subs[subjectIndex], totalMarks: parseInt(value) || 100 };
+        updatedMarksData[studentIndex] = { ...updatedMarksData[studentIndex], subjects: subs };
         setMarksData(updatedMarksData);
     };
 
@@ -142,16 +177,16 @@ const MarksResultsPage = () => {
         return 'F';
     };
 
-    // Calculate student totals
+    // Calculate student totals across all subjects
     const calculateStudentTotal = (studentMarks) => {
-        const marks = parseFloat(studentMarks.marks) || 0;
-        const totalMarks = studentMarks.totalMarks;
-        const percentage = totalMarks > 0 ? (marks / totalMarks) * 100 : 0;
+        const subjects = Array.isArray(studentMarks.subjects) ? studentMarks.subjects : [];
+        const totalObtained = subjects.reduce((sum, s) => sum + (parseFloat(s.marks) || 0), 0);
+        const totalMarks = subjects.reduce((sum, s) => sum + (parseInt(s.totalMarks) || 0), 0);
+        const percentage = totalMarks > 0 ? (totalObtained / totalMarks) * 100 : 0;
         const grade = calculateGrade(percentage);
         const status = percentage >= 33 ? 'Pass' : 'Fail';
-        
         return {
-            totalObtained: marks.toFixed(2),
+            totalObtained: totalObtained.toFixed(2),
             totalMarks,
             percentage: percentage.toFixed(2),
             grade,
@@ -159,11 +194,59 @@ const MarksResultsPage = () => {
         };
     };
 
+    // Save a single student's result
+    const saveStudentResult = async (studentIndex) => {
+        const student = marksData[studentIndex];
+        const subs = getSafeSubjects(student);
+
+        if (subs.some(s => s.subjectName === '' || s.marks === '' || s.marks === null)) {
+            Swal.fire('Error', 'Please enter subject name and marks for this student', 'error');
+            return;
+        }
+        if (!examName) {
+            Swal.fire('Error', 'Please enter Exam Name before saving', 'error');
+            return;
+        }
+
+        try {
+            setSavingIndex(studentIndex);
+            const payload = [{
+                studentId: student.studentId,
+                studentName: student.studentName,
+                rollNumber: student.rollNumber,
+                class: selectedClass,
+                section: selectedSection,
+                examName,
+                examType,
+                academicYear,
+                subjects: subs
+            }];
+
+            const response = await fetch(`${API_BASE_URL}/results/bulk`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ results: payload })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                Swal.fire({ icon: 'success', title: 'Saved!', text: `${student.studentName}'s results saved.`, timer: 1500, showConfirmButton: false });
+            } else {
+                throw new Error(data.message || 'Failed to save');
+            }
+        } catch (error) {
+            Swal.fire('Error', error.message || 'Failed to save result', 'error');
+        } finally {
+            setSavingIndex(null);
+        }
+    };
+
     // Save results
     const saveResults = async () => {
         // Validate all fields are entered
         const invalidEntries = marksData.some(student =>
-            student.subjectName === '' || student.marks === '' || student.marks === null
+            !Array.isArray(student.subjects) ||
+            student.subjects.some(s => s.subjectName === '' || s.marks === '' || s.marks === null)
         );
 
         if (invalidEntries) {
@@ -183,11 +266,7 @@ const MarksResultsPage = () => {
                 examName,
                 examType,
                 academicYear,
-                subjects: [{
-                    subjectName: student.subjectName,
-                    marks: student.marks,
-                    totalMarks: student.totalMarks
-                }]
+                subjects: getSafeSubjects(student)
             }));
 
             const response = await fetch(`${API_BASE_URL}/results/bulk`, {
@@ -201,7 +280,7 @@ const MarksResultsPage = () => {
             const data = await response.json();
 
             if (data.success) {
-                Swal.fire('Success', 'Results saved successfully!', 'success');
+                Swal.fire('Success', 'All results saved successfully!', 'success');
                 fetchResults();
             } else {
                 throw new Error(data.message || 'Failed to save results');
@@ -252,8 +331,8 @@ const MarksResultsPage = () => {
             const data = await response.json();
 
             if (data.success) {
-                // Group results by class, section, examName, academicYear
-                const grouped = data.data.reduce((acc, result) => {
+                // Step 1: Group by class+section+examName+academicYear (full exam groups)
+                const examGrouped = data.data.reduce((acc, result) => {
                     const key = `${result.class}-${result.section}-${result.examName}-${result.academicYear}`;
                     if (!acc[key]) {
                         acc[key] = {
@@ -264,20 +343,48 @@ const MarksResultsPage = () => {
                             totalStudents: 0,
                             passed: 0,
                             failed: 0,
-                            averagePercentage: 0
+                            averagePercentage: 0,
+                            // track latest createdAt in this exam group
+                            _latestCreatedAt: result.createdAt || ''
                         };
                     }
                     acc[key].totalStudents += 1;
                     if (result.status === 'Pass') acc[key].passed += 1;
                     else acc[key].failed += 1;
                     acc[key].averagePercentage += result.percentage;
+                    // keep the most recent createdAt for tie-breaking
+                    if ((result.createdAt || '') > acc[key]._latestCreatedAt) {
+                        acc[key]._latestCreatedAt = result.createdAt || '';
+                    }
                     return acc;
                 }, {});
 
-                const cards = Object.values(grouped).map(card => ({
+                const allCards = Object.values(examGrouped).map(card => ({
                     ...card,
                     averagePercentage: (card.averagePercentage / card.totalStudents).toFixed(2)
                 }));
+
+                // Step 2: For each class+section keep only the LATEST exam card
+                // Latest = highest academicYear; if tied, highest _latestCreatedAt
+                const latestPerClassSection = allCards.reduce((acc, card) => {
+                    const key = `${card.class}-${card.section}`;
+                    if (!acc[key]) {
+                        acc[key] = card;
+                    } else {
+                        const existing = acc[key];
+                        const newYear = parseInt(card.academicYear) || 0;
+                        const exYear  = parseInt(existing.academicYear) || 0;
+                        if (
+                            newYear > exYear ||
+                            (newYear === exYear && (card._latestCreatedAt || '') > (existing._latestCreatedAt || ''))
+                        ) {
+                            acc[key] = card;
+                        }
+                    }
+                    return acc;
+                }, {});
+
+                const cards = Object.values(latestPerClassSection).map(({ _latestCreatedAt, ...rest }) => rest);
 
                 setClassSectionCards(cards);
             }
@@ -338,38 +445,40 @@ const MarksResultsPage = () => {
             : ['Class', 'Section', 'Exam Name', 'Exam Type', 'Academic Year', 'Roll', 'Student Name', 'Subject Name', 'Marks', 'Total Marks', 'Percentage', 'Grade', 'Status', 'Merit Position'];
         csvContent += headers.join(',') + '\n';
 
-        // Data rows
+        // Data rows — one row per subject per student
         results.forEach(result => {
-            const row = selectedCard
-                ? [
-                    result.rollNumber,
-                    `"${result.studentName}"`,
-                    result.subjects[0].subjectName,
-                    result.subjects[0].marks,
-                    result.subjects[0].totalMarks,
-                    result.percentage + '%',
-                    result.grade,
-                    result.status,
-                    result.meritPosition || 'N/A'
-                ]
-                : [
-                    result.class,
-                    result.section,
-                    result.examName,
-                    result.examType,
-                    result.academicYear,
-                    result.rollNumber,
-                    `"${result.studentName}"`,
-                    result.subjects[0].subjectName,
-                    result.subjects[0].marks,
-                    result.subjects[0].totalMarks,
-                    result.percentage + '%',
-                    result.grade,
-                    result.status,
-                    result.meritPosition || 'N/A'
-                ];
-            
-            csvContent += row.join(',') + '\n';
+            const subs = Array.isArray(result.subjects) && result.subjects.length ? result.subjects : [{ subjectName: 'N/A', marks: 'N/A', totalMarks: 'N/A' }];
+            subs.forEach((sub, si) => {
+                const row = selectedCard
+                    ? [
+                        si === 0 ? result.rollNumber : '',
+                        si === 0 ? `"${result.studentName}"` : '',
+                        sub.subjectName,
+                        sub.marks,
+                        sub.totalMarks,
+                        si === 0 ? result.percentage + '%' : '',
+                        si === 0 ? result.grade : '',
+                        si === 0 ? result.status : '',
+                        si === 0 ? (result.meritPosition || 'N/A') : ''
+                    ]
+                    : [
+                        si === 0 ? result.class : '',
+                        si === 0 ? result.section : '',
+                        si === 0 ? result.examName : '',
+                        si === 0 ? result.examType : '',
+                        si === 0 ? result.academicYear : '',
+                        si === 0 ? result.rollNumber : '',
+                        si === 0 ? `"${result.studentName}"` : '',
+                        sub.subjectName,
+                        sub.marks,
+                        sub.totalMarks,
+                        si === 0 ? result.percentage + '%' : '',
+                        si === 0 ? result.grade : '',
+                        si === 0 ? result.status : '',
+                        si === 0 ? (result.meritPosition || 'N/A') : ''
+                    ];
+                csvContent += row.join(',') + '\n';
+            });
         });
 
         // Download
@@ -400,7 +509,7 @@ const MarksResultsPage = () => {
                 <title>${selectedCard ? `Results - ${selectedCard.class} ${selectedCard.section}` : 'All Results Report'}</title>
                 <style>
                     body { 
-                        font-family: 'Arial', sans-serif; 
+                        font-family: 'Tiro Bangla','Tiro Bangla Static',serif; 
                         margin: 0; 
                         padding: 20px; 
                         background-color: white;
@@ -507,6 +616,170 @@ const MarksResultsPage = () => {
         printWindow.onload = function() {
             printWindow.print();
         };
+    };
+
+    // Download individual student result card as PDF
+    const downloadStudentCard = (result) => {
+        const resSubs = Array.isArray(result.subjects) && result.subjects.length
+            ? result.subjects
+            : [{ subjectName: 'N/A', marks: 0, totalMarks: 100 }];
+        const totalObtained = resSubs.reduce((s, sub) => s + (parseFloat(sub.marks) || 0), 0);
+        const totalMarks   = resSubs.reduce((s, sub) => s + (parseInt(sub.totalMarks) || 0), 0);
+        const percentage   = totalMarks > 0 ? (totalObtained / totalMarks * 100).toFixed(2) : '0.00';
+        const grade        = calculateGrade(parseFloat(percentage));
+        const status       = parseFloat(percentage) >= 33 ? 'Pass' : 'Fail';
+        const meritPos     = result.meritPosition ? `#${result.meritPosition}` : '-';
+        const statusColor  = status === 'Pass' ? '#16a34a' : '#dc2626';
+        const gradeColor   = grade === 'A+' ? '#16a34a' : grade === 'A' ? '#1d4ed8' : grade === 'F' ? '#dc2626' : '#b45309';
+        const pctNum       = parseFloat(percentage);
+        const barColor     = pctNum >= 80 ? '#16a34a' : pctNum >= 60 ? '#2563eb' : pctNum >= 33 ? '#d97706' : '#dc2626';
+        const classInfo    = selectedCard ? `${selectedCard.class} - Section ${selectedCard.section}` : '';
+        const examInfo     = selectedCard ? `${selectedCard.examName}` : result.examName || '';
+        const yearInfo     = selectedCard ? selectedCard.academicYear : result.academicYear || '';
+
+        // Build rows HTML
+        const rows = resSubs.map((sub, i) => {
+            const pct = sub.totalMarks > 0 ? ((parseFloat(sub.marks) || 0) / parseInt(sub.totalMarks) * 100).toFixed(1) : '0.0';
+            const bg  = i % 2 === 0 ? '#f8fafc' : '#fff';
+            return `
+                <tr style="background:${bg};">
+                    <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;color:#64748b;font-weight:600;font-size:13px;">${i + 1}</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;color:#1e293b;font-weight:500;font-size:13px;">${sub.subjectName}</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;text-align:center;font-weight:700;color:#1e40af;font-size:13px;">${sub.marks}</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;text-align:center;color:#64748b;font-size:13px;">${sub.totalMarks}</td>
+                    <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;text-align:center;color:#64748b;font-size:13px;">${pct}%</td>
+                </tr>`;
+        }).join('');
+
+        const cardHTML = `
+            <div id="student-result-card" style="
+                width:720px;
+                background:#fff;
+                font-family:'Segoe UI',Arial,sans-serif;
+                border-radius:16px;
+                overflow:hidden;
+                box-shadow:0 4px 32px rgba(0,0,0,0.13);
+                border:1px solid #e2e8f0;
+            ">
+                <!-- Header gradient banner -->
+                <div style="background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 60%,#3b82f6 100%);padding:32px 36px 28px;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+                    <div style="position:absolute;bottom:-60px;left:-30px;width:220px;height:220px;background:rgba(255,255,255,0.04);border-radius:50%;"></div>
+                    <div style="position:relative;z-index:1;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                            <div>
+                                <div style="font-size:11px;font-weight:600;letter-spacing:2px;color:rgba(255,255,255,0.65);text-transform:uppercase;margin-bottom:4px;">Official Result Card</div>
+                                <div style="font-size:24px;font-weight:800;color:#fff;line-height:1.2;">School Management System</div>
+                            </div>
+                            <div style="width:64px;height:64px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;border:2px solid rgba(255,255,255,0.25);">🎓</div>
+                        </div>
+                        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                            ${classInfo ? `<span style="background:rgba(255,255,255,0.15);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,0.25);">🏫 ${classInfo}</span>` : ''}
+                            ${examInfo  ? `<span style="background:rgba(255,255,255,0.15);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,0.25);">📋 ${examInfo}</span>`  : ''}
+                            ${yearInfo  ? `<span style="background:rgba(255,255,255,0.15);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,0.25);">📅 ${yearInfo}</span>`  : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student identity strip -->
+                <div style="background:#f1f5f9;padding:20px 36px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <div style="width:52px;height:52px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:800;flex-shrink:0;">
+                            ${(result.studentName || 'S').charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <div style="font-size:19px;font-weight:800;color:#1e293b;">${result.studentName}</div>
+                            <div style="font-size:12px;color:#64748b;font-weight:500;margin-top:2px;">Roll No: <strong style="color:#1e3a8a;">${result.rollNumber}</strong></div>
+                        </div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Merit Position</div>
+                        <div style="font-size:22px;font-weight:800;color:#1e3a8a;">${meritPos}</div>
+                    </div>
+                </div>
+
+                <!-- Subject table -->
+                <div style="padding:24px 36px 0;">
+                    <div style="font-size:13px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Subject-wise Performance</div>
+                    <table style="width:100%;border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:linear-gradient(90deg,#1e3a8a,#2563eb);">
+                                <th style="padding:11px 14px;text-align:left;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px;">#</th>
+                                <th style="padding:11px 14px;text-align:left;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px;">Subject</th>
+                                <th style="padding:11px 14px;text-align:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px;">Obtained</th>
+                                <th style="padding:11px 14px;text-align:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px;">Total</th>
+                                <th style="padding:11px 14px;text-align:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.5px;">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+
+                <!-- Summary row -->
+                <div style="margin:20px 36px 0;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                    <div style="text-align:center;flex:1;">
+                        <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Total Marks</div>
+                        <div style="font-size:20px;font-weight:800;color:#1e293b;">${totalObtained} <span style="font-size:14px;color:#64748b;font-weight:500;">/ ${totalMarks}</span></div>
+                    </div>
+                    <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+                    <div style="text-align:center;flex:1;">
+                        <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Percentage</div>
+                        <div style="font-size:20px;font-weight:800;color:${barColor};">${percentage}%</div>
+                    </div>
+                    <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+                    <div style="text-align:center;flex:1;">
+                        <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Grade</div>
+                        <div style="font-size:20px;font-weight:800;color:${gradeColor};">${grade}</div>
+                    </div>
+                    <div style="width:1px;height:40px;background:#e2e8f0;"></div>
+                    <div style="text-align:center;flex:1;">
+                        <div style="font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Result</div>
+                        <div style="font-size:20px;font-weight:800;color:${statusColor};">${status}</div>
+                    </div>
+                </div>
+
+                <!-- Percentage bar -->
+                <div style="margin:16px 36px 0;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                        <span style="font-size:11px;font-weight:600;color:#64748b;">Score Progress</span>
+                        <span style="font-size:11px;font-weight:700;color:${barColor};">${percentage}%</span>
+                    </div>
+                    <div style="height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden;">
+                        <div style="height:100%;width:${Math.min(parseFloat(percentage), 100)}%;background:linear-gradient(90deg,${barColor},${barColor}cc);border-radius:999px;"></div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="margin:20px 36px 0;padding:16px 0 24px;border-top:1px dashed #e2e8f0;display:flex;align-items:center;justify-content:space-between;">
+                    <div style="font-size:11px;color:#94a3b8;">Generated: ${new Date().toLocaleDateString('en-BD', { year:'numeric', month:'long', day:'numeric' })}</div>
+                    <div style="font-size:11px;color:#94a3b8;">School Management System &copy; ${new Date().getFullYear()}</div>
+                </div>
+            </div>`;
+
+        // Inject hidden container, capture, then remove
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;';
+        wrapper.innerHTML = cardHTML;
+        document.body.appendChild(wrapper);
+
+        const cardEl = wrapper.querySelector('#student-result-card');
+
+        Swal.fire({ title: 'Generating Result Card...', text: 'Please wait', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+        html2canvas(cardEl, { scale: 2.5, useCORS: true, backgroundColor: '#ffffff', logging: false }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const pageW = pdf.internal.pageSize.getWidth();
+            const imgW = pageW - 20;
+            const imgH = (canvas.height * imgW) / canvas.width;
+            pdf.addImage(imgData, 'PNG', 10, 15, imgW, imgH);
+            pdf.save(`Result_Card_${result.studentName}_${result.rollNumber}.pdf`);
+            document.body.removeChild(wrapper);
+            Swal.fire({ icon: 'success', title: 'Downloaded!', text: `Result card for ${result.studentName} saved.`, timer: 2000, showConfirmButton: false });
+        }).catch(() => {
+            document.body.removeChild(wrapper);
+            Swal.fire('Error', 'Could not generate result card.', 'error');
+        });
     };
 
     // Download as PDF
@@ -721,80 +994,114 @@ const MarksResultsPage = () => {
                                     </button>
                                 </div>
 
-                                <div className="overflow-x-auto -mx-4 sm:mx-0">
-                                    <div className="inline-block min-w-full align-middle">
-                                        <table className="min-w-full border-collapse">
-                                            <thead>
-                                                <tr className="bg-blue-900 text-white">
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm">Roll</th>
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm">Student Name</th>
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Subject Name</th>
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Marks</th>
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Total Marks</th>
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">%</th>
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Grade</th>
-                                                    <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {marksData.map((student, studentIndex) => {
-                                                    const totals = calculateStudentTotal(student);
-                                                    return (
-                                                        <tr key={studentIndex} className="border-b hover:bg-blue-50 transition-colors">
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold">{student.rollNumber}</td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">{student.studentName}</td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <input
-                                                                    type="text"
-                                                                    value={student.subjectName}
-                                                                    onChange={(e) => updateSubjectName(studentIndex, e.target.value)}
-                                                                    className="w-full px-1 sm:px-2 py-1 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
-                                                                    placeholder="Subject Name"
-                                                                />
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <input
-                                                                    type="number"
-                                                                    value={student.marks}
-                                                                    onChange={(e) => updateMarks(studentIndex, e.target.value)}
-                                                                    className="w-16 sm:w-20 px-1 sm:px-2 py-1 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
-                                                                    min="0"
-                                                                    max={student.totalMarks}
-                                                                />
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <input
-                                                                    type="number"
-                                                                    value={student.totalMarks}
-                                                                    onChange={(e) => updateTotalMarks(studentIndex, e.target.value)}
-                                                                    className="w-16 sm:w-20 px-1 sm:px-2 py-1 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
-                                                                    min="1"
-                                                                />
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-bold text-xs sm:text-sm">{totals.percentage}%</td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <span className={`px-1 sm:px-3 py-1 rounded-full font-bold text-xs sm:text-sm ${
-                                                                    totals.grade === 'A+' ? 'bg-green-100 text-green-800' :
-                                                                    totals.grade === 'A' ? 'bg-blue-100 text-blue-800' :
-                                                                    totals.grade === 'F' ? 'bg-red-100 text-red-800' :
-                                                                    'bg-yellow-100 text-yellow-800'
-                                                                }`}>
-                                                                    {totals.grade}
-                                                                </span>
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <span className={`px-1 sm:px-3 py-1 rounded-full font-bold text-xs sm:text-sm ${
-                                                                    totals.status === 'Pass' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                                                }`}>
-                                                                    {totals.status}
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <div className="space-y-4">
+                                    {marksData.map((student, studentIndex) => {
+                                        const subjects = getSafeSubjects(student);
+                                        const totals = calculateStudentTotal(student);
+                                        return (
+                                            <div key={student.studentId} className="border-2 border-gray-200 rounded-lg overflow-hidden">
+                                                {/* Student Header */}
+                                                <div className="bg-blue-50 px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200">
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-xs font-bold text-gray-500 bg-white border border-gray-300 rounded px-2 py-0.5">Roll: {student.rollNumber}</span>
+                                                        <span className="text-sm font-bold text-blue-900">{student.studentName}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <span className="text-xs text-gray-600 font-medium">{totals.totalObtained}/{totals.totalMarks}</span>
+                                                        <span className="text-xs font-bold text-blue-800">{totals.percentage}%</span>
+                                                        <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${
+                                                            totals.grade === 'A+' ? 'bg-green-100 text-green-800' :
+                                                            totals.grade === 'A' ? 'bg-blue-100 text-blue-800' :
+                                                            totals.grade === 'F' ? 'bg-red-100 text-red-800' :
+                                                            'bg-yellow-100 text-yellow-800'
+                                                        }`}>{totals.grade}</span>
+                                                        <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${totals.status === 'Pass' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                                            {totals.status}
+                                                        </span>
+                                                        <button
+                                                            onClick={() => saveStudentResult(studentIndex)}
+                                                            disabled={savingIndex === studentIndex}
+                                                            className="px-3 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition-colors text-xs disabled:opacity-50"
+                                                        >
+                                                            {savingIndex === studentIndex ? 'Saving...' : '💾 Save'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                {/* Subjects Table */}
+                                                <div className="overflow-x-auto">
+                                                    <table className="w-full border-collapse text-xs sm:text-sm">
+                                                        <thead>
+                                                            <tr className="bg-gray-100 text-gray-600">
+                                                                <th className="px-3 py-2 text-left font-semibold">#</th>
+                                                                <th className="px-3 py-2 text-left font-semibold">Subject Name</th>
+                                                                <th className="px-3 py-2 text-center font-semibold">Marks Obtained</th>
+                                                                <th className="px-3 py-2 text-center font-semibold">Total Marks</th>
+                                                                <th className="px-3 py-2 text-center font-semibold">Remove</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {subjects.map((sub, subIndex) => (
+                                                                <tr key={subIndex} className={subIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                                    <td className="px-3 py-2 text-gray-400 font-bold">{subIndex + 1}</td>
+                                                                    <td className="px-3 py-2">
+                                                                        <input
+                                                                            type="text"
+                                                                            value={sub.subjectName}
+                                                                            onChange={(e) => updateSubjectName(studentIndex, subIndex, e.target.value)}
+                                                                            className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
+                                                                            placeholder="e.g. Bangla, English, Math"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="px-3 py-2 text-center">
+                                                                        <input
+                                                                            type="number"
+                                                                            value={sub.marks}
+                                                                            onChange={(e) => updateMarks(studentIndex, subIndex, e.target.value)}
+                                                                            className="w-20 px-2 py-1.5 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
+                                                                            min="0"
+                                                                            max={sub.totalMarks}
+                                                                            placeholder="0"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="px-3 py-2 text-center">
+                                                                        <input
+                                                                            type="number"
+                                                                            value={sub.totalMarks}
+                                                                            onChange={(e) => updateTotalMarks(studentIndex, subIndex, e.target.value)}
+                                                                            className="w-20 px-2 py-1.5 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
+                                                                            min="1"
+                                                                            placeholder="100"
+                                                                        />
+                                                                    </td>
+                                                                    <td className="px-3 py-2 text-center">
+                                                                        <button
+                                                                            onClick={() => removeSubject(studentIndex, subIndex)}
+                                                                            disabled={subjects.length === 1}
+                                                                            className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-600 hover:bg-red-200 font-bold text-base disabled:opacity-30 disabled:cursor-not-allowed transition-colors mx-auto"
+                                                                            title="Remove subject"
+                                                                        >
+                                                                            ×
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                {/* Add Subject Button */}
+                                                <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+                                                    <button
+                                                        onClick={() => addSubject(studentIndex)}
+                                                        className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded text-xs font-semibold hover:bg-blue-700 transition-colors"
+                                                    >
+                                                        <span className="text-base leading-none">+</span> Add Subject
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
@@ -964,118 +1271,189 @@ const MarksResultsPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Editable Results Table */}
+                                {/* Results — card-based view + inline edit per student */}
                                 <div id="results-table-print" className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6">
-                                    <h2 className="text-lg sm:text-xl font-bold text-blue-900 mb-4 sm:mb-6">✏️ Edit Results</h2>
-                                    <div className="overflow-x-auto -mx-4 sm:mx-0">
-                                        <div className="inline-block min-w-full align-middle">
-                                            <table className="min-w-full border-collapse">
-                                                <thead>
-                                                    <tr className="bg-blue-900 text-white">
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Roll</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Student Name</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Subject Name</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Marks</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Total Marks</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">%</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Grade</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Status</th>
-                                                        <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {results.map((result, index) => (
-                                                        <tr key={index} className="border-b hover:bg-blue-50 transition-colors">
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-semibold text-xs sm:text-sm">{result.rollNumber}</td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm">{result.studentName}</td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <input
-                                                                    type="text"
-                                                                    value={editedResults[result._id]?.subjectName ?? result.subjects[0].subjectName}
-                                                                    onChange={(e) => setEditedResults(prev => ({
-                                                                        ...prev,
-                                                                        [result._id]: {
-                                                                            ...prev[result._id],
-                                                                            subjectName: e.target.value
-                                                                        }
-                                                                    }))}
-                                                                    className="w-full px-1 sm:px-2 py-1 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
-                                                                />
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <input
-                                                                    type="number"
-                                                                    value={editedResults[result._id]?.marks ?? result.subjects[0].marks}
-                                                                    onChange={(e) => setEditedResults(prev => ({
-                                                                        ...prev,
-                                                                        [result._id]: {
-                                                                            ...prev[result._id],
-                                                                            marks: e.target.value
-                                                                        }
-                                                                    }))}
-                                                                    className="w-16 sm:w-20 px-1 sm:px-2 py-1 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
-                                                                    min="0"
-                                                                    max={editedResults[result._id]?.totalMarks ?? result.subjects[0].totalMarks}
-                                                                />
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <input
-                                                                    type="number"
-                                                                    value={editedResults[result._id]?.totalMarks ?? result.subjects[0].totalMarks}
-                                                                    onChange={(e) => setEditedResults(prev => ({
-                                                                        ...prev,
-                                                                        [result._id]: {
-                                                                            ...prev[result._id],
-                                                                            totalMarks: parseInt(e.target.value) || 100
-                                                                        }
-                                                                    }))}
-                                                                    className="w-16 sm:w-20 px-1 sm:px-2 py-1 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs sm:text-sm"
-                                                                    min="1"
-                                                                />
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center font-bold text-xs sm:text-sm">{result.percentage}%</td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <span className={`px-1 sm:px-3 py-1 rounded-full font-bold text-xs sm:text-sm ${
-                                                                    result.grade === 'A+' ? 'bg-green-100 text-green-800' :
-                                                                    result.grade === 'A' ? 'bg-blue-100 text-blue-800' :
-                                                                    result.grade === 'F' ? 'bg-red-100 text-red-800' :
-                                                                    'bg-yellow-100 text-yellow-800'
-                                                                }`}>
-                                                                    {result.grade}
-                                                                </span>
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <span className={`px-1 sm:px-3 py-1 rounded-full font-bold text-xs sm:text-sm ${
-                                                                    result.status === 'Pass' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                                                }`}>
-                                                                    {result.status}
-                                                                </span>
-                                                            </td>
-                                                            <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
-                                                                <button 
-                                                                    onClick={() => {
-                                                                        const edited = editedResults[result._id];
-                                                                        if (edited) {
-                                                                            updateResult(result._id, {
-                                                                                ...result,
-                                                                                subjects: [{
-                                                                                    subjectName: edited.subjectName || result.subjects[0].subjectName,
-                                                                                    marks: edited.marks || result.subjects[0].marks,
-                                                                                    totalMarks: edited.totalMarks || result.subjects[0].totalMarks
-                                                                                }]
-                                                                            });
-                                                                        }
-                                                                    }}
-                                                                    className="px-3 py-1 sm:px-4 sm:py-2 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors text-xs sm:text-sm"
-                                                                >
-                                                                    Update
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                    <h2 className="text-lg sm:text-xl font-bold text-blue-900 mb-4 sm:mb-6">📋 Student Results</h2>
+                                    <div className="space-y-4">
+                                        {results.map((result, index) => {
+                                            const resSubs = Array.isArray(result.subjects) && result.subjects.length
+                                                ? result.subjects
+                                                : [{ subjectName: 'N/A', marks: 0, totalMarks: 100 }];
+                                            const isEditing = !!editedResults[result._id];
+                                            const editedSubs = editedResults[result._id]?.subjects ?? resSubs.map(s => ({ ...s }));
+
+                                            // Live totals (updates as user edits)
+                                            const liveSubs = isEditing ? editedSubs : resSubs;
+                                            const liveTotalObtained = liveSubs.reduce((s, sub) => s + (parseFloat(sub.marks) || 0), 0);
+                                            const liveTotalMarks = liveSubs.reduce((s, sub) => s + (parseInt(sub.totalMarks) || 0), 0);
+                                            const livePercentage = liveTotalMarks > 0 ? (liveTotalObtained / liveTotalMarks * 100).toFixed(2) : '0.00';
+                                            const liveGrade = calculateGrade(parseFloat(livePercentage));
+                                            const liveStatus = parseFloat(livePercentage) >= 33 ? 'Pass' : 'Fail';
+
+                                            return (
+                                                <div key={result._id} className="border-2 border-gray-200 rounded-lg overflow-hidden">
+                                                    {/* Student header */}
+                                                    <div className={`px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 ${isEditing ? 'bg-blue-100' : 'bg-blue-50'}`}>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-xs font-bold text-gray-500 bg-white border border-gray-300 rounded px-2 py-0.5">#{index + 1}</span>
+                                                            <span className="text-xs font-bold text-gray-500 bg-white border border-gray-300 rounded px-2 py-0.5">Roll: {result.rollNumber}</span>
+                                                            <span className="text-sm font-bold text-blue-900">{result.studentName}</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span className="text-xs text-gray-600 font-medium">{liveTotalObtained}/{liveTotalMarks}</span>
+                                                            <span className="text-xs font-bold text-blue-800">{livePercentage}%</span>
+                                                            <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${
+                                                                liveGrade === 'A+' ? 'bg-green-100 text-green-800' :
+                                                                liveGrade === 'A' ? 'bg-blue-100 text-blue-800' :
+                                                                liveGrade === 'F' ? 'bg-red-100 text-red-800' :
+                                                                'bg-yellow-100 text-yellow-800'
+                                                            }`}>{liveGrade}</span>
+                                                            <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${liveStatus === 'Pass' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                                                {liveStatus}
+                                                            </span>
+                                                            {isEditing ? (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            updateResult(result._id, { ...result, subjects: editedSubs });
+                                                                            setEditedResults(prev => { const c = { ...prev }; delete c[result._id]; return c; });
+                                                                        }}
+                                                                        className="px-3 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition-colors text-xs"
+                                                                    >
+                                                                        ✓ Save
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setEditedResults(prev => { const c = { ...prev }; delete c[result._id]; return c; })}
+                                                                        className="px-3 py-1 bg-gray-400 text-white rounded font-semibold hover:bg-gray-500 transition-colors text-xs"
+                                                                    >
+                                                                        ✕ Cancel
+                                                                    </button>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => downloadStudentCard(result)}
+                                                                        className="px-3 py-1 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700 transition-colors text-xs"
+                                                                        title="Download Result Card PDF"
+                                                                    >
+                                                                        📥 Card
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setEditedResults(prev => ({
+                                                                            ...prev,
+                                                                            [result._id]: { subjects: resSubs.map(s => ({ ...s })) }
+                                                                        }))}
+                                                                        className="px-3 py-1 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-colors text-xs"
+                                                                    >
+                                                                        ✏️ Edit
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Subjects table */}
+                                                    <div className="overflow-x-auto">
+                                                        <table className="w-full border-collapse text-xs sm:text-sm">
+                                                            <thead>
+                                                                <tr className="bg-gray-100 text-gray-600">
+                                                                    <th className="px-3 py-2 text-left font-semibold">#</th>
+                                                                    <th className="px-3 py-2 text-left font-semibold">Subject Name</th>
+                                                                    <th className="px-3 py-2 text-center font-semibold">Marks</th>
+                                                                    <th className="px-3 py-2 text-center font-semibold">Total</th>
+                                                                    {isEditing && <th className="px-3 py-2 text-center font-semibold">Remove</th>}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {(isEditing ? editedSubs : resSubs).map((sub, si) => (
+                                                                    <tr key={si} className={si % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                                        <td className="px-3 py-2 text-gray-400 font-bold">{si + 1}</td>
+                                                                        <td className="px-3 py-2">
+                                                                            {isEditing ? (
+                                                                                <input
+                                                                                    type="text"
+                                                                                    value={sub.subjectName}
+                                                                                    onChange={(e) => {
+                                                                                        const n = editedSubs.map((s, i) => i === si ? { ...s, subjectName: e.target.value } : s);
+                                                                                        setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
+                                                                                    }}
+                                                                                    className="w-full px-2 py-1.5 border-2 border-blue-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
+                                                                                    placeholder="Subject Name"
+                                                                                />
+                                                                            ) : (
+                                                                                <span className="font-medium">{sub.subjectName}</span>
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-center">
+                                                                            {isEditing ? (
+                                                                                <input
+                                                                                    type="number"
+                                                                                    value={sub.marks}
+                                                                                    onChange={(e) => {
+                                                                                        const n = editedSubs.map((s, i) => i === si ? { ...s, marks: e.target.value } : s);
+                                                                                        setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
+                                                                                    }}
+                                                                                    className="w-20 px-2 py-1.5 border-2 border-blue-300 rounded text-center focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+                                                                                    min="0"
+                                                                                />
+                                                                            ) : (
+                                                                                <span className="font-semibold text-blue-800">{sub.marks}</span>
+                                                                            )}
+                                                                        </td>
+                                                                        <td className="px-3 py-2 text-center">
+                                                                            {isEditing ? (
+                                                                                <input
+                                                                                    type="number"
+                                                                                    value={sub.totalMarks}
+                                                                                    onChange={(e) => {
+                                                                                        const n = editedSubs.map((s, i) => i === si ? { ...s, totalMarks: parseInt(e.target.value) || 100 } : s);
+                                                                                        setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
+                                                                                    }}
+                                                                                    className="w-20 px-2 py-1.5 border-2 border-blue-300 rounded text-center focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+                                                                                    min="1"
+                                                                                />
+                                                                            ) : (
+                                                                                <span className="text-gray-600">{sub.totalMarks}</span>
+                                                                            )}
+                                                                        </td>
+                                                                        {isEditing && (
+                                                                            <td className="px-3 py-2 text-center">
+                                                                                <button
+                                                                                    onClick={() => {
+                                                                                        if (editedSubs.length === 1) return;
+                                                                                        const n = editedSubs.filter((_, i) => i !== si);
+                                                                                        setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
+                                                                                    }}
+                                                                                    disabled={editedSubs.length === 1}
+                                                                                    className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-600 hover:bg-red-200 font-bold text-base disabled:opacity-30 disabled:cursor-not-allowed transition-colors mx-auto"
+                                                                                >
+                                                                                    ×
+                                                                                </button>
+                                                                            </td>
+                                                                        )}
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    {/* Add subject — only in edit mode */}
+                                                    {isEditing && (
+                                                        <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const n = [...editedSubs, { subjectName: '', marks: '', totalMarks: 100 }];
+                                                                    setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
+                                                                }}
+                                                                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded text-xs font-semibold hover:bg-blue-700 transition-colors"
+                                                            >
+                                                                <span className="text-base leading-none">+</span> Add Subject
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
@@ -1125,39 +1503,57 @@ const MarksResultsPage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {results.map((result, index) => (
-                                                <tr key={index} style={{ backgroundColor: index % 2 === 0 ? '#f9fafb' : 'white' }}>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>{result.rollNumber}</td>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{result.studentName}</td>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{result.subjects[0].subjectName}</td>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{result.subjects[0].marks}</td>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{result.subjects[0].totalMarks}</td>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>{result.percentage}%</td>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>
-                                                        <span style={{
-                                                            padding: '4px 8px',
-                                                            borderRadius: '12px',
-                                                            fontWeight: 'bold',
-                                                            backgroundColor: result.grade === 'A+' ? '#d1fae5' : result.grade === 'A' ? '#dbeafe' : result.grade === 'F' ? '#fee2e2' : '#fef3c7',
-                                                            color: result.grade === 'A+' ? '#065f46' : result.grade === 'A' ? '#1e40af' : result.grade === 'F' ? '#991b1b' : '#92400e'
-                                                        }}>
-                                                            {result.grade}
-                                                        </span>
-                                                    </td>
-                                                    <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>
-                                                        <span style={{
-                                                            padding: '4px 8px',
-                                                            borderRadius: '12px',
-                                                            fontWeight: 'bold',
-                                                            backgroundColor: result.status === 'Pass' ? '#d1fae5' : '#fee2e2',
-                                                            color: result.status === 'Pass' ? '#065f46' : '#991b1b'
-                                                        }}>
-                                                            {result.status}
-                                                        </span>
-                                                    </td>
-                                                    {selectedCard && <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{result.meritPosition || 'N/A'}</td>}
-                                                </tr>
-                                            ))}
+                                            {results.map((result, index) => {
+                                                const pSubs = Array.isArray(result.subjects) && result.subjects.length ? result.subjects : [{ subjectName: 'N/A', marks: 'N/A', totalMarks: 'N/A' }];
+                                                return pSubs.map((sub, si) => (
+                                                    <tr key={`${index}-${si}`} style={{ backgroundColor: si > 0 ? '#f0f9ff' : (index % 2 === 0 ? '#f9fafb' : 'white') }}>
+                                                        {si === 0 && (
+                                                            <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', fontWeight: 'bold', verticalAlign: 'middle' }} rowSpan={pSubs.length}>{result.rollNumber}</td>
+                                                        )}
+                                                        {si === 0 && (
+                                                            <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', verticalAlign: 'middle' }} rowSpan={pSubs.length}>{result.studentName}</td>
+                                                        )}
+                                                        <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{sub.subjectName}</td>
+                                                        <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{sub.marks}</td>
+                                                        <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center' }}>{sub.totalMarks}</td>
+                                                        {si === 0 && (
+                                                            <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', fontWeight: 'bold', verticalAlign: 'middle' }} rowSpan={pSubs.length}>
+                                                                {result.percentage}%
+                                                                <div style={{ fontSize: '10px', color: '#6b7280', fontWeight: 'normal' }}>
+                                                                    {result.totalObtained || ''}/{result.totalMarks || ''}
+                                                                </div>
+                                                            </td>
+                                                        )}
+                                                        {si === 0 && (
+                                                            <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', verticalAlign: 'middle' }} rowSpan={pSubs.length}>
+                                                                <span style={{
+                                                                    padding: '4px 8px',
+                                                                    borderRadius: '12px',
+                                                                    fontWeight: 'bold',
+                                                                    backgroundColor: result.grade === 'A+' ? '#d1fae5' : result.grade === 'A' ? '#dbeafe' : result.grade === 'F' ? '#fee2e2' : '#fef3c7',
+                                                                    color: result.grade === 'A+' ? '#065f46' : result.grade === 'A' ? '#1e40af' : result.grade === 'F' ? '#991b1b' : '#92400e'
+                                                                }}>
+                                                                    {result.grade}
+                                                                </span>
+                                                            </td>
+                                                        )}
+                                                        {si === 0 && (
+                                                            <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', verticalAlign: 'middle' }} rowSpan={pSubs.length}>
+                                                                <span style={{
+                                                                    padding: '4px 8px',
+                                                                    borderRadius: '12px',
+                                                                    fontWeight: 'bold',
+                                                                    backgroundColor: result.status === 'Pass' ? '#d1fae5' : '#fee2e2',
+                                                                    color: result.status === 'Pass' ? '#065f46' : '#991b1b'
+                                                                }}>
+                                                                    {result.status}
+                                                                </span>
+                                                            </td>
+                                                        )}
+                                                        {selectedCard && si === 0 && <td style={{ border: '1px solid #000', padding: '8px', textAlign: 'center', verticalAlign: 'middle' }} rowSpan={pSubs.length}>{result.meritPosition || 'N/A'}</td>}
+                                                    </tr>
+                                                ));
+                                            })}
                                         </tbody>
                                     </table>
                                     

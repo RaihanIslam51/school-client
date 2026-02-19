@@ -1,45 +1,18 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { API_URL } from '../../config/api';
 import { useLanguage } from '../../src/contexts/LanguageContext';
+import { useAcademics } from '../../src/hooks/useApi';
 
 const Academics = () => {
-    const [academics, setAcademics] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [activeMedium, setActiveMedium] = useState('english');
     const [activeTab, setActiveTab] = useState('classes');
 
     const { t, language } = useLanguage();
 
-    useEffect(() => {
-        const fetchAcademics = async () => {
-            try {
-                setLoading(true);
-                console.log('Fetching academics from:', `${API_URL}/api/academics`);
-                const response = await fetch(`${API_URL}/api/academics`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Academics response:', data);
-                console.log('Academics data array:', data.data);
-                
-                setAcademics(data.data || []);
-            } catch (err) {
-                setError(err.message);
-                console.error('Error fetching academics:', err);
-                console.error('API_URL:', API_URL);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAcademics();
-    }, []);
+    const { data: academicsData, isLoading: loading, error: fetchError } = useAcademics();
+    const academics = academicsData?.data || [];
+    const error = fetchError?.message || null;
 
     // Organize data by type
     const classes = academics.filter(item => item.type === 'class') || [];

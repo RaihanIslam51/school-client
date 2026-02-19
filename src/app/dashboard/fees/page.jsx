@@ -31,6 +31,9 @@ const FeesManagementPage = () => {
     const [currentReceipt, setCurrentReceipt] = useState(null);
     const [recordFilter, setRecordFilter] = useState('unpaid'); // 'all', 'paid', 'unpaid'
     const [selectedRecords, setSelectedRecords] = useState([]); // For bulk delete
+    const [partialEdit, setPartialEdit] = useState({ recordId: null, amount: '' }); // For partial payment input
+    const [reportType, setReportType] = useState('monthly'); // 'daily', 'monthly', 'yearly'
+    const [reportStatusFilter, setReportStatusFilter] = useState('all'); // 'all', 'Paid', 'Partial', 'Pending'
 
     // Fee categories
     const feeCategories = [
@@ -387,11 +390,11 @@ const FeesManagementPage = () => {
         };
 
         return `
-            <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; background: white;">
+            <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; background: white; color: #111;">
                 <!-- Header -->
-                <div style="text-align: center; border-bottom: 3px solid #3b82f6; padding-bottom: 20px; margin-bottom: 30px;">
-                    <h1 style="color: #1e40af; margin: 0; font-size: 32px;">🎓 School Management System</h1>
-                    <p style="color: #6b7280; margin: 10px 0 0 0; font-size: 16px;">Fee Payment Receipt</p>
+                <div style="text-align: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 30px;">
+                    <h1 style="color: #111; margin: 0; font-size: 28px;">School Management System</h1>
+                    <p style="color: #6b7280; margin: 10px 0 0 0; font-size: 14px;">Fee Payment Receipt</p>
                 </div>
 
                 <!-- Receipt Info -->
@@ -404,7 +407,7 @@ const FeesManagementPage = () => {
                     <div style="text-align: right;">
                         <p style="margin: 5px 0;"><strong>Payment Method:</strong> ${receipt.paymentMethod}</p>
                         <p style="margin: 5px 0;"><strong>Status:</strong> 
-                            <span style="background: ${receipt.status === 'Paid' ? '#10b981' : receipt.status === 'Partial' ? '#f59e0b' : '#ef4444'}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px;">${receipt.status}</span>
+                            <span style="background: #f3f4f6; color: #111; padding: 4px 8px; border-radius: 6px; font-size: 12px; border:1px solid #ddd;">${receipt.status}</span>
                         </p>
                     </div>
                 </div>
@@ -425,7 +428,7 @@ const FeesManagementPage = () => {
                     <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">Fee Details</h3>
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="background: #3b82f6; color: white;">
+                            <tr style="border-bottom:1px solid #ddd; color: #111; font-weight:700;">
                                 <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Fee Category</th>
                                 <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Description</th>
                                 <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Amount (৳)</th>
@@ -444,12 +447,12 @@ const FeesManagementPage = () => {
                         <span style="font-size: 16px; font-weight: bold;">৳ ${totals.total}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span style="font-size: 16px; color: #10b981;">Paid Amount:</span>
-                        <span style="font-size: 16px; font-weight: bold; color: #10b981;">৳ ${totals.paid}</span>
+                        <span style="font-size: 16px; color: #111;">Paid Amount:</span>
+                        <span style="font-size: 16px; font-weight: bold; color: #111;">৳ ${totals.paid}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 2px solid #d1d5db;">
-                        <span style="font-size: 18px; font-weight: bold; color: ${parseFloat(totals.due) > 0 ? '#ef4444' : '#6b7280'};">Due Amount:</span>
-                        <span style="font-size: 18px; font-weight: bold; color: ${parseFloat(totals.due) > 0 ? '#ef4444' : '#6b7280'};">৳ ${totals.due}</span>
+                        <span style="font-size: 18px; font-weight: bold; color: #111;">Due Amount:</span>
+                        <span style="font-size: 18px; font-weight: bold; color: #111;">৳ ${totals.due}</span>
                     </div>
                 </div>
 
@@ -525,6 +528,304 @@ const FeesManagementPage = () => {
     // Deselect all records
     const deselectAllRecords = () => {
         setSelectedRecords([]);
+    };
+
+    // Download comprehensive fee report as PDF
+    const downloadReport = async () => {
+        if (feeRecords.length === 0) {
+            Swal.fire('Error', 'No records to generate report', 'error');
+            return;
+        }
+
+        Swal.fire({ title: 'Generating Report...', text: 'Please wait', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+        // --- Filter records by status ---
+        const filteredRecords = reportStatusFilter === 'all'
+            ? feeRecords
+            : feeRecords.filter(r => r.status === reportStatusFilter);
+
+        if (filteredRecords.length === 0) {
+            Swal.close();
+            Swal.fire('No Data', `No ${reportStatusFilter} records found.`, 'warning');
+            return;
+        }
+
+        const reportTypeLabel = reportType === 'daily' ? 'Daily' : reportType === 'monthly' ? 'Monthly' : 'Yearly';
+        const statusLabel = reportStatusFilter === 'all' ? 'All' : reportStatusFilter;
+
+        // --- Compute stats ---
+        const totalExpected = filteredRecords.reduce((s, r) => s + (r.totalAmount || 0), 0);
+        const totalCollectedAmt = filteredRecords.reduce((s, r) => s + (r.status === 'Pending' ? 0 : (r.paidAmount || 0)), 0);
+        const totalDueAmt = filteredRecords.reduce((s, r) => s + (r.status === 'Pending' ? (r.totalAmount || 0) : Math.max(0, (r.totalAmount || 0) - (r.paidAmount || 0))), 0);
+        const paidCount = filteredRecords.filter(r => r.status === 'Paid').length;
+        const partialCount = filteredRecords.filter(r => r.status === 'Partial').length;
+        const pendingCount = filteredRecords.filter(r => r.status === 'Pending').length;
+        const uniqueStudents = [...new Set(filteredRecords.map(r => r.studentName))].length;
+
+        // --- Group by year ---
+        const byYear = {};
+        filteredRecords.forEach(r => {
+            const y = new Date(r.paymentDate).getFullYear();
+            if (!byYear[y]) byYear[y] = { total: 0, collected: 0, due: 0, paid: 0, partial: 0, pending: 0, count: 0 };
+            byYear[y].count++;
+            byYear[y].total += r.totalAmount || 0;
+            byYear[y].collected += r.status === 'Pending' ? 0 : (r.paidAmount || 0);
+            byYear[y].due += r.status === 'Pending' ? (r.totalAmount || 0) : Math.max(0, (r.totalAmount || 0) - (r.paidAmount || 0));
+            if (r.status === 'Paid') byYear[y].paid++;
+            else if (r.status === 'Partial') byYear[y].partial++;
+            else byYear[y].pending++;
+        });
+
+        // --- Group by month ---
+        const byMonth = {};
+        filteredRecords.forEach(r => {
+            const d = new Date(r.paymentDate);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            const label = d.toLocaleString('default', { month: 'long', year: 'numeric' });
+            if (!byMonth[key]) byMonth[key] = { label, total: 0, collected: 0, due: 0, paid: 0, partial: 0, pending: 0, count: 0 };
+            byMonth[key].count++;
+            byMonth[key].total += r.totalAmount || 0;
+            byMonth[key].collected += r.status === 'Pending' ? 0 : (r.paidAmount || 0);
+            byMonth[key].due += r.status === 'Pending' ? (r.totalAmount || 0) : Math.max(0, (r.totalAmount || 0) - (r.paidAmount || 0));
+            if (r.status === 'Paid') byMonth[key].paid++;
+            else if (r.status === 'Partial') byMonth[key].partial++;
+            else byMonth[key].pending++;
+        });
+        const sortedMonths = Object.entries(byMonth).sort((a, b) => b[0].localeCompare(a[0]));
+
+        // --- Group by day (last 30 days only) ---
+        const byDay = {};
+        filteredRecords.forEach(r => {
+            const d = new Date(r.paymentDate);
+            const key = d.toISOString().split('T')[0];
+            const label = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+            if (!byDay[key]) byDay[key] = { label, total: 0, collected: 0, due: 0, paid: 0, partial: 0, pending: 0, count: 0 };
+            byDay[key].count++;
+            byDay[key].total += r.totalAmount || 0;
+            byDay[key].collected += r.status === 'Pending' ? 0 : (r.paidAmount || 0);
+            byDay[key].due += r.status === 'Pending' ? (r.totalAmount || 0) : Math.max(0, (r.totalAmount || 0) - (r.paidAmount || 0));
+            if (r.status === 'Paid') byDay[key].paid++;
+            else if (r.status === 'Partial') byDay[key].partial++;
+            else byDay[key].pending++;
+        });
+        const sortedDays = Object.entries(byDay).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 30);
+
+        const tableRowStyle = (i) => `background:${i % 2 === 0 ? '#f9fafb' : '#fff'};`;
+        const statusBadge = (paid, partial, pending) =>
+            '<span style="background:#166534;color:#fff;padding:2px 7px;border-radius:10px;font-size:11px;margin-right:3px">' + paid + ' Paid</span>' +
+            '<span style="background:#92400e;color:#fff;padding:2px 7px;border-radius:10px;font-size:11px;margin-right:3px">' + partial + ' Partial</span>' +
+            '<span style="background:#6b7280;color:#fff;padding:2px 7px;border-radius:10px;font-size:11px">' + pending + ' Pending</span>';
+
+        const breakdownCols = '<thead><tr style="background:#1a202c;color:#fff">' +
+            '<th style="padding:10px 12px;text-align:left">Period</th>' +
+            '<th style="padding:10px 12px;text-align:center">Records</th>' +
+            '<th style="padding:10px 12px;text-align:center">Status</th>' +
+            '<th style="padding:10px 12px;text-align:right">Expected (&#2547;)</th>' +
+            '<th style="padding:10px 12px;text-align:right">Collected (&#2547;)</th>' +
+            '<th style="padding:10px 12px;text-align:right">Due (&#2547;)</th>' +
+            '</tr></thead>';
+
+        const buildBreakdownRows = (entries) => entries.map(([, d], i) =>
+            '<tr style="' + tableRowStyle(i) + '">' +
+            '<td style="padding:9px 12px;font-weight:600">' + d.label + '</td>' +
+            '<td style="padding:9px 12px;text-align:center">' + d.count + '</td>' +
+            '<td style="padding:9px 12px;text-align:center">' + statusBadge(d.paid, d.partial, d.pending) + '</td>' +
+            '<td style="padding:9px 12px;text-align:right">&#2547;' + d.total.toFixed(2) + '</td>' +
+            '<td style="padding:9px 12px;text-align:right;color:#15803d;font-weight:600">&#2547;' + d.collected.toFixed(2) + '</td>' +
+            '<td style="padding:9px 12px;text-align:right;color:#dc2626;font-weight:600">&#2547;' + d.due.toFixed(2) + '</td>' +
+            '</tr>'
+        ).join('');
+
+        const yearlySection = reportType === 'yearly'
+            ? '<h3 style="margin:0 0 10px;font-size:16px;color:#111">Yearly Breakdown</h3>' +
+              '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
+              breakdownCols + '<tbody>' +
+              buildBreakdownRows(Object.entries(byYear).sort((a, b) => b[0] - a[0]).map(([yr, d]) => [yr, { ...d, label: yr }])) +
+              '</tbody></table>'
+            : ''; 
+
+        const monthlySection = reportType === 'monthly'
+            ? '<h3 style="margin:0 0 10px;font-size:16px;color:#111">Monthly Breakdown</h3>' +
+              '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
+              breakdownCols + '<tbody>' +
+              buildBreakdownRows(sortedMonths) +
+              '</tbody></table>'
+            : ''; 
+
+        const dailySection = reportType === 'daily'
+            ? '<h3 style="margin:0 0 10px;font-size:16px;color:#111">Daily Breakdown (Recent ' + sortedDays.length + ' Days)</h3>' +
+              '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
+              breakdownCols + '<tbody>' +
+              buildBreakdownRows(sortedDays) +
+              '</tbody></table>'
+            : ''; 
+
+        const html = `
+        <div style="font-family:Arial,sans-serif;max-width:900px;margin:0 auto;padding:30px;background:#fff;color:#1a202c">
+
+          <!-- Header -->
+          <div style="text-align:center;border-bottom:1px solid #e5e7eb;padding-bottom:18px;margin-bottom:24px">
+            <h1 style="margin:0;font-size:28px;color:#111">School Management System</h1>
+            <h2 style="margin:6px 0 0;font-size:18px;color:#111;font-weight:500">Fee Collection Report — ${reportTypeLabel} | Status: ${statusLabel}</h2>
+            <p style="margin:4px 0 0;font-size:13px;color:#6b7280">Generated: ${new Date().toLocaleString()} &nbsp;|&nbsp; Class: ${selectedClass} &nbsp;|&nbsp; Section: ${selectedSection} &nbsp;|&nbsp; Year: ${academicYear}</p>
+          </div>
+
+          <!-- Summary Cards -->
+          <h3 style="margin:0 0 12px;font-size:16px;color:#111">Overall Summary</h3>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px">
+            <div style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;padding:14px;text-align:center">
+              <p style="margin:0;font-size:12px;color:#6b7280">Total Students</p>
+              <p style="margin:4px 0 0;font-size:26px;font-weight:700;color:#1a202c">${uniqueStudents}</p>
+            </div>
+            <div style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;padding:14px;text-align:center">
+              <p style="margin:0;font-size:12px;color:#6b7280">Total Records</p>
+              <p style="margin:4px 0 0;font-size:26px;font-weight:700;color:#1a202c">${filteredRecords.length}</p>
+              <p style="margin:4px 0 0;font-size:11px;color:#6b7280">${statusBadge(paidCount, partialCount, pendingCount)}</p>
+            </div>
+            <div style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;padding:14px;text-align:center">
+              <p style="margin:0;font-size:12px;color:#6b7280">Total Expected (&#2547;)</p>
+              <p style="margin:4px 0 0;font-size:22px;font-weight:700;color:#1a202c">&#2547;${totalExpected.toFixed(2)}</p>
+            </div>
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px;text-align:center">
+              <p style="margin:0;font-size:12px;color:#111">&#2547; Total Collected</p>
+              <p style="margin:4px 0 0;font-size:22px;font-weight:700;color:#111">&#2547;${totalCollectedAmt.toFixed(2)}</p>
+            </div>
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px;text-align:center">
+              <p style="margin:0;font-size:12px;color:#111">&#2547; Total Due</p>
+              <p style="margin:4px 0 0;font-size:22px;font-weight:700;color:#111">&#2547;${totalDueAmt.toFixed(2)}</p>
+            </div>
+            <div style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:8px;padding:14px;text-align:center">
+              <p style="margin:0;font-size:12px;color:#6b7280">Collection Rate</p>
+              <p style="margin:4px 0 0;font-size:22px;font-weight:700;color:#1a202c">${totalExpected > 0 ? ((totalCollectedAmt / totalExpected) * 100).toFixed(1) : 0}%</p>
+            </div>
+          </div>
+
+          <!-- Breakdown Section -->
+          ${yearlySection}${monthlySection}${dailySection}
+
+          <!-- Student-wise Detail -->
+          <h3 style="margin:0 0 10px;font-size:16px;color:#1a202c">&#128101; Student-wise Fee Detail</h3>
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead>
+              <tr style="border-bottom:1px solid #ddd;color:#111;font-weight:700">
+                <th style="padding:9px 10px;text-align:left">#</th>
+                <th style="padding:9px 10px;text-align:left">Student</th>
+                <th style="padding:9px 10px;text-align:left">Roll</th>
+                <th style="padding:9px 10px;text-align:left">Receipt No</th>
+                <th style="padding:9px 10px;text-align:left">Date</th>
+                <th style="padding:9px 10px;text-align:right">Total (&#2547;)</th>
+                <th style="padding:9px 10px;text-align:right">Paid (&#2547;)</th>
+                <th style="padding:9px 10px;text-align:right">Due (&#2547;)</th>
+                <th style="padding:9px 10px;text-align:center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredRecords.map((r, i) => {
+                const due = r.status === 'Pending' ? r.totalAmount : Math.max(0, r.totalAmount - r.paidAmount);
+                const paid = r.status === 'Pending' ? 0 : r.paidAmount;
+                const color = '#111';
+                const bg = r.status === 'Paid' ? '#e6e6e6' : r.status === 'Partial' ? '#f5f5f5' : '#f8f8f8';
+                return `<tr style="${tableRowStyle(i)}">
+                  <td style="padding:8px 10px">${i + 1}</td>
+                  <td style="padding:8px 10px;font-weight:600">${r.studentName}</td>
+                  <td style="padding:8px 10px">${r.rollNumber}</td>
+                  <td style="padding:8px 10px;font-family:monospace">${r.receiptNumber}</td>
+                  <td style="padding:8px 10px">${new Date(r.paymentDate).toLocaleDateString()}</td>
+                  <td style="padding:8px 10px;text-align:right">&#2547;${r.totalAmount.toFixed(2)}</td>
+                  <td style="padding:8px 10px;text-align:right;color:#15803d;font-weight:600">&#2547;${paid.toFixed(2)}</td>
+                  <td style="padding:8px 10px;text-align:right;color:#dc2626;font-weight:600">&#2547;${due.toFixed(2)}</td>
+                  <td style="padding:8px 10px;text-align:center"><span style="background:${bg};color:${color};padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600">${r.status}</span></td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+
+          <!-- Footer -->
+          <div style="margin-top:30px;padding-top:14px;border-top:2px solid #e5e7eb;display:flex;justify-content:space-between;font-size:11px;color:#9ca3af">
+            <span>School Management System &mdash; Confidential</span>
+            <span>Generated on ${new Date().toLocaleString()}</span>
+          </div>
+        </div>`;
+
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.left = '-9999px';
+        tempDiv.style.width = '950px';
+        tempDiv.style.backgroundColor = 'white';
+        document.body.appendChild(tempDiv);
+
+        try {
+            const canvas = await html2canvas(tempDiv, { scale: 1.5, backgroundColor: '#ffffff' });
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = 210;
+            const pageHeight = 297;
+            const imgWidth = pageWidth;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let y = 0;
+            let remaining = imgHeight;
+            let first = true;
+            while (remaining > 0) {
+                if (!first) pdf.addPage();
+                const sliceHeight = Math.min(pageHeight, remaining);
+                pdf.addImage(imgData, 'PNG', 0, -y, imgWidth, imgHeight);
+                y += pageHeight;
+                remaining -= pageHeight;
+                first = false;
+            }
+            pdf.save(`FeeReport_${selectedClass}_${selectedSection}_${academicYear}_${Date.now()}.pdf`);
+            Swal.close();
+            Swal.fire('Success', 'Report downloaded successfully!', 'success');
+        } catch (err) {
+            console.error(err);
+            Swal.fire('Error', 'Failed to generate report', 'error');
+        } finally {
+            document.body.removeChild(tempDiv);
+        }
+    };
+
+    // Handle status dropdown change
+    const handleStatusChange = (record, newStatus) => {
+        if (newStatus === 'Partial') {
+            setPartialEdit({ recordId: record._id, amount: record.paidAmount?.toString() || '' });
+        } else {
+            setPartialEdit({ recordId: null, amount: '' });
+            updateFeeStatus(record._id, newStatus, null);
+        }
+    };
+
+    // Update fee status
+    const updateFeeStatus = async (id, newStatus, newPaidAmount) => {
+        try {
+            const body = { status: newStatus };
+            if (newStatus === 'Partial' && newPaidAmount !== null && newPaidAmount !== '') {
+                const paid = parseFloat(newPaidAmount);
+                if (isNaN(paid) || paid <= 0) {
+                    Swal.fire('Error', 'Please enter a valid paid amount', 'error');
+                    return;
+                }
+                body.paidAmount = paid;
+            }
+            const response = await fetch(`${API_BASE_URL}/fees/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await response.json();
+            if (data.success) {
+                setFeeRecords(prev =>
+                    prev.map(r => r._id === id ? { ...r, status: newStatus, ...(body.paidAmount !== undefined ? { paidAmount: body.paidAmount, dueAmount: r.totalAmount - body.paidAmount } : {}) } : r)
+                );
+                setPartialEdit({ recordId: null, amount: '' });
+                fetchStatistics();
+            } else {
+                Swal.fire('Error', data.message || 'Failed to update status', 'error');
+            }
+        } catch (error) {
+            console.error('Error updating fee status:', error);
+            Swal.fire('Error', 'Failed to update status', 'error');
+        }
     };
 
     // Delete selected records
@@ -687,10 +988,10 @@ const FeesManagementPage = () => {
                         <div className="bg-white border border-gray-300 rounded p-3 sm:p-4 lg:p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-black text-xs sm:text-sm">Paid Records</p>
-                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">{statistics.paidCount}</p>
+                                    <p className="text-black text-xs sm:text-sm">মোট প্রাপ্য (Expected)</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">৳{(statistics.totalAmount ?? (statistics.totalCollected + statistics.totalDue)).toLocaleString()}</p>
                                 </div>
-                                <div className="text-2xl sm:text-3xl lg:text-5xl opacity-20">✅</div>
+                                <div className="text-2xl sm:text-3xl lg:text-5xl opacity-20">📋</div>
                             </div>
                         </div>
 
@@ -698,7 +999,7 @@ const FeesManagementPage = () => {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-black text-xs sm:text-sm">Total Due</p>
-                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">৳{statistics.totalDue.toLocaleString()}</p>
+                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mt-2">৳{feeRecords.reduce((sum, r) => sum + (r.status === 'Pending' ? (r.totalAmount || 0) : Math.max(0, (r.totalAmount || 0) - (r.paidAmount || 0))), 0).toLocaleString()}</p>
                                 </div>
                                 <div className="text-2xl sm:text-3xl lg:text-5xl opacity-20">⚠️</div>
                             </div>
@@ -971,6 +1272,32 @@ const FeesManagementPage = () => {
                                 )}
                             </div>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                                <select
+                                    value={reportType}
+                                    onChange={(e) => setReportType(e.target.value)}
+                                    className="w-full sm:w-auto px-3 py-2 text-sm border border-gray-300 rounded font-medium text-gray-700 bg-white hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                >
+                                    <option value="daily">Daily</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                                <select
+                                    value={reportStatusFilter}
+                                    onChange={(e) => setReportStatusFilter(e.target.value)}
+                                    className="w-full sm:w-auto px-3 py-2 text-sm border border-gray-300 rounded font-medium text-gray-700 bg-white hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                >
+                                    <option value="all">All Status</option>
+                                    <option value="Paid">Paid</option>
+                                    <option value="Partial">Partial</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                                <button
+                                    onClick={downloadReport}
+                                    disabled={loading || feeRecords.length === 0}
+                                    className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-green-700 text-white rounded text-sm font-semibold hover:bg-green-800 transition-all disabled:opacity-50"
+                                >
+                                    📊 Download Report
+                                </button>
                                 {selectedRecords.length > 0 && (
                                     <button
                                         onClick={deleteSelectedRecords}
@@ -1017,6 +1344,32 @@ const FeesManagementPage = () => {
                             </div>
                         )}
                         
+                        {feeRecords.length > 0 && (
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
+                                <div className="bg-gray-50 border border-gray-200 rounded p-3 sm:p-4">
+                                    <p className="text-xs sm:text-sm text-gray-500 font-medium">মোট প্রাপ্য (Expected)</p>
+                                    <p className="text-lg sm:text-xl font-bold text-[#1a202c] mt-1">
+                                        ৳{feeRecords.reduce((sum, r) => sum + (r.totalAmount || 0), 0).toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-1">{feeRecords.length} records</p>
+                                </div>
+                                <div className="bg-green-50 border border-green-200 rounded p-3 sm:p-4">
+                                    <p className="text-xs sm:text-sm text-green-600 font-medium">মোট পরিশোধিত (Collected)</p>
+                                    <p className="text-lg sm:text-xl font-bold text-green-700 mt-1">
+                                        ৳{feeRecords.reduce((sum, r) => sum + (r.status === 'Pending' ? 0 : (r.paidAmount || 0)), 0).toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-green-500 mt-1">{feeRecords.filter(r => r.status === 'Paid').length} paid</p>
+                                </div>
+                                <div className="bg-red-50 border border-red-200 rounded p-3 sm:p-4">
+                                    <p className="text-xs sm:text-sm text-red-500 font-medium">মোট বকেয়া (Due)</p>
+                                    <p className="text-lg sm:text-xl font-bold text-red-600 mt-1">
+                                        ৳{feeRecords.reduce((sum, r) => sum + (r.status === 'Pending' ? (r.totalAmount || 0) : Math.max(0, (r.totalAmount || 0) - (r.paidAmount || 0))), 0).toFixed(2)}
+                                    </p>
+                                    <p className="text-xs text-red-400 mt-1">{feeRecords.filter(r => r.status !== 'Paid').length} unpaid</p>
+                                </div>
+                            </div>
+                        )}
+
                         {feeRecords.length > 0 ? (
                             <div className="overflow-x-auto">
                                 <table className="w-full border-collapse text-xs sm:text-sm">
@@ -1065,12 +1418,14 @@ const FeesManagementPage = () => {
                                                 <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-black">{record.studentName}</td>
                                                 <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-black">{record.rollNumber}</td>
                                                 <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.totalAmount.toFixed(2)}</td>
-                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.paidAmount.toFixed(2)}</td>
-                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.dueAmount.toFixed(2)}</td>
+                                                <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold text-black">{record.status === 'Pending' ? (0).toFixed(2) : record.paidAmount.toFixed(2)}</td>
+                                                <td className={`px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-right font-semibold ${record.status === 'Pending' ? 'text-red-600' : (record.totalAmount - record.paidAmount) > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                    {record.status === 'Pending' ? record.totalAmount.toFixed(2) : Math.max(0, record.totalAmount - record.paidAmount).toFixed(2)}
+                                                </td>
                                                 <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">
                                                     <select
                                                         value={record.status}
-                                                        onChange={(e) => updateFeeStatus(record._id, e.target.value)}
+                                                        onChange={(e) => handleStatusChange(record, e.target.value)}
                                                         className={`px-2 sm:px-3 py-1 rounded text-xs font-bold border-0 ${
                                                             record.status === 'Paid' ? 'bg-[#1a202c] text-white' :
                                                             record.status === 'Partial' ? 'bg-gray-600 text-white' :
@@ -1082,6 +1437,39 @@ const FeesManagementPage = () => {
                                                         <option value="Partial">Partial</option>
                                                         <option value="Pending">Pending</option>
                                                     </select>
+                                                    {partialEdit.recordId === record._id && (
+                                                        <div className="mt-2 flex flex-col gap-1 items-center">
+                                                            <input
+                                                                type="number"
+                                                                value={partialEdit.amount}
+                                                                onChange={(e) => setPartialEdit(prev => ({ ...prev, amount: e.target.value }))}
+                                                                placeholder="Paid amount"
+                                                                className="w-24 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] text-black"
+                                                                min="0"
+                                                                step="0.01"
+                                                                autoFocus
+                                                            />
+                                                            {partialEdit.amount !== '' && (
+                                                                <div className="text-xs font-semibold text-red-600">
+                                                                    Due: ৳{Math.max(0, record.totalAmount - parseFloat(partialEdit.amount || 0)).toFixed(2)}
+                                                                </div>
+                                                            )}
+                                                            <div className="flex gap-1">
+                                                                <button
+                                                                    onClick={() => updateFeeStatus(record._id, 'Partial', partialEdit.amount)}
+                                                                    className="px-2 py-1 bg-blue-900 text-white rounded text-xs font-semibold hover:bg-blue-800 transition-all"
+                                                                >
+                                                                    Save
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => setPartialEdit({ recordId: null, amount: '' })}
+                                                                    className="px-2 py-1 bg-gray-400 text-white rounded text-xs font-semibold hover:bg-gray-500 transition-all"
+                                                                >
+                                                                    ✕
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">
                                                     <button

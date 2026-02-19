@@ -194,8 +194,8 @@ const swManager = new ServiceWorkerManager();
 // Export for use in components
 export default swManager;
 
-// Auto-register service worker on module load (client-side)
-if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+// Auto-register service worker only in production (Turbopack/dev mode does not support SW)
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => swManager.register().catch(console.error));
   } else {

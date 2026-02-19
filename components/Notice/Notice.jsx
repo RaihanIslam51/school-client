@@ -1,50 +1,19 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { API_URL } from '../../config/api';
 import { useLanguage } from '../../src/contexts/LanguageContext';
+import { useNotices } from '../../src/hooks/useApi';
 
 const Notice = () => {
     const [activeTab, setActiveTab] = useState('all');
     const [showAll, setShowAll] = useState(false);
-    const [notices, setNotices] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [selectedNotice, setSelectedNotice] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const { t, language } = useLanguage();
 
-    // Fetch notices from API
-    useEffect(() => {
-        const fetchNotices = async () => {
-            try {
-                setLoading(true);
-                console.log('Fetching notices from:', `${API_URL}/api/notices`);
-                const response = await fetch(`${API_URL}/api/notices`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Notices response:', data);
-
-                if (data.success) {
-                    setNotices(data.data);
-                } else {
-                    throw new Error('Failed to fetch notices');
-                }
-            } catch (err) {
-                setError(err.message);
-                console.error('Error fetching notices:', err);
-                console.error('API_URL:', API_URL);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchNotices();
-    }, []);
+    const { data: noticesData, isLoading: loading, error: fetchError } = useNotices();
+    const notices = noticesData?.data || [];
+    const error = fetchError?.message || null;
 
     const filteredNotices = activeTab === 'all'
         ? notices

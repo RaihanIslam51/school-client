@@ -102,17 +102,14 @@ const Navbar = ({ onOpenLogin }) => {
                             ))}
                         </div>
 
-                        {/* ALWAYS-VISIBLE language toggle */}
+                        {/* Language toggle — compact text pill */}
                         <button
                             onClick={toggleLanguage}
-                            className="px-3 py-2 text-white bg-blue-900 hover:bg-blue-800 transition-all duration-200 font-semibold text-sm rounded-md shadow-sm flex items-center gap-2"
+                            className="px-2.5 py-1 text-blue-900 border border-blue-900 hover:bg-blue-900 hover:text-white transition-colors duration-200 font-bold text-xs rounded tracking-wide"
                             title={language === 'en' ? 'বাংলা তে পরিবর্তন করুন' : 'Switch to English'}
-                            aria-label="Toggle language"
+                            aria-label={language === 'en' ? 'Switch to Bangla' : 'Switch to English'}
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                            </svg>
-                            <span className="font-bold text-sm">{language === 'en' ? 'বাংলা' : 'EN'}</span>
+                            {language === 'en' ? 'বাং' : 'EN'}
                         </button>
 
                         {/* User / Login (desktop only) */}
@@ -175,15 +172,14 @@ const Navbar = ({ onOpenLogin }) => {
                             </Link>
                         ))}
                         
-                        {/* Mobile Language Switcher */}
+                        {/* Mobile language toggle */}
                         <button
-                            onClick={toggleLanguage}
-                            className="w-full px-4 py-4 text-white bg-blue-900 hover:bg-blue-800 transition-all duration-200 font-bold rounded-lg shadow-md flex items-center justify-center gap-2 mt-3 text-base"
+                            onClick={() => { toggleLanguage(); setIsMenuOpen(false); }}
+                            className="flex items-center justify-between w-full px-4 py-3 text-black hover:text-blue-900 transition-colors duration-200"
+                            aria-label={language === 'en' ? 'Switch to Bangla' : 'Switch to English'}
                         >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                            </svg>
-                            <span className="font-bold text-lg">{language === 'en' ? '🇧🇩 বাংলা ভাষা' : '🇬🇧 English Language'}</span>
+                            <span className="font-semibold text-sm">{language === 'en' ? 'Switch to Bangla' : 'ইংরেজিতে পরিবর্তন করুন'}</span>
+                            <span className="px-2 py-0.5 text-xs font-bold border border-blue-900 text-blue-900 rounded tracking-wide">{language === 'en' ? 'বাং' : 'EN'}</span>
                         </button>
 
                         <div className="pt-3 mt-2">
