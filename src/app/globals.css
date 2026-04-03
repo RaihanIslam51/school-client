@@ -1,55 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Tiro+Bangla:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&display=swap');
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #000000;
-  --font-sans: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-bn: "Tiro Bangla", "Tiro Bangla Static", "Noto Serif Bengali", serif;
 }
 
-/* Bangla / Tiro Bangla — professional utilities + language selector
-   - Use `.tiro-bangla-regular` or `.font-bn` for inline elements
-   - `:lang(bn)` applies automatically where the element language is Bengali
-   - includes sensible fallbacks, smoothing and an italic fallback */
-.tiro-bangla-regular,
-.font-bn,
-:lang(bn) {
-  font-family: var(--font-bn);
+.tiro-bangla-regular {
+  font-family: "Tiro Bangla", serif;
   font-weight: 400;
   font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  line-height: 1.6;
 }
 
-/* Explicit italic utility — will gracefully fall back if the font lacks an italic face */
-.tiro-bangla-regular-italic,
-.font-bn--italic,
-:lang(bn) em,
-:lang(bn) i {
-  font-family: var(--font-bn);
+.tiro-bangla-regular-italic {
+  font-family: "Tiro Bangla", serif;
   font-weight: 400;
   font-style: italic;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Tiro Bangla", "Tiro Bangla Static", serif;
+  font-family: "Tiro Bangla", serif;
   font-weight: 400;
   font-style: normal;
-}
-
-.open-sans {
-  font-family: "Open Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
 }
 
 /* Sweetalert2 high z-index to show above modals */

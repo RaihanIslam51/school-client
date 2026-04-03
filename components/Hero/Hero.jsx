@@ -167,7 +167,7 @@ const defaultBanners = [{
     return (
         <section
             ref={sectionRef}
-            className="relative w-full min-h-[50vh] md:min-h-[80vh] lg:h-150 flex items-center justify-center overflow-hidden"
+            className="relative w-full min-h-[45vh] md:min-h-[75vh] lg:h-140 flex items-center justify-center overflow-hidden"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
