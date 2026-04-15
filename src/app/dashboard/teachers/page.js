@@ -180,6 +180,11 @@ export default function TeacherManagement() {
                 imageUrl: '',
                 status: 'active'
             });
+            
+            // Refresh page after successful addition/update
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         } catch (error) {
             console.error('Error:', error);
             Swal.fire({
@@ -394,15 +399,29 @@ export default function TeacherManagement() {
                         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Teacher Management</h2>
                         <p className="text-sm sm:text-base text-gray-600">Manage teacher profiles, assignments, and schedules</p>
                     </div>
-                    <button
-                        onClick={handleAddTeacher}
-                        className="mt-3 sm:mt-4 lg:mt-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
-                    >
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Add Teacher</span>
-                    </button>
+                    <div className="mt-3 sm:mt-4 lg:mt-0 flex flex-col sm:flex-row gap-2 sm:gap-3">
+
+                         <button
+                            onClick={() => window.location.reload()}
+                            className="bg-gray-600 hover:bg-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                            title="Refresh page"
+                        >
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span>Refresh</span>
+                        </button>
+                        <button
+                            onClick={handleAddTeacher}
+                            className="bg-gradient-to-r from-blue-900 to-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                        >
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Add Teacher</span>
+                        </button>
+                       
+                    </div>
                 </div>
 
                 {/* Search Bar */}
@@ -452,90 +471,76 @@ export default function TeacherManagement() {
                     </div>
                 ) : (
                     <>
-                        {/* Mobile Card View */}
-                        <div className="block md:hidden space-y-4">
+                        {/* Mobile Card View - Single Line Format */}
+                        <div className="block md:hidden space-y-2">
                             {filteredTeachers.map((teacher, index) => (
-                                <div key={teacher._id} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
-                                    <div className="flex items-start space-x-3 mb-3">
-                                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center flex-shrink-0">
-                                            {teacher.imageUrl ? (
-                                                <img
-                                                    src={teacher.imageUrl}
-                                                    alt={teacher.name}
-                                                    className="w-full h-full object-cover"
-                                                    onError={(e) => {
-                                                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSAxOVYyMEgzVjE5QzMgMTYuMzMgNS4zMyAxNCA4IDE0SDE2QzE4LjY3IDE0IDIxIDE2LjMzIDIxIDE5WiIgZmlsbD0iIzk3OTdhNyIvPgo8L3N2Zz4K';
-                                                    }}
-                                                />
-                                            ) : (
-                                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                            )}
-                                        </div>
+                                <div key={teacher._id} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow">
+                                    <div className="flex items-center justify-between gap-2">
+                                        {/* Teacher Info - Compact */}
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex items-center justify-between mb-1">
-                                                <h3 className="text-base font-semibold text-gray-900 truncate">{teacher.name}</h3>
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                    teacher.status === 'active' 
-                                                        ? 'bg-green-100 text-green-800' 
-                                                        : 'bg-gray-100 text-gray-800'
-                                                }`}>
-                                                    {teacher.status}
-                                                </span>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-10 h-10 rounded-lg overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                                    {teacher.imageUrl ? (
+                                                        <img
+                                                            src={teacher.imageUrl}
+                                                            alt={teacher.name}
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0QzE0IDUuMSAxMy4xIDYgMTIgNkMxMC45IDYgMTAgNS4xIDEwIDRDMTAgMi45IDEwLjkgMiAxMiAyWk0yMSAxOVYyMEgzVjE5QzMgMTYuMzMgNS4zMyAxNCA4IDE0SDE2QzE4LjY3IDE0IDIxIDE2LjMzIDIxIDE5WiIgZmlsbD0iIzk3OTdhNyIvPgo8L3N2Zz4K';
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2">
+                                                        <h3 className="text-sm font-semibold text-gray-900 truncate">{teacher.name}</h3>
+                                                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${
+                                                            teacher.status === 'active' 
+                                                                ? 'bg-green-100 text-green-800' 
+                                                                : 'bg-gray-100 text-gray-800'
+                                                        }`}>
+                                                            {teacher.status}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-xs text-gray-600">ID: {teacher.teacherId || 'N/A'} | {teacher.subject || 'N/A'}</p>
+                                                </div>
                                             </div>
-                                            <p className="text-sm text-gray-600 mb-1">{teacher.teacherId || 'N/A'}</p>
-                                            <p className="text-sm text-gray-600">{teacher.subject || 'N/A'}</p>
                                         </div>
-                                    </div>
-                                    
-                                    <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
-                                        <div>
-                                            <span className="text-gray-500">Email:</span>
-                                            <p className="text-gray-900 truncate">{teacher.email || 'N/A'}</p>
+                                        
+                                        {/* Action Buttons */}
+                                        <div className="flex gap-1 flex-shrink-0">
+                                            <button
+                                                onClick={() => handlePrintTeacher(teacher)}
+                                                className="text-purple-600 hover:text-purple-800 p-1.5 hover:bg-purple-50 rounded transition-all"
+                                                title="Print"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                onClick={() => handleEditTeacher(teacher)}
+                                                className="text-blue-600 hover:text-blue-800 p-1.5 hover:bg-blue-50 rounded transition-all"
+                                                title="Edit"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteTeacher(teacher._id)}
+                                                className="text-red-600 hover:text-red-800 p-1.5 hover:bg-red-50 rounded transition-all"
+                                                title="Delete"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
                                         </div>
-                                        <div>
-                                            <span className="text-gray-500">Phone:</span>
-                                            <p className="text-gray-900 truncate">{teacher.phone || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <span className="text-gray-500">Qualification:</span>
-                                            <p className="text-gray-900 truncate">{teacher.qualification || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <span className="text-gray-500">Experience:</span>
-                                            <p className="text-gray-900 truncate">{teacher.experience || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex justify-end space-x-2">
-                                        <button
-                                            onClick={() => handlePrintTeacher(teacher)}
-                                            className="text-purple-600 hover:text-purple-800 p-2 hover:bg-purple-50 rounded-lg transition-all"
-                                            title="Print Teacher Details"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            onClick={() => handleEditTeacher(teacher)}
-                                            className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded-lg transition-all"
-                                            title="Edit"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteTeacher(teacher._id)}
-                                            className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded-lg transition-all"
-                                            title="Delete"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
                                     </div>
                                 </div>
                             ))}

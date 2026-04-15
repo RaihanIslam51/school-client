@@ -100,9 +100,9 @@ export default function TeacherboardHome() {
     return (
         <div className="p-4 sm:p-6 lg:p-8">
             {/* Welcome Section */}
-            <div className="bg-[#1a202c] rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 text-white">
+            <div className="bg-blue-900 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 text-white">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-white">Welcome to Teacherboard</h1>
-                <p className="text-gray-300 text-sm sm:text-base">Manage your teaching activities and access resources</p>
+                <p className="text-gray-100 text-sm sm:text-base">Manage your teaching activities and access resources</p>
             </div>
 
             {/* Stats Cards */}
@@ -140,13 +140,13 @@ export default function TeacherboardHome() {
                         <Link
                             key={index}
                             href={link.path}
-                            className={`${link.color} rounded-lg sm:rounded-xl p-4 sm:p-6 text-white hover:bg-[#2d3748] transition-all duration-200 transform hover:-translate-y-1 shadow-sm hover:shadow-md`}
+                            className="bg-blue-900 rounded-lg sm:rounded-xl p-4 sm:p-6 text-white hover:bg-blue-800 transition-all duration-200 transform hover:-translate-y-1 shadow-sm hover:shadow-md"
                         >
                             <div className="flex items-center space-x-3 sm:space-x-4">
                                 <span className="text-2xl sm:text-3xl">{link.icon}</span>
                                 <div>
                                     <h3 className="font-bold text-base sm:text-lg text-white">{link.name}</h3>
-                                    <p className="text-gray-300 text-xs sm:text-sm">Access {link.name.toLowerCase()}</p>
+                                    <p className="text-gray-100 text-xs sm:text-sm">Access {link.name.toLowerCase()}</p>
                                 </div>
                             </div>
                         </Link>
@@ -172,7 +172,7 @@ export default function TeacherboardHome() {
                             ))
                         ) : recentAssignments.length > 0 ? recentAssignments.map((a, i) => (
                             <div key={i} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                <div className="w-9 h-9 bg-[#1a202c] rounded-full flex items-center justify-center flex-shrink-0">
+                                <div className="w-9 h-9 bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
                                     <span className="text-white text-sm">📝</span>
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -210,7 +210,7 @@ export default function TeacherboardHome() {
                             ))
                         ) : recentNotices.length > 0 ? recentNotices.map((n, i) => (
                             <div key={i} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                <div className="w-9 h-9 bg-[#1a202c] rounded-full flex items-center justify-center flex-shrink-0">
+                                <div className="w-9 h-9 bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
                                     <span className="text-white text-sm">📢</span>
                                 </div>
                                 <div className="flex-1 min-w-0">

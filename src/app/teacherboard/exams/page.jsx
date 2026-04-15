@@ -22,6 +22,7 @@ export default function TeacherExams() {
         fetchData();
     }, []);
 
+
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -168,12 +169,12 @@ export default function TeacherExams() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[#1a202c]">📋 Exam Schedule</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-blue-900">📋 Exam Schedule</h1>
                     <p className="text-gray-500 text-sm mt-1">View all published exams and your invigilator duties</p>
                 </div>
                 <button
                     onClick={fetchData}
-                    className="px-4 py-2 bg-[#1a202c] text-white rounded-lg text-sm font-semibold hover:bg-[#2d3748] transition-all"
+                    className="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition-all"
                 >
                     🔄 Refresh
                 </button>
@@ -181,7 +182,7 @@ export default function TeacherExams() {
 
             {/* ====== MY INVIGILATOR DUTY CARD ====== */}
             {myDuties.length > 0 && (
-                <div className="bg-linear-to-br from-[#1a202c] to-[#2d3748] rounded-2xl p-6 text-white shadow-xl">
+                <div className="bg-linear-to-br from-blue-900 to-blue-800 rounded-2xl p-6 text-white shadow-xl">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
                         <div className="flex items-center gap-3">
                             <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">👮</div>
@@ -192,7 +193,7 @@ export default function TeacherExams() {
                         </div>
                         <button
                             onClick={downloadDutyCardPDF}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-white text-[#1a202c] rounded-xl font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
+                            className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-900 rounded-xl font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
                         >
                             📥 Download Duty Card PDF
                         </button>
@@ -221,10 +222,10 @@ export default function TeacherExams() {
 
             {/* Hidden PDF render for Duty Card */}
             <div id="duty-card-pdf" style={{ position: 'fixed', left: '-9999px', top: 0, width: '794px', padding: '40px', fontFamily: 'Arial, sans-serif', background: '#fff' }}>
-                <div style={{ borderBottom: '3px solid #1a202c', paddingBottom: '20px', marginBottom: '24px' }}>
+                <div style={{ borderBottom: '3px solid #1e40af', paddingBottom: '20px', marginBottom: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <div>
-                            <h1 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1a202c', margin: '0 0 4px 0' }}>INVIGILATOR DUTY CARD</h1>
+                            <h1 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 4px 0' }}>INVIGILATOR DUTY CARD</h1>
                             <p style={{ fontSize: '13px', color: '#555', margin: 0 }}>Sunlight School — Official Assignment</p>
                         </div>
                         <div style={{ textAlign: 'right' }}>
@@ -235,15 +236,15 @@ export default function TeacherExams() {
 
                 <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
                     <h2 style={{ fontSize: '14px', color: '#555', margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Assigned Invigilator</h2>
-                    <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#1a202c', margin: '0 0 4px 0' }}>{currentTeacher?.name || '—'}</p>
+                    <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 4px 0' }}>{currentTeacher?.name || '—'}</p>
                     <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>{currentTeacher?.email || ''}</p>
                 </div>
 
-                <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1a202c', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Duty Schedule</h2>
+                <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1e40af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Duty Schedule</h2>
 
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                     <thead>
-                        <tr style={{ background: '#1a202c', color: '#fff' }}>
+                        <tr style={{ background: '#1e40af', color: '#fff' }}>
                             <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>#</th>
                             <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Exam</th>
                             <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Class</th>
@@ -272,10 +273,10 @@ export default function TeacherExams() {
 
                 <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ textAlign: 'center' }}>
-                        <div style={{ width: '160px', borderTop: '2px solid #1a202c', paddingTop: '6px', fontSize: '12px', color: '#555' }}>Invigilator Signature</div>
+                        <div style={{ width: '160px', borderTop: '2px solid #1e40af', paddingTop: '6px', fontSize: '12px', color: '#555' }}>Invigilator Signature</div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                        <div style={{ width: '160px', borderTop: '2px solid #1a202c', paddingTop: '6px', fontSize: '12px', color: '#555' }}>Principal Signature</div>
+                        <div style={{ width: '160px', borderTop: '2px solid #1e40af', paddingTop: '6px', fontSize: '12px', color: '#555' }}>Principal Signature</div>
                     </div>
                 </div>
             </div>
@@ -290,7 +291,7 @@ export default function TeacherExams() {
                             placeholder="Search exams or class..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#1a202c] focus:border-[#1a202c] outline-none"
+                            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none"
                         />
                     </div>
                     <div className="flex gap-2 flex-wrap">
@@ -298,7 +299,7 @@ export default function TeacherExams() {
                             <button
                                 key={f}
                                 onClick={() => setActiveFilter(f)}
-                                className={`px-4 py-2 rounded-lg text-sm font-semibold capitalize transition-all ${activeFilter === f ? 'bg-[#1a202c] text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold capitalize transition-all ${activeFilter === f ? 'bg-blue-900 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
                             >
                                 {f === 'mine' ? '👮 My Duties' : f === 'published' ? '✅ Published' : '📋 All Exams'}
                             </button>
@@ -321,7 +322,7 @@ export default function TeacherExams() {
                     {filteredExams.map(exam => (
                         <div key={exam._id} className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden">
                             {/* Exam Header */}
-                            <div className="bg-[#1a202c] px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <div className="bg-blue-900 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                 <div>
                                     <div className="flex items-center gap-2 flex-wrap">
                                         <h3 className="text-lg font-bold text-white">{exam.examName}</h3>
@@ -342,7 +343,7 @@ export default function TeacherExams() {
                                     </button>
                                     <button
                                         onClick={() => downloadExamPDF(exam)}
-                                        className="px-4 py-2 bg-white text-[#1a202c] rounded-lg text-sm font-bold hover:bg-gray-100 transition-all shadow"
+                                        className="px-4 py-2 bg-white text-blue-900 rounded-lg text-sm font-bold hover:bg-gray-100 transition-all shadow"
                                     >
                                         📥 PDF
                                     </button>
@@ -353,19 +354,19 @@ export default function TeacherExams() {
                             <div className="px-6 py-3 bg-gray-50 border-b border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
                                 <div>
                                     <span className="text-gray-500">Total Marks</span>
-                                    <p className="font-bold text-[#1a202c] text-sm mt-0.5">{exam.totalMarks}</p>
+                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{exam.totalMarks}</p>
                                 </div>
                                 <div>
                                     <span className="text-gray-500">Pass Marks</span>
-                                    <p className="font-bold text-[#1a202c] text-sm mt-0.5">{exam.passMarks}</p>
+                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{exam.passMarks}</p>
                                 </div>
                                 <div>
                                     <span className="text-gray-500">Start Date</span>
-                                    <p className="font-bold text-[#1a202c] text-sm mt-0.5">{formatDate(exam.startDate)}</p>
+                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{formatDate(exam.startDate)}</p>
                                 </div>
                                 <div>
                                     <span className="text-gray-500">End Date</span>
-                                    <p className="font-bold text-[#1a202c] text-sm mt-0.5">{formatDate(exam.endDate)}</p>
+                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{formatDate(exam.endDate)}</p>
                                 </div>
                             </div>
 
@@ -392,7 +393,7 @@ export default function TeacherExams() {
                                                 );
                                                 return (
                                                     <tr key={idx} className={`hover:bg-gray-50 transition-colors ${isMe ? 'bg-amber-50 border-l-4 border-amber-400' : ''}`}>
-                                                        <td className="px-4 sm:px-6 py-3.5 font-semibold text-[#1a202c]">
+                                                        <td className="px-4 sm:px-6 py-3.5 font-semibold text-blue-900">
                                                             {subject.subjectName}
                                                         </td>
                                                         <td className="px-4 sm:px-6 py-3.5 text-gray-700">
@@ -431,10 +432,10 @@ export default function TeacherExams() {
 
                             {/* Hidden PDF canvas for this exam */}
                             <div id={`exam-pdf-${exam._id}`} style={{ position: 'fixed', left: '-9999px', top: 0, width: '794px', padding: '36px', fontFamily: 'Arial, sans-serif', background: '#fff' }}>
-                                <div style={{ borderBottom: '3px solid #1a202c', paddingBottom: '16px', marginBottom: '20px' }}>
+                                <div style={{ borderBottom: '3px solid #1e40af', paddingBottom: '16px', marginBottom: '20px' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                                         <div>
-                                            <h1 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1a202c', margin: '0 0 4px 0' }}>EXAM SCHEDULE</h1>
+                                            <h1 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 4px 0' }}>EXAM SCHEDULE</h1>
                                             <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>Sunlight School — Official Exam Timetable</p>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
@@ -459,7 +460,7 @@ export default function TeacherExams() {
                                     ].map(([label, value], i) => (
                                         <div key={i} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '10px 14px' }}>
                                             <p style={{ fontSize: '10px', color: '#888', margin: '0 0 3px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</p>
-                                            <p style={{ fontSize: '13px', fontWeight: 'bold', color: '#1a202c', margin: 0 }}>{value || '—'}</p>
+                                            <p style={{ fontSize: '13px', fontWeight: 'bold', color: '#1e40af', margin: 0 }}>{value || '—'}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -467,10 +468,10 @@ export default function TeacherExams() {
                                 {/* Subjects table */}
                                 {exam.subjects && exam.subjects.length > 0 && (
                                     <>
-                                        <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#1a202c', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Subject Schedule</h2>
+                                        <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Subject Schedule</h2>
                                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
                                             <thead>
-                                                <tr style={{ background: '#1a202c', color: '#fff' }}>
+                                                <tr style={{ background: '#1e40af', color: '#fff' }}>
                                                     {['#', 'Subject', 'Date', 'Time', 'Duration', 'Room', 'Invigilator'].map(h => (
                                                         <th key={h} style={{ padding: '9px 10px', textAlign: 'left', fontWeight: '600' }}>{h}</th>
                                                     ))}
@@ -503,7 +504,7 @@ export default function TeacherExams() {
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
                     <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                         {/* Modal Header */}
-                        <div className="bg-[#1a202c] text-white px-6 py-5 rounded-t-2xl flex items-start justify-between">
+                        <div className="bg-blue-900 text-white px-6 py-5 rounded-t-2xl flex items-start justify-between">
                             <div>
                                 <h2 className="text-xl font-bold">{selectedExam.examName}</h2>
                                 <p className="text-gray-300 text-sm mt-1">
@@ -513,7 +514,7 @@ export default function TeacherExams() {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => downloadExamPDF(selectedExam)}
-                                    className="px-4 py-2 bg-white text-[#1a202c] rounded-lg text-sm font-bold hover:bg-gray-100 transition-all"
+                                    className="px-4 py-2 bg-white text-blue-900 rounded-lg text-sm font-bold hover:bg-gray-100 transition-all"
                                 >
                                     📥 Download PDF
                                 </button>
@@ -538,7 +539,7 @@ export default function TeacherExams() {
                                 ].map(({ label, value }) => (
                                     <div key={label} className="bg-gray-50 rounded-xl p-3.5 border border-gray-100">
                                         <p className="text-xs text-gray-500 font-medium mb-1">{label}</p>
-                                        <p className="text-sm font-bold text-[#1a202c]">{value}</p>
+                                        <p className="text-sm font-bold text-blue-900">{value}</p>
                                     </div>
                                 ))}
                             </div>
@@ -546,7 +547,7 @@ export default function TeacherExams() {
                             {/* Subjects in modal */}
                             {selectedExam.subjects?.length > 0 && (
                                 <div>
-                                    <h3 className="text-base font-bold text-[#1a202c] mb-3">Subject Schedule</h3>
+                                    <h3 className="text-base font-bold text-blue-900 mb-3">Subject Schedule</h3>
                                     <div className="space-y-3">
                                         {selectedExam.subjects.map((s, i) => {
                                             const inv = getTeacherById(s.invigilator);
@@ -557,7 +558,7 @@ export default function TeacherExams() {
                                             return (
                                                 <div key={i} className={`rounded-xl border p-4 ${isMe ? 'bg-amber-50 border-amber-200' : 'bg-white border-gray-200'}`}>
                                                     <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
-                                                        <h4 className="font-bold text-[#1a202c] text-base">{s.subjectName}</h4>
+                                                        <h4 className="font-bold text-blue-900 text-base">{s.subjectName}</h4>
                                                         {inv && (
                                                             <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${isMe ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-700'}`}>
                                                                 👮 {inv.name}{isMe && ' (You)'}

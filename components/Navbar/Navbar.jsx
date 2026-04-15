@@ -52,6 +52,7 @@ const Navbar = ({ onOpenLogin }) => {
         { name: t('nav.academics'), href: '/academics' },
         { name: t('nav.notices'), href: '/notices' },
         { name: t('nav.contact'), href: '/contact' },
+        { name: t('nav.admissions'), href: '/admission' },
     ];
 
     // Add appropriate link based on user role

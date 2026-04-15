@@ -37,7 +37,7 @@ export default function TeacherboardLayout({ children }) {
     if (!user) {
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
-                <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-[#1a202c]"></div>
+                <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-blue-900"></div>
             </div>
         );
     }
@@ -52,11 +52,11 @@ export default function TeacherboardLayout({ children }) {
                     {/* Sidebar Header */}
                     <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
                         <div className="flex items-center space-x-2 sm:space-x-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#1a202c] rounded flex items-center justify-center">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-900 rounded flex items-center justify-center">
                                 <span className="text-white font-bold text-sm sm:text-lg">👨‍🏫</span>
                             </div>
                             <div>
-                                <h2 className="text-[#1a202c] font-bold text-sm sm:text-lg">Teacherboard</h2>
+                                <h2 className="text-blue-900 font-bold text-sm sm:text-lg">Teacherboard</h2>
                                 <p className="text-gray-600 text-xs">Sunlight School</p>
                             </div>
                         </div>
@@ -73,12 +73,12 @@ export default function TeacherboardLayout({ children }) {
                     {/* User Info */}
                     <div className="p-3 sm:p-4 border-b border-gray-200">
                         <div className="flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 bg-white border border-gray-200 rounded">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#1a202c] rounded-full flex items-center justify-center">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-900 rounded-full flex items-center justify-center">
                                 <span className="text-white font-bold text-sm sm:text-lg">{user.name.charAt(0)}</span>
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-gray-900 font-semibold text-xs sm:text-sm truncate">{user.name}</p>
-                                <p className="text-[#1a202c] text-xs capitalize">{user.role}</p>
+                                <p className="text-blue-900 text-xs capitalize">{user.role}</p>
                                 <p className="text-gray-600 text-xs truncate">{user.email}</p>
                             </div>
                         </div>
@@ -93,8 +93,8 @@ export default function TeacherboardLayout({ children }) {
                                 onClick={() => setIsSidebarOpen(false)}
                                 className={`w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded transition-all duration-200 ${
                                     pathname === item.path
-                                        ? 'bg-[#1a202c] text-white shadow-sm'
-                                        : 'text-gray-700 hover:bg-gray-100 hover:text-[#1a202c]'
+                                        ? 'bg-blue-900 text-white shadow-sm'
+                                        : 'text-gray-700 hover:bg-gray-100 hover:text-blue-900'
                                 }`}
                             >
                                 <span className="text-lg sm:text-xl">{item.icon}</span>
@@ -111,7 +111,7 @@ export default function TeacherboardLayout({ children }) {
                         <div className="space-y-1 sm:space-y-2">
                             <Link
                                 href="/"
-                                className="w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded text-gray-700 hover:bg-gray-100 hover:text-[#1a202c] transition-all duration-200"
+                                className="w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded text-gray-700 hover:bg-gray-100 hover:text-blue-900 transition-all duration-200"
                             >
                                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -137,13 +137,13 @@ export default function TeacherboardLayout({ children }) {
                         <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
                             <button
                                 onClick={() => setIsSidebarOpen(true)}
-                                className="lg:hidden text-gray-600 hover:text-[#1a202c] p-1"
+                                className="lg:hidden text-gray-600 hover:text-blue-900 p-1"
                             >
                                 <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                                 </svg>
                             </button>
-                            <h1 className="text-lg sm:text-xl font-bold text-[#1a202c] truncate">
+                            <h1 className="text-lg sm:text-xl font-bold text-blue-900 truncate">
                                 {currentMenuItem ? currentMenuItem.name : 'Teacherboard'}
                             </h1>
                             <div className="flex items-center space-x-2 sm:space-x-4">

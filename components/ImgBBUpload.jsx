@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef } from 'react';
 
 const ImgBBUpload = ({ onUploadSuccess, onUploadError, multiple = false, maxFiles = 5 }) => {

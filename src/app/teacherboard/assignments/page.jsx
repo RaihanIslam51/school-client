@@ -252,7 +252,7 @@ export default function AssignmentManagement() {
 
     return (
         <div className="min-h-screen bg-white p-1">
-            <div className="max-w-7xl mx-auto">
+            <div className="container mx-auto">
                 <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
                     {/* Header */}
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">

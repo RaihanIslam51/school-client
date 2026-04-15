@@ -207,23 +207,30 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                             placeholder="Enter your ID (e.g., 26-0001)"
                         />
-                        {/* <div className="mt-2 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
-                            <p className="text-xs font-semibold text-blue-900 mb-2">📋 ID Format Guide:</p>
-                            <div className="space-y-1">
-                                <p className="text-xs text-blue-800">
-                                    <span className="font-semibold">👨‍💼 Admin:</span> 0001-26 (Number-Year)
-                                </p>
-                                <p className="text-xs text-blue-800">
-                                    <span className="font-semibold">📚 Student:</span> 26-0001 (Year-Number)
-                                </p>
-                                <p className="text-xs text-blue-800">
-                                    <span className="font-semibold">👨‍🏫 Teacher:</span> 26-0001-1 (Year-Number-Subject)
-                                </p>
+                        <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
+                            <p className="font-semibold text-blue-900 mb-2">Demo Credentials</p>
+                            <div className="space-y-1.5 text-gray-700">
+                                <div>
+                                    <p className="font-medium text-blue-800 mb-1">👨‍💼 Admin:</p>
+                                     <p className="ml-4"><span className="font-medium">Email:</span> <span className="font-mono text-blue-600">admin@gmail.com</span></p>
+                                    <p className="ml-4"><span className="font-medium">ID:</span> <span className="font-mono text-blue-600">0001-26</span></p>
+                                   
+                                </div>
+                                <div>
+                                    <p className="font-medium text-blue-800 mb-1">📚 Student:</p>
+                                    <p className="ml-4"><span className="font-medium">Email:</span> <span className="font-mono text-blue-600">student@gmail.com</span></p>
+                                    <p className="ml-4"><span className="font-medium">ID:</span> <span className="font-mono text-blue-600">26-0012</span></p>
+                                    
+                                </div>
+                                <div>
+                                    <p className="font-medium text-blue-800 mb-1">👨‍🏫 Teacher:</p>
+                                    <p className="ml-4"><span className="font-medium">Email:</span> <span className="font-mono text-blue-600">teacher@gmail.com</span></p>
+                                    <p className="ml-4"><span className="font-medium">ID:</span> <span className="font-mono text-blue-600">26-0006-6</span></p>
+                                    
+                                </div>
                             </div>
-                            <p className="text-xs text-blue-600 mt-2 italic">
-                                ✨ Your account type will be detected automatically
-                            </p>
-                        </div> */}
+                        </div> 
+
                     </div>
 
                     {/* Login Button */}
