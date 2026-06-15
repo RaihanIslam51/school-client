@@ -28,7 +28,8 @@
     "contact": "Contact",
     "adminDashboard": "Admin Dashboard",
     "teacherboard": "Teacherboard",
-    "portal": "Portal"
+    "portal": "Portal",
+    "applyNow": "Apply Now"
   },
   "hero": {
     "welcomeTitle": "Welcome to Sunlight School",
@@ -193,6 +194,72 @@
         "category": "Science",
         "participants": "100+"
       }
+    },
+    "programsList": {
+      "primaryEducation": {
+        "title": "Primary Education",
+        "description": "Nurturing young minds with a holistic foundation focusing on cognitive, emotional, and social development through interactive learning.",
+        "features": ["Play-based learning", "Expert Child Educators", "Creative Arts & Crafts", "Foundation Literacy"],
+        "stat": "100% Foundation Rate"
+      },
+      "secondaryEducation": {
+        "title": "Secondary Education",
+        "description": "Empowering middle and high school students with critical thinking, scientific inquiry, and structured academic preparation.",
+        "features": ["Smart Classrooms", "Structured Curriculum", "Analytical Skills", "Extracurricular Focus"],
+        "stat": "1:15 Teacher-Student Ratio"
+      },
+      "higherSecondary": {
+        "title": "Higher Secondary",
+        "description": "Pre-university curriculum tailored to prepare students for top-tier universities through intensive academics and career path modeling.",
+        "features": ["College Preparation", "Board Exam Prep", "Career Counseling", "Advanced Seminars"],
+        "stat": "99.4% Board Pass Rate"
+      },
+      "scienceDepartment": {
+        "title": "Science Department",
+        "description": "Delving deep into empirical inquiry, scientific methods, and research projects to explore physics, chemistry, and biology.",
+        "features": ["Practical Lab Work", "Research Projects", "Olympiad Coaching", "Physics/Chemistry/Bio Labs"],
+        "stat": "100% Practical Success"
+      },
+      "businessStudies": {
+        "title": "Business Studies",
+        "description": "Introducing students to microeconomics, business models, accounting, and marketing strategies for modern commerce.",
+        "features": ["Entrepreneurship Lab", "Financial Literacy", "Case Studies", "Market Analysis"],
+        "stat": "15+ Annual Projects"
+      },
+      "humanities": {
+        "title": "Humanities",
+        "description": "Fostering cultural empathy, philosophical depth, historical perspective, and strong communications skills.",
+        "features": ["Literature Forums", "Civic Studies", "Creative Writing", "Cultural Heritage"],
+        "stat": "12+ National Debates"
+      },
+      "computerScience": {
+        "title": "Computer Science",
+        "description": "Equipping students with algorithmic thinking, code architecture, and hands-on app development for the digital age.",
+        "features": ["Python & JS Coding", "Web Development", "AI/ML Basics", "Smart Tech Lab"],
+        "stat": "85% Coding Proficiency"
+      },
+      "stemEducation": {
+        "title": "STEM Education",
+        "description": "Integrating Science, Technology, Engineering, and Math in collaborative projects to tackle real-world global challenges.",
+        "features": ["Robotics Workshops", "3D Printing & Design", "Engineering Challenges", "Problem-Solving Seminars"],
+        "stat": "20+ STEM Exhibitions"
+      },
+      "onlineLearning": {
+        "title": "Online Learning Program",
+        "description": "Providing high-quality online courses and virtual classroom access, allowing students to study and review from anywhere.",
+        "features": ["LMS Portal Access", "Recorded Lectures", "Interactive Quizzes", "Flexible Schedules"],
+        "stat": "24/7 Digital Access"
+      },
+      "skillDevelopment": {
+        "title": "Skill Development Courses",
+        "description": "Equipping students with essential professional life skills, soft skills, and vocational training to excel in the workplace.",
+        "features": ["Public Speaking", "Graphic Design", "Leadership Training", "Financial Management"],
+        "stat": "1500+ Graduated Alumni"
+      }
+    },
+    "buttons": {
+      "seeMore": "See More Programs",
+      "seeLess": "See Less"
     }
   },
   "notices": {
@@ -374,14 +441,16 @@
     "errorLoading": "Unable to load gallery — showing fallback content.",
     "retry": "Retry",
     "categories": {
-      "Events": "Events",
-      "Sports": "Sports",
-      "Cultural": "Cultural",
-      "Academic": "Academic",
-      "Infrastructure": "Infrastructure",
-      "Technology": "Technology",
-      "Arts": "Arts",
-      "Science": "Science"
+      "CampusLife": "Campus Life",
+      "ClassroomActivities": "Classroom Activities",
+      "SportsEvents": "Sports Events",
+      "CulturalPrograms": "Cultural Programs",
+      "ScienceFair": "Science Fair",
+      "GraduationCeremony": "Graduation Ceremony",
+      "EducationalTours": "Educational Tours",
+      "AnnualFunction": "Annual Function",
+      "AwardCeremony": "Award Ceremony",
+      "StudentActivities": "Student Activities"
     },
     "fallbacks": {
       "techDay": {
@@ -418,6 +487,36 @@
         "date": "2024-08-25",
         "category": "Academic"
       }
+    },
+    "stats": {
+      "totalStudents": "Total Students",
+      "totalStudentsDesc": "Enrolled students active in learning",
+      "gpaRate": "Board Success Rate",
+      "gpaRateDesc": "Average GPA 5.0 in national exams",
+      "awardsCount": "National Awards",
+      "awardsCountDesc": "Championships & trophies won",
+      "scholarships": "Scholarship Achievements",
+      "scholarshipsDesc": "Secured government & private funds",
+      "olympiad": "Olympiad Winners",
+      "olympiadDesc": "Winners in STEM & Math Olympiads",
+      "admissions": "University Placements",
+      "admissionsDesc": "Admission rate to top tier universities",
+      "teachers": "Experienced Faculty",
+      "teachersDesc": "Highly certified teachers & researchers",
+      "international": "Global Competitions",
+      "internationalDesc": "Honors achieved across nations"
+    },
+    "analytics": {
+      "title": "Performance Analytics",
+      "subtitle": "Visual representation of our academic & co-curricular excellence over the years",
+      "chartGpa": "Board Exam Success (%)",
+      "chartAwards": "Awards Won",
+      "chartAdmissions": "University Admission (%)"
+    },
+    "successHighlights": {
+      "title": "Success Highlights & Placements",
+      "subtitle": "Prominent placements and notable accomplishments from our alumni network",
+      "badge": "Student Success Stories"
     }
   },
   "facilities": {

@@ -106,7 +106,7 @@ export default function TeacherboardHome() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 {[
                     { icon: '👥', label: 'Students', sub: 'Total enrolled', value: stats.students, color: 'text-blue-700', bg: 'bg-blue-50' },
                     { icon: '📚', label: 'Subjects', sub: 'In academics', value: stats.subjects, color: 'text-green-700', bg: 'bg-green-50' },
@@ -130,7 +130,7 @@ export default function TeacherboardHome() {
                         <p className="text-gray-500 text-xs sm:text-sm mt-0.5">{stat.sub}</p>
                     </div>
                 ))}
-            </div>
+            </div> */}
 
             {/* Quick Links */}
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8">

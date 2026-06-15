@@ -13,11 +13,11 @@ const FeesManagementPage = () => {
     const [students, setStudents] = useState([]);
     const [feeRecords, setFeeRecords] = useState([]);
     const [statistics, setStatistics] = useState(null);
-    
+
     const [selectedClass, setSelectedClass] = useState('');
     const [selectedSection, setSelectedSection] = useState('');
     const [academicYear, setAcademicYear] = useState(new Date().getFullYear().toString());
-    
+
     const [viewMode, setViewMode] = useState('collection'); // 'collection' or 'records'
     const [collectionMode, setCollectionMode] = useState('bulk'); // 'bulk' or 'individual'
     const [selectedStudents, setSelectedStudents] = useState([]); // For individual mode
@@ -25,7 +25,7 @@ const FeesManagementPage = () => {
     const [paymentMethod, setPaymentMethod] = useState('Cash');
     const [paidAmount, setPaidAmount] = useState('');
     const [remarks, setRemarks] = useState('');
-    
+
     const [loading, setLoading] = useState(false);
     const receiptRef = useRef(null);
     const [currentReceipt, setCurrentReceipt] = useState(null);
@@ -82,7 +82,7 @@ const FeesManagementPage = () => {
             setLoading(true);
             const response = await fetch(`${API_BASE_URL}/fees/helpers/students?class=${selectedClass}&section=${selectedSection}`);
             const data = await response.json();
-            
+
             if (data.success) {
                 setStudents(data.data);
             }
@@ -110,7 +110,7 @@ const FeesManagementPage = () => {
                 `${API_BASE_URL}/fees/class-section?class=${selectedClass}&section=${selectedSection}&academicYear=${academicYear}&${statusParam}`
             );
             const data = await response.json();
-            
+
             if (data.success) {
                 // Sort records by roll number in ascending order
                 const sortedRecords = data.data.sort((a, b) => {
@@ -134,7 +134,7 @@ const FeesManagementPage = () => {
                 `${API_BASE_URL}/fees/statistics?class=${selectedClass}&section=${selectedSection}&academicYear=${academicYear}`
             );
             const data = await response.json();
-            
+
             if (data.success) {
                 setStatistics(data.data);
             }
@@ -180,13 +180,13 @@ const FeesManagementPage = () => {
             preConfirm: () => {
                 const amount = document.getElementById('fee-amount').value;
                 const description = document.getElementById('fee-description').value;
-                
+
                 if (!amount || parseFloat(amount) <= 0) {
                     Swal.showValidationMessage('Please enter a valid amount');
                     return false;
                 }
-                
-                return { 
+
+                return {
                     feeCategory: category.name,
                     amount: parseFloat(amount),
                     description: description || ''
@@ -216,7 +216,7 @@ const FeesManagementPage = () => {
         const total = selectedFees.reduce((sum, fee) => sum + fee.amount, 0);
         const paid = parseFloat(paidAmount) || 0;
         const due = total - paid;
-        
+
         return {
             total: total.toFixed(2),
             paid: paid.toFixed(2),
@@ -232,17 +232,17 @@ const FeesManagementPage = () => {
         }
 
         const studentsToProcess = collectionMode === 'bulk' ? students : selectedStudents;
-        
+
         if (studentsToProcess.length === 0) {
             Swal.fire('Error', 'Please select at least one student', 'error');
             return;
         }
 
         const totals = calculateTotals();
-        
+
         try {
             setLoading(true);
-            
+
             // Create fee records for selected students
             const promises = studentsToProcess.map(student => {
                 const feeData = {
@@ -270,20 +270,20 @@ const FeesManagementPage = () => {
             });
 
             const responses = await Promise.all(promises);
-            
+
             // Check if all succeeded
             const results = await Promise.all(responses.map(r => r.json()));
             const allSuccess = results.every(result => result.success);
-            
+
             if (allSuccess) {
                 Swal.fire('Success!', `Fees collected for ${studentsToProcess.length} student${studentsToProcess.length > 1 ? 's' : ''}!`, 'success');
-                
+
                 // Reset form
                 setSelectedFees([]);
                 setPaidAmount('');
                 setRemarks('');
                 setSelectedStudents([]);
-                
+
                 // Refresh data and switch to records view
                 fetchFeeRecords();
                 fetchStatistics();
@@ -328,7 +328,7 @@ const FeesManagementPage = () => {
     const printReceipt = (receipt) => {
         const receiptHTML = generateReceiptHTML(receipt);
         const printWindow = window.open('', '_blank');
-        
+
         printWindow.document.write(receiptHTML);
         printWindow.document.close();
         printWindow.onload = () => {
@@ -358,19 +358,19 @@ const FeesManagementPage = () => {
         document.body.appendChild(tempDiv);
 
         try {
-            const canvas = await html2canvas(tempDiv, { 
+            const canvas = await html2canvas(tempDiv, {
                 scale: 2,
                 backgroundColor: '#ffffff'
             });
-            
+
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
             const imgWidth = 210; // A4 width in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
+
             pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
             pdf.save(`Receipt_${receipt.receiptNumber}.pdf`);
-            
+
             Swal.close();
             Swal.fire('Success', 'PDF downloaded successfully', 'success');
         } catch (error) {
@@ -638,27 +638,27 @@ const FeesManagementPage = () => {
 
         const yearlySection = reportType === 'yearly'
             ? '<h3 style="margin:0 0 10px;font-size:16px;color:#111">Yearly Breakdown</h3>' +
-              '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
-              breakdownCols + '<tbody>' +
-              buildBreakdownRows(Object.entries(byYear).sort((a, b) => b[0] - a[0]).map(([yr, d]) => [yr, { ...d, label: yr }])) +
-              '</tbody></table>'
-            : ''; 
+            '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
+            breakdownCols + '<tbody>' +
+            buildBreakdownRows(Object.entries(byYear).sort((a, b) => b[0] - a[0]).map(([yr, d]) => [yr, { ...d, label: yr }])) +
+            '</tbody></table>'
+            : '';
 
         const monthlySection = reportType === 'monthly'
             ? '<h3 style="margin:0 0 10px;font-size:16px;color:#111">Monthly Breakdown</h3>' +
-              '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
-              breakdownCols + '<tbody>' +
-              buildBreakdownRows(sortedMonths) +
-              '</tbody></table>'
-            : ''; 
+            '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
+            breakdownCols + '<tbody>' +
+            buildBreakdownRows(sortedMonths) +
+            '</tbody></table>'
+            : '';
 
         const dailySection = reportType === 'daily'
             ? '<h3 style="margin:0 0 10px;font-size:16px;color:#111">Daily Breakdown (Recent ' + sortedDays.length + ' Days)</h3>' +
-              '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
-              breakdownCols + '<tbody>' +
-              buildBreakdownRows(sortedDays) +
-              '</tbody></table>'
-            : ''; 
+            '<table style="width:100%;border-collapse:collapse;margin-bottom:28px;font-size:13px">' +
+            breakdownCols + '<tbody>' +
+            buildBreakdownRows(sortedDays) +
+            '</tbody></table>'
+            : '';
 
         const html = `
         <div style="font-family:Arial,sans-serif;max-width:900px;margin:0 auto;padding:30px;background:#fff;color:#1a202c">
@@ -721,11 +721,11 @@ const FeesManagementPage = () => {
             </thead>
             <tbody>
               ${filteredRecords.map((r, i) => {
-                const due = r.status === 'Pending' ? r.totalAmount : Math.max(0, r.totalAmount - r.paidAmount);
-                const paid = r.status === 'Pending' ? 0 : r.paidAmount;
-                const color = '#111';
-                const bg = r.status === 'Paid' ? '#e6e6e6' : r.status === 'Partial' ? '#f5f5f5' : '#f8f8f8';
-                return `<tr style="${tableRowStyle(i)}">
+            const due = r.status === 'Pending' ? r.totalAmount : Math.max(0, r.totalAmount - r.paidAmount);
+            const paid = r.status === 'Pending' ? 0 : r.paidAmount;
+            const color = '#111';
+            const bg = r.status === 'Paid' ? '#e6e6e6' : r.status === 'Partial' ? '#f5f5f5' : '#f8f8f8';
+            return `<tr style="${tableRowStyle(i)}">
                   <td style="padding:8px 10px">${i + 1}</td>
                   <td style="padding:8px 10px;font-weight:600">${r.studentName}</td>
                   <td style="padding:8px 10px">${r.rollNumber}</td>
@@ -736,7 +736,7 @@ const FeesManagementPage = () => {
                   <td style="padding:8px 10px;text-align:right;color:#dc2626;font-weight:600">&#2547;${due.toFixed(2)}</td>
                   <td style="padding:8px 10px;text-align:center"><span style="background:${bg};color:${color};padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600">${r.status}</span></td>
                 </tr>`;
-              }).join('')}
+        }).join('')}
             </tbody>
           </table>
 
@@ -852,23 +852,23 @@ const FeesManagementPage = () => {
 
         try {
             setLoading(true);
-            
+
             // Delete selected records
-            const promises = selectedRecords.map(record => 
+            const promises = selectedRecords.map(record =>
                 fetch(`${API_BASE_URL}/fees/${record._id}`, {
                     method: 'DELETE'
                 })
             );
 
             const responses = await Promise.all(promises);
-            
+
             // Check if all succeeded
             const results = await Promise.all(responses.map(r => r.json()));
             const allSuccess = results.every(result => result.success);
-            
+
             if (allSuccess) {
                 Swal.fire('Success!', `${selectedRecords.length} record${selectedRecords.length > 1 ? 's' : ''} deleted successfully!`, 'success');
-                
+
                 // Reset selection and refresh data
                 setSelectedRecords([]);
                 fetchFeeRecords();
@@ -901,21 +901,19 @@ const FeesManagementPage = () => {
                         <div className="flex flex-wrap gap-1 sm:gap-2">
                             <button
                                 onClick={() => setViewMode('collection')}
-                                className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
-                                    viewMode === 'collection'
+                                className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${viewMode === 'collection'
                                         ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                         : 'bg-white text-gray-700 hover:bg-gray-50'
-                                }`}
+                                    }`}
                             >
                                 Fee Collection
                             </button>
                             <button
                                 onClick={() => setViewMode('records')}
-                                className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
-                                    viewMode === 'records'
+                                className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${viewMode === 'records'
                                         ? 'bg-blue-900 text-white border-b-2 border-blue-900'
                                         : 'bg-white text-gray-700 hover:bg-gray-50'
-                                }`}
+                                    }`}
                             >
                                 Fee Records
                             </button>
@@ -1046,13 +1044,12 @@ const FeesManagementPage = () => {
                                     {students.map((student) => (
                                         <div
                                             key={student._id}
-                                            className={`p-3 sm:p-4 rounded border cursor-pointer transition-all ${
-                                                collectionMode === 'bulk'
+                                            className={`p-3 sm:p-4 rounded border cursor-pointer transition-all ${collectionMode === 'bulk'
                                                     ? 'border-gray-300 bg-gray-50'
                                                     : selectedStudents.some(s => s._id === student._id)
                                                         ? 'border-[#1a202c] bg-gray-100'
                                                         : 'border-gray-300 hover:border-[#1a202c] hover:bg-gray-50'
-                                            }`}
+                                                }`}
                                             onClick={() => collectionMode === 'individual' && toggleStudentSelection(student)}
                                         >
                                             <div className="flex items-center justify-between">
@@ -1083,7 +1080,7 @@ const FeesManagementPage = () => {
                         {/* Fee Collection Form */}
                         <div className="bg-white border border-gray-200 rounded p-3 sm:p-4 lg:p-6">
                             <h2 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Fee Collection</h2>
-                            
+
                             <div className="space-y-4 sm:space-y-6">
                                 {/* Collection Mode Selection */}
                                 <div>
@@ -1124,140 +1121,139 @@ const FeesManagementPage = () => {
                                         {collectionMode === 'bulk' ? 'Bulk Fee Collection' : 'Individual Fee Collection'}
                                     </p>
                                     <p className="text-xs sm:text-sm text-black mt-1">
-                                        Class: {selectedClass} | Section: {selectedSection} | 
-                                        {collectionMode === 'bulk' 
-                                            ? ` Students: ${students.length}` 
+                                        Class: {selectedClass} | Section: {selectedSection} |
+                                        {collectionMode === 'bulk'
+                                            ? ` Students: ${students.length}`
                                             : ` Selected: ${selectedStudents.length}/${students.length}`
                                         }
                                     </p>
                                 </div>
 
-                                    {/* Fee Categories */}
-                                    <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-2 sm:mb-3">Add Fees</label>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                            {feeCategories.map((category, index) => (
-                                                <button
-                                                    key={index}
-                                                    onClick={() => addFee(category)}
-                                                    className="px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
-                                                >
-                                                    + {category.name}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {selectedFees.length > 0 ? (
-                                        <>
-                                            {/* Selected Fees */}
-                                            <div>
-                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-2 sm:mb-3">Selected Fees</label>
-                                                <div className="space-y-2">
-                                                    {selectedFees.map((fee, index) => (
-                                                        <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-200">
-                                                            <div>
-                                                                <p className="font-semibold text-sm text-black">{fee.feeCategory}</p>
-                                                                {fee.description && (
-                                                                    <p className="text-xs text-black">{fee.description}</p>
-                                                                )}
-                                                            </div>
-                                                            <div className="flex items-center gap-3">
-                                                                <span className="font-bold text-black">৳{fee.amount}</span>
-                                                                <button
-                                                                    onClick={() => removeFee(index)}
-                                                                    className="text-red-600 hover:text-red-800 font-bold"
-                                                                >
-                                                                    ×
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* Payment Details */}
-                                            <div>
-                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Payment Method</label>
-                                                <select
-                                                    value={paymentMethod}
-                                                    onChange={(e) => setPaymentMethod(e.target.value)}
-                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                                >
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Card">Card</option>
-                                                    <option value="Bank Transfer">Bank Transfer</option>
-                                                    <option value="Online">Online</option>
-                                                    <option value="Cheque">Cheque</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Paid Amount (৳)</label>
-                                                <input
-                                                    type="number"
-                                                    value={paidAmount}
-                                                    onChange={(e) => setPaidAmount(e.target.value)}
-                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                                    placeholder="Enter amount"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Remarks (Optional)</label>
-                                                <textarea
-                                                    value={remarks}
-                                                    onChange={(e) => setRemarks(e.target.value)}
-                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                                    rows="2"
-                                                    placeholder="Add any remarks..."
-                                                ></textarea>
-                                            </div>
-
-                                            {/* Summary */}
-                                            <div className="bg-gray-50 border border-gray-300 p-3 sm:p-4 rounded">
-                                                <div className="flex justify-between mb-2">
-                                                    <span className="font-semibold text-sm text-black">Total Amount:</span>
-                                                    <span className="font-bold text-sm text-black">৳{calculateTotals().total}</span>
-                                                </div>
-                                                <div className="flex justify-between mb-2">
-                                                    <span className="font-semibold text-sm text-black">Paid Amount:</span>
-                                                    <span className="font-bold text-sm text-black">৳{calculateTotals().paid}</span>
-                                                </div>
-                                                <div className="flex justify-between pt-2 border-t border-gray-300">
-                                                    <span className="font-semibold text-sm text-black">Due Amount:</span>
-                                                    <span className="font-bold text-sm text-black">৳{calculateTotals().due}</span>
-                                                </div>
-                                            </div>
-
-                                            {/* Submit Button */}
+                                {/* Fee Categories */}
+                                <div>
+                                    <label className="block text-xs sm:text-sm font-semibold text-black mb-2 sm:mb-3">Add Fees</label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                        {feeCategories.map((category, index) => (
                                             <button
-                                                onClick={collectFee}
-                                                disabled={loading}
-                                                className="w-full px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-4 bg-blue-900 text-white rounded font-semibold text-sm sm:text-base lg:text-lg hover:bg-blue-800 transition-all disabled:opacity-50"
+                                                key={index}
+                                                onClick={() => addFee(category)}
+                                                className="px-3 sm:px-4 py-2 bg-blue-900 text-white rounded text-sm font-semibold hover:bg-blue-800 transition-all"
                                             >
-                                                {loading ? 'Processing...' : `Collect Fees for ${
-                                                    collectionMode === 'bulk' 
-                                                        ? `${students.length} Students` 
-                                                        : `${selectedStudents.length} Selected Student${selectedStudents.length !== 1 ? 's' : ''}`
-                                                }`}
+                                                + {category.name}
                                             </button>
-                                        </>
-                                    ) : (
-                                        <div className="text-center py-6 sm:py-8 lg:py-12">
-                                            <div className="text-3xl sm:text-4xl lg:text-5xl mb-4">💰</div>
-                                            <p className="text-black text-sm sm:text-base lg:text-lg">
-                                                {collectionMode === 'bulk' 
-                                                    ? 'Add fees to collect for all students' 
-                                                    : 'Add fees and select students to collect fees'
-                                                }
-                                            </p>
-                                        </div>
-                                    )}
+                                        ))}
+                                    </div>
                                 </div>
+
+                                {selectedFees.length > 0 ? (
+                                    <>
+                                        {/* Selected Fees */}
+                                        <div>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-2 sm:mb-3">Selected Fees</label>
+                                            <div className="space-y-2">
+                                                {selectedFees.map((fee, index) => (
+                                                    <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded border border-gray-200">
+                                                        <div>
+                                                            <p className="font-semibold text-sm text-black">{fee.feeCategory}</p>
+                                                            {fee.description && (
+                                                                <p className="text-xs text-black">{fee.description}</p>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="font-bold text-black">৳{fee.amount}</span>
+                                                            <button
+                                                                onClick={() => removeFee(index)}
+                                                                className="text-red-600 hover:text-red-800 font-bold"
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Payment Details */}
+                                        <div>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Payment Method</label>
+                                            <select
+                                                value={paymentMethod}
+                                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
+                                            >
+                                                <option value="Cash">Cash</option>
+                                                <option value="Card">Card</option>
+                                                <option value="Bank Transfer">Bank Transfer</option>
+                                                <option value="Online">Online</option>
+                                                <option value="Cheque">Cheque</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Paid Amount (৳)</label>
+                                            <input
+                                                type="number"
+                                                value={paidAmount}
+                                                onChange={(e) => setPaidAmount(e.target.value)}
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
+                                                placeholder="Enter amount"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Remarks (Optional)</label>
+                                            <textarea
+                                                value={remarks}
+                                                onChange={(e) => setRemarks(e.target.value)}
+                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
+                                                rows="2"
+                                                placeholder="Add any remarks..."
+                                            ></textarea>
+                                        </div>
+
+                                        {/* Summary */}
+                                        <div className="bg-gray-50 border border-gray-300 p-3 sm:p-4 rounded">
+                                            <div className="flex justify-between mb-2">
+                                                <span className="font-semibold text-sm text-black">Total Amount:</span>
+                                                <span className="font-bold text-sm text-black">৳{calculateTotals().total}</span>
+                                            </div>
+                                            <div className="flex justify-between mb-2">
+                                                <span className="font-semibold text-sm text-black">Paid Amount:</span>
+                                                <span className="font-bold text-sm text-black">৳{calculateTotals().paid}</span>
+                                            </div>
+                                            <div className="flex justify-between pt-2 border-t border-gray-300">
+                                                <span className="font-semibold text-sm text-black">Due Amount:</span>
+                                                <span className="font-bold text-sm text-black">৳{calculateTotals().due}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Submit Button */}
+                                        <button
+                                            onClick={collectFee}
+                                            disabled={loading}
+                                            className="w-full px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-4 bg-blue-900 text-white rounded font-semibold text-sm sm:text-base lg:text-lg hover:bg-blue-800 transition-all disabled:opacity-50"
+                                        >
+                                            {loading ? 'Processing...' : `Collect Fees for ${collectionMode === 'bulk'
+                                                    ? `${students.length} Students`
+                                                    : `${selectedStudents.length} Selected Student${selectedStudents.length !== 1 ? 's' : ''}`
+                                                }`}
+                                        </button>
+                                    </>
+                                ) : (
+                                    <div className="text-center py-6 sm:py-8 lg:py-12">
+                                        <div className="text-3xl sm:text-4xl lg:text-5xl mb-4">💰</div>
+                                        <p className="text-black text-sm sm:text-base lg:text-lg">
+                                            {collectionMode === 'bulk'
+                                                ? 'Add fees to collect for all students'
+                                                : 'Add fees and select students to collect fees'
+                                            }
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                    )}
+                    </div>
+                )}
 
                 {/* Fee Records Mode */}
                 {viewMode === 'records' && selectedClass && selectedSection && (
@@ -1321,7 +1317,7 @@ const FeesManagementPage = () => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         {feeRecords.length > 0 && (
                             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-4">
                                 <div className="flex gap-2">
@@ -1343,7 +1339,7 @@ const FeesManagementPage = () => {
                                 </span>
                             </div>
                         )}
-                        
+
                         {feeRecords.length > 0 && (
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
                                 <div className="bg-gray-50 border border-gray-200 rounded p-3 sm:p-4">
@@ -1402,9 +1398,8 @@ const FeesManagementPage = () => {
                                     </thead>
                                     <tbody>
                                         {feeRecords.map((record, index) => (
-                                            <tr key={index} className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
-                                                selectedRecords.some(r => r._id === record._id) ? 'bg-gray-100' : ''
-                                            }`}>
+                                            <tr key={index} className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${selectedRecords.some(r => r._id === record._id) ? 'bg-gray-100' : ''
+                                                }`}>
                                                 <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-center">
                                                     <input
                                                         type="checkbox"
@@ -1426,12 +1421,11 @@ const FeesManagementPage = () => {
                                                     <select
                                                         value={record.status}
                                                         onChange={(e) => handleStatusChange(record, e.target.value)}
-                                                        className={`px-2 sm:px-3 py-1 rounded text-xs font-bold border-0 ${
-                                                            record.status === 'Paid' ? 'bg-[#1a202c] text-white' :
-                                                            record.status === 'Partial' ? 'bg-gray-600 text-white' :
-                                                            record.status === 'Pending' ? 'bg-gray-400 text-white' :
-                                                            'bg-gray-300 text-black'
-                                                        }`}
+                                                        className={`px-2 sm:px-3 py-1 rounded text-xs font-bold border-0 ${record.status === 'Paid' ? 'bg-[#1a202c] text-white' :
+                                                                record.status === 'Partial' ? 'bg-gray-600 text-white' :
+                                                                    record.status === 'Pending' ? 'bg-gray-400 text-white' :
+                                                                        'bg-gray-300 text-black'
+                                                            }`}
                                                     >
                                                         <option value="Paid">Paid</option>
                                                         <option value="Partial">Partial</option>

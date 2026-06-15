@@ -14,6 +14,7 @@ export default function PortalLayout({ children }) {
         { name: 'My Profile', path: '/portal/profile', icon: '👤' },
         { name: 'Academic Records', path: '/portal/academics', icon: '📚' },
         { name: 'Messages', path: '/portal/messages', icon: '📅' },
+       
         { name: 'Assignments', path: '/portal/assignments', icon: '📝' },
         // { name: 'Exam Schedule', path: '/portal/exams', icon: '📊' },
         // { name: 'Results', path: '/portal/results', icon: '📈' },
