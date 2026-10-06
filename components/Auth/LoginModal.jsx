@@ -7,8 +7,9 @@ import { useLanguage } from '../../src/contexts/LanguageContext';
 const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
     const { t } = useLanguage();
     const [formData, setFormData] = useState({
-        email: '',
-        id: ''
+        email: 'student@gmail.com',
+        id: '26-0012',
+        role: 'Student'
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -21,28 +22,24 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
         setError('');
     };
 
-    const handleSelectDemo = (email, id) => {
-        setFormData({ email, id });
-        setError('');
+    const handleRoleChange = (e) => {
+        const role = e.target.value;
+        if (role === 'Student') {
+            setFormData({ email: 'student@gmail.com', id: '26-0012', role: 'Student' });
+        } else if (role === 'Teacher') {
+            setFormData({ email: 'teacher@gmail.com', id: '26-0006-6', role: 'Teacher' });
+        } else if (role === 'Parent' || role === 'Admin') {
+            setFormData({ email: 'admin@gmail.com', id: '0001-26', role: role });
+        } else {
+            setFormData(prev => ({ ...prev, role }));
+        }
     };
 
-
-    // Automatically detect role based on ID format
     const detectRoleFromId = (id) => {
         if (!id) return null;
-
-        // Admin format: 0001-26 (4 digits - 2 digits)
-        if (/^\d{4}-\d{2}$/.test(id)) {
-            return 'admin';
-        }
-        // Teacher format: 26-0001-1 (2 digits - 4 digits - 1 digit)
-        else if (/^\d{2}-\d{4}-\d{1}$/.test(id)) {
-            return 'teacher';
-        }
-        // Student format: 26-0001 (2 digits - 4 digits)
-        else if (/^\d{2}-\d{4}$/.test(id)) {
-            return 'student';
-        }
+        if (/^\d{4}-\d{2}$/.test(id)) return 'admin';
+        if (/^\d{2}-\d{4}-\d{1}$/.test(id)) return 'teacher';
+        if (/^\d{2}-\d{4}$/.test(id)) return 'student';
         return null;
     };
 
@@ -52,39 +49,17 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
         setError('');
 
         try {
-            // Detect role from ID format
-            const role = detectRoleFromId(formData.id);
+            const role = detectRoleFromId(formData.id) || (
+                formData.role === 'Teacher' ? 'teacher' :
+                formData.role === 'Admin' || formData.role === 'Parent' ? 'admin' : 'student'
+            );
 
-            if (!role) {
-                await Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid ID Format',
-                    html: `
-                        <div class="text-left font-sans">
-                            <p class="mb-2 font-semibold text-[#1F2937]">Please enter ID in correct format:</p>
-                            <ul class="list-disc list-inside space-y-1 text-sm text-[#374151]">
-                                <li><strong>Admin:</strong> 0001-26</li>
-                                <li><strong>Student:</strong> 26-0001</li>
-                                <li><strong>Teacher:</strong> 26-0001-1</li>
-                            </ul>
-                        </div>
-                    `,
-                    confirmButtonColor: '#1a2e5a',
-                    customClass: {
-                        container: 'swal-high-z-index'
-                    }
-                });
-                setLoading(false);
-                return;
-            }
-
-            // Build login data based on detected role
             const loginData = {
                 email: formData.email,
                 role: role,
                 ...(role === 'teacher' ? { teacherId: formData.id } :
                     role === 'admin' ? { adminId: formData.id } :
-                        { studentId: formData.id })
+                    { studentId: formData.id })
             };
 
             const response = await fetch(`${API_URL}/api/auth/login`, {
@@ -98,24 +73,19 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
             const data = await response.json();
 
             if (data.success) {
-                // Store user data in localStorage
                 localStorage.setItem('user', JSON.stringify(data.data));
 
                 await Swal.fire({
                     icon: 'success',
                     title: 'Login Successful!',
                     text: `Welcome back, ${data.data.name}!`,
-                    confirmButtonColor: '#1a2e5a',
+                    confirmButtonColor: '#0B0F28',
                     timer: 2000,
                     showConfirmButton: false,
-                    customClass: {
-                        container: 'swal-high-z-index'
-                    }
                 });
 
                 onClose();
 
-                // Redirect based on user role
                 if (data.data.role === 'admin') {
                     window.location.href = '/dashboard';
                 } else if (data.data.role === 'teacher') {
@@ -126,26 +96,20 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
                     window.location.reload();
                 }
             } else {
-                await Swal.fire({
+                Swal.fire({
                     icon: 'error',
                     title: 'Login Failed',
                     text: data.message || 'Invalid credentials',
-                    confirmButtonColor: '#1a2e5a',
-                    customClass: {
-                        container: 'swal-high-z-index'
-                    }
+                    confirmButtonColor: '#0B0F28',
                 });
                 setError(data.message || 'Login failed');
             }
         } catch (error) {
-            await Swal.fire({
+            Swal.fire({
                 icon: 'error',
                 title: 'Server Error',
                 text: 'Please make sure the server is running on port 5000',
-                confirmButtonColor: '#1a2e5a',
-                customClass: {
-                    container: 'swal-high-z-index'
-                }
+                confirmButtonColor: '#0B0F28',
             });
             setError('Server error. Please try again.');
         } finally {
@@ -155,112 +119,79 @@ const LoginModal = ({ isOpen, onClose, onOpenSignup }) => {
 
     if (!isOpen) return null;
 
-
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md">
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative animate-fadeIn font-[Inter,sans-serif]">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="bg-[#F4F5F8] border border-gray-200 shadow-2xl max-w-md w-full p-6 sm:p-10 relative rounded-none font-sans">
+                
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-[#f5a623] text-2xl transition-colors cursor-pointer"
+                    className="absolute top-3 right-4 text-gray-500 hover:text-[#FF5500] text-2xl transition-colors cursor-pointer"
                 >
                     ×
                 </button>
 
-                {/* Header */}
-                <div className="text-center mb-6 sm:mb-8">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-[#1a2e5a] to-[#132348] border-2 border-[#f5a623]/30 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                        <span className="text-2xl sm:text-3xl">👤</span>
-                    </div>
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1F2937] tracking-tight mb-2">{t('auth.loginTitle')}</h2>
-                    <p className="text-[#6B7280] text-xs sm:text-sm">{t('auth.loginTitle')}</p>
-                </div>
-
                 {/* Error Message */}
                 {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-xs sm:text-sm font-semibold">
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2.5 rounded-none mb-4 text-xs font-medium">
                         {error}
                     </div>
                 )}
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    
+                    {/* Username Input */}
                     <div>
-                        <label className="block text-xs sm:text-sm font-bold text-[#374151] mb-2">
-                            {t('auth.email')}
-                        </label>
                         <input
-                            type="email"
+                            type="text"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2.5 sm:py-3 border border-[#E5E7EB] bg-[#F9FAFB] text-[#1F2937] placeholder-[#6B7280]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f5a623]/30 focus:border-[#f5a623] transition-all duration-300 text-xs sm:text-sm"
-                            placeholder={t('auth.email')}
+                            placeholder="Username"
+                            className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-gray-300 rounded-none bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#FF5500]"
                         />
                     </div>
 
+                    {/* Password Input */}
                     <div>
-                        <label className="block text-xs sm:text-sm font-bold text-[#374151] mb-2">
-                            ID Number
-                        </label>
                         <input
                             type="text"
                             name="id"
                             value={formData.id}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2.5 sm:py-3 border border-[#E5E7EB] bg-[#F9FAFB] text-[#1F2937] placeholder-[#6B7280]/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f5a623]/30 focus:border-[#f5a623] transition-all duration-300 text-xs sm:text-sm"
-                            placeholder="Enter your ID (e.g., 26-0001)"
+                            placeholder="Password"
+                            className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-gray-300 rounded-none bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#FF5500]"
                         />
-                        <div className="mt-3 p-3 sm:p-4 bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl text-xs">
-                            <p className="font-bold text-[#1a2e5a] mb-2.5 border-b border-[#E5E7EB] pb-1.5 flex items-center justify-between">
-                                <span>Demo Credentials</span>
-                                <span className="text-[10px] text-[#f5a623] font-semibold animate-pulse">(Click to autofill)</span>
-                            </p>
-                            <div className="space-y-2 text-[#374151]">
-                                <div 
-                                    onClick={() => handleSelectDemo('admin@gmail.com', '0001-26')}
-                                    className="p-2.5 bg-white border border-[#E5E7EB] rounded-xl hover:border-[#f5a623] hover:bg-[#f5a623]/5 transition-all duration-200 cursor-pointer group/item flex flex-col sm:flex-row sm:items-center justify-between gap-1 shadow-sm"
-                                >
-                                    <span className="font-bold text-[#1a2e5a] flex items-center gap-1 group-hover/item:text-[#f5a623] transition-colors">👨‍💼 Admin</span>
-                                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] sm:text-xs">
-                                        <p><span className="text-[#6B7280]">Email:</span> <span className="font-mono text-[#1a2e5a] font-semibold">admin@gmail.com</span></p>
-                                        <p><span className="text-[#6B7280]">ID:</span> <span className="font-mono text-[#f5a623] font-bold">0001-26</span></p>
-                                    </div>
-                                </div>
-                                <div 
-                                    onClick={() => handleSelectDemo('student@gmail.com', '26-0012')}
-                                    className="p-2.5 bg-white border border-[#E5E7EB] rounded-xl hover:border-[#f5a623] hover:bg-[#f5a623]/5 transition-all duration-200 cursor-pointer group/item flex flex-col sm:flex-row sm:items-center justify-between gap-1 shadow-sm"
-                                >
-                                    <span className="font-bold text-[#1a2e5a] flex items-center gap-1 group-hover/item:text-[#f5a623] transition-colors">📚 Student</span>
-                                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] sm:text-xs">
-                                        <p><span className="text-[#6B7280]">Email:</span> <span className="font-mono text-[#1a2e5a] font-semibold">student@gmail.com</span></p>
-                                        <p><span className="text-[#6B7280]">ID:</span> <span className="font-mono text-[#f5a623] font-bold">26-0012</span></p>
-                                    </div>
-                                </div>
-                                <div 
-                                    onClick={() => handleSelectDemo('teacher@gmail.com', '26-0006-6')}
-                                    className="p-2.5 bg-white border border-[#E5E7EB] rounded-xl hover:border-[#f5a623] hover:bg-[#f5a623]/5 transition-all duration-200 cursor-pointer group/item flex flex-col sm:flex-row sm:items-center justify-between gap-1 shadow-sm"
-                                >
-                                    <span className="font-bold text-[#1a2e5a] flex items-center gap-1 group-hover/item:text-[#f5a623] transition-colors">👨‍🏫 Teacher</span>
-                                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px] sm:text-xs">
-                                        <p><span className="text-[#6B7280]">Email:</span> <span className="font-mono text-[#1a2e5a] font-semibold">teacher@gmail.com</span></p>
-                                        <p><span className="text-[#6B7280]">ID:</span> <span className="font-mono text-[#f5a623] font-bold">26-0006-6</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+
+                    {/* Role Select Dropdown */}
+                    <div>
+                        <select
+                            name="role"
+                            value={formData.role}
+                            onChange={handleRoleChange}
+                            className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-gray-300 rounded-none bg-white text-gray-800 focus:outline-none focus:border-[#FF5500] cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_12px_center] bg-no-repeat pr-8"
+                        >
+                            <option value="Student">Student</option>
+                            <option value="Teacher">Teacher</option>
+                            <option value="Admin">Admin</option>
+                        </select>
                     </div>
 
                     {/* Login Button */}
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-gradient-to-r from-[#f5a623] to-[#fdb94e] text-[#132348] font-bold py-3 sm:py-3.5 rounded-full shadow-[0_4px_14px_rgba(245,166,35,0.25)] hover:shadow-[0_6px_20px_rgba(245,166,35,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:scale-100 disabled:shadow-none cursor-pointer text-sm"
-                    >
-                        {loading ? `${t('common.loading')}` : t('auth.loginButton')}
-                    </button>
+                    <div className="pt-2">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-3 bg-[#FF5500] hover:bg-[#e04500] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider transition-colors rounded-none cursor-pointer"
+                        >
+                            {loading ? 'LOGGING IN...' : 'LOGIN'}
+                        </button>
+                    </div>
+
                 </form>
             </div>
         </div>

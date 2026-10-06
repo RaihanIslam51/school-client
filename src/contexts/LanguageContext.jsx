@@ -54,7 +54,8 @@ export const LanguageProvider = ({ children }) => {
     }
   };
 
-  const t = (key) => {
+  const t = (key, fallback = undefined) => {
+    if (!key || typeof key !== 'string') return fallback || key;
     const keys = key.split('.');
     let value = translations;
     
@@ -62,12 +63,12 @@ export const LanguageProvider = ({ children }) => {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
-        // Return key if translation not found
-        return key;
+        // Return fallback if provided, otherwise undefined so || fallbacks work
+        return fallback;
       }
     }
     
-    return value;
+    return value !== undefined && value !== null ? value : fallback;
   };
 
   const value = {

@@ -62,23 +62,23 @@ export default memo(function PortalAcademics() {
 
     const gradeStyle = (grade) => {
         switch (grade) {
-            case 'A+': return { bar: 'bg-green-500',  badge: 'bg-green-100 text-green-800 border-green-300' };
-            case 'A':  return { bar: 'bg-blue-500',   badge: 'bg-blue-100 text-blue-800 border-blue-300' };
-            case 'A-': return { bar: 'bg-cyan-500',   badge: 'bg-cyan-100 text-cyan-800 border-cyan-300' };
-            case 'B':  return { bar: 'bg-yellow-500', badge: 'bg-yellow-100 text-yellow-800 border-yellow-300' };
-            case 'C':  return { bar: 'bg-orange-400', badge: 'bg-orange-100 text-orange-800 border-orange-300' };
-            case 'D':  return { bar: 'bg-red-400',    badge: 'bg-red-100 text-red-700 border-red-300' };
-            case 'F':  return { bar: 'bg-red-600',    badge: 'bg-red-100 text-red-800 border-red-400' };
-            default:   return { bar: 'bg-gray-400',   badge: 'bg-gray-100 text-gray-700 border-gray-300' };
+            case 'A+': return { bar: 'bg-[#10B981]', badge: 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' };
+            case 'A': return { bar: 'bg-blue-500', badge: 'bg-blue-100 text-blue-800 border-blue-300' };
+            case 'A-': return { bar: 'bg-cyan-500', badge: 'bg-cyan-100 text-cyan-800 border-cyan-300' };
+            case 'B': return { bar: 'bg-[#F59E0B]', badge: 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20' };
+            case 'C': return { bar: 'bg-orange-400', badge: 'bg-orange-100 text-orange-800 border-orange-300' };
+            case 'D': return { bar: 'bg-red-400', badge: 'bg-red-100 text-red-700 border-red-300' };
+            case 'F': return { bar: 'bg-[#EF4444]', badge: 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20' };
+            default: return { bar: 'bg-gray-400', badge: 'bg-gray-100 text-gray-700 border-gray-300' };
         }
     };
 
     const pctBarColor = (pct) => {
-        if (pct >= 80) return 'bg-green-500';
-        if (pct >= 60) return 'bg-blue-500';
-        if (pct >= 40) return 'bg-yellow-500';
+        if (pct >= 80) return 'bg-[#10B981]';
+        if (pct >= 60) return 'bg-[#0B0F28]';
+        if (pct >= 40) return 'bg-[#FF5500]';
         if (pct >= 33) return 'bg-orange-400';
-        return 'bg-red-500';
+        return 'bg-[#EF4444]';
     };
 
     // Generate professional PDF result card for a single result
@@ -109,39 +109,39 @@ export default memo(function PortalAcademics() {
         }).join('');
 
         const cardHTML = `
-            <div id="portal-result-card" style="width:720px;background:#fff;font-family:'Tiro Bangla','Tiro Bangla Static',serif;border-radius:14px;overflow:hidden;border:1px solid #e6edf3;box-shadow:0 8px 40px rgba(2,6,23,0.08);">
-                <div style="background:linear-gradient(135deg,#0b5ed7 0%,#2563eb 100%);padding:28px 32px;color:#fff;">
+            <div id="portal-result-card" style="width:720px;background:#fff;font-family:'Inter',sans-serif;border-radius:14px;overflow:hidden;border:1px solid #e6edf3;box-shadow:0 8px 40px rgba(2,6,23,0.08);">
+                <div style="background:linear-gradient(135deg,#0B0F28 0%,#1a224f 100%);padding:28px 32px;color:#fff;">
                     <div style="display:flex;justify-content:space-between;align-items:center;">
                         <div>
-                            <div style="font-size:11px;font-weight:700;opacity:0.9;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Official Result Card</div>
-                            <div style="font-size:20px;font-weight:800;">School Management System</div>
+                            <div style="font-size:11px;font-weight:700;opacity:0.9;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;color:#FF5500;">Official Result Card</div>
+                            <div style="font-size:20px;font-weight:800;">Salmela International School</div>
                         </div>
-                        <div style="width:64px;height:64px;background:rgba(255,255,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid rgba(255,255,255,0.18);">🎓</div>
+                        <div style="width:64px;height:64px;background:#FF5500;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid rgba(255,255,255,0.18);">🎓</div>
                     </div>
                     <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;color:#e6f0ff;font-size:12px;">
-                        <div style="background:rgba(255,255,255,0.06);padding:6px 12px;border-radius:16px;">🏫 Class {result.class} - {result.section}</div>
-                        <div style="background:rgba(255,255,255,0.06);padding:6px 12px;border-radius:16px;">📋 {result.examName}</div>
-                        <div style="background:rgba(255,255,255,0.06);padding:6px 12px;border-radius:16px;">📅 {result.academicYear}</div>
+                        <div style="background:rgba(255,255,255,0.08);padding:6px 12px;border-radius:16px;">🏫 Class ${result.class} - ${result.section}</div>
+                        <div style="background:rgba(255,255,255,0.08);padding:6px 12px;border-radius:16px;">📋 ${result.examName}</div>
+                        <div style="background:rgba(255,255,255,0.08);padding:6px 12px;border-radius:16px;">📅 ${result.academicYear}</div>
                     </div>
                 </div>
-                <div style="padding:20px 32px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f8fafc;">
+                <div style="padding:20px 32px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F4F5F8;">
                     <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#0b5ed7,#60a5fa);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;">${(studentName || 'S').charAt(0).toUpperCase()}</div>
+                        <div style="width:56px;height:56px;border-radius:50%;background:#FF5500;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;">${(studentName || 'S').charAt(0).toUpperCase()}</div>
                         <div>
-                            <div style="font-size:16px;font-weight:800;color:#0f172a;">${studentName}</div>
-                            <div style="font-size:12px;color:#6b7280;margin-top:2px;">Roll: <strong style="color:#0b5ed7;">${rollNumber}</strong></div>
+                            <div style="font-size:16px;font-weight:800;color:#0B0F28;">${studentName}</div>
+                            <div style="font-size:12px;color:#6b7280;margin-top:2px;">Roll: <strong style="color:#FF5500;">${rollNumber}</strong></div>
                         </div>
                     </div>
                     <div style="text-align:center;">
                         <div style="font-size:11px;color:#6b7280;margin-bottom:4px;">Merit Position</div>
-                        <div style="font-size:20px;font-weight:800;color:#0b5ed7;">${meritPos}</div>
+                        <div style="font-size:20px;font-weight:800;color:#FF5500;">${meritPos}</div>
                     </div>
                 </div>
                 <div style="padding:20px 32px;">
-                    <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;">Subject-wise Performance</div>
+                    <div style="font-size:13px;font-weight:700;color:#0B0F28;margin-bottom:10px;">Subject-wise Performance</div>
                     <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">
                         <thead>
-                            <tr style="background:#0b5ed7;color:#fff;font-weight:700;font-size:12px;">
+                            <tr style="background:#0B0F28;color:#fff;font-weight:700;font-size:12px;">
                                 <th style="padding:10px 12px;text-align:left;">#</th>
                                 <th style="padding:10px 12px;text-align:left;">Subject</th>
                                 <th style="padding:10px 12px;text-align:center;">Obtained</th>
@@ -151,28 +151,28 @@ export default memo(function PortalAcademics() {
                         </thead>
                         <tbody>${rows}</tbody>
                     </table>
-                    <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;background:#f8fafc;padding:12px;border-radius:10px;border:1px solid #eef2ff;">
+                    <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;background:#F4F5F8;padding:12px;border-radius:10px;border:1px solid #e2e8f0;">
                         <div style="text-align:center;flex:1;">
                             <div style="font-size:11px;color:#6b7280;">Total Marks</div>
-                            <div style="font-size:18px;font-weight:800;color:#0f172a;">${totalObtained} / ${totalMarks}</div>
+                            <div style="font-size:18px;font-weight:800;color:#0B0F28;">${totalObtained} / ${totalMarks}</div>
                         </div>
                         <div style="text-align:center;flex:1;">
                             <div style="font-size:11px;color:#6b7280;">Percentage</div>
-                            <div style="font-size:18px;font-weight:800;color:${barColor};">${percentage}%</div>
+                            <div style="font-size:18px;font-weight:800;color:#FF5500;">${percentage}%</div>
                         </div>
                         <div style="text-align:center;flex:1;">
                             <div style="font-size:11px;color:#6b7280;">Grade</div>
-                            <div style="font-size:18px;font-weight:800;color:#111827;">${grade}</div>
+                            <div style="font-size:18px;font-weight:800;color:#0B0F28;">${grade}</div>
                         </div>
                         <div style="text-align:center;flex:1;">
                             <div style="font-size:11px;color:#6b7280;">Result</div>
-                            <div style="font-size:18px;font-weight:800;color:${status === 'Pass' ? '#16a34a' : '#dc2626'};">${status}</div>
+                            <div style="font-size:18px;font-weight:800;color:${status === 'Pass' ? '#10B981' : '#EF4444'};">${status}</div>
                         </div>
                     </div>
                     <div style="margin-top:12px;">
                         <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#6b7280;margin-top:8px;">
                             <div>Generated: ${new Date().toLocaleDateString()}</div>
-                            <div>School Management System</div>
+                            <div>Salmela International School</div>
                         </div>
                     </div>
                 </div>
@@ -194,7 +194,7 @@ export default memo(function PortalAcademics() {
             const imgW = pageW - 20;
             const imgH = (canvas.height * imgW) / canvas.width;
             pdf.addImage(imgData, 'PNG', 10, 15, imgW, imgH);
-            pdf.save(`Result_Card_${studentName.replace(/\s+/g,'_')}_${rollNumber}.pdf`);
+            pdf.save(`Result_Card_${studentName.replace(/\s+/g, '_')}_${rollNumber}.pdf`);
             document.body.removeChild(wrapper);
             Swal.close();
             Swal.fire({ icon: 'success', title: 'Downloaded', text: `Result card saved for ${studentName}`, timer: 1800, showConfirmButton: false });
@@ -208,18 +208,18 @@ export default memo(function PortalAcademics() {
 
     // Loading skeleton
     if (loading) return (
-        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
+        <div className="min-h-screen bg-[#F4F5F8] p-4 sm:p-6 lg:p-8">
             <div className="container mx-auto max-w-5xl space-y-6">
-                <div className="bg-white rounded-xl p-6 animate-pulse h-24"></div>
-                {[1,2].map(i => (
-                    <div key={i} className="bg-white rounded-xl p-6 space-y-4 animate-pulse">
+                <div className="bg-white rounded-2xl p-6 animate-pulse h-24 border border-gray-100 shadow-sm"></div>
+                {[1, 2].map(i => (
+                    <div key={i} className="bg-white rounded-2xl p-6 space-y-4 animate-pulse border border-gray-100 shadow-sm">
                         <div className="h-6 bg-gray-200 rounded w-1/2"></div>
                         <div className="h-4 bg-gray-100 rounded w-1/3"></div>
                         <div className="grid grid-cols-4 gap-4 mt-4">
-                            {[1,2,3,4].map(j => <div key={j} className="h-16 bg-gray-100 rounded-lg"></div>)}
+                            {[1, 2, 3, 4].map(j => <div key={j} className="h-16 bg-gray-100 rounded-xl"></div>)}
                         </div>
                         <div className="space-y-3 mt-4">
-                            {[1,2,3].map(j => <div key={j} className="h-10 bg-gray-50 rounded"></div>)}
+                            {[1, 2, 3].map(j => <div key={j} className="h-10 bg-gray-50 rounded"></div>)}
                         </div>
                     </div>
                 ))}
@@ -228,34 +228,35 @@ export default memo(function PortalAcademics() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 p-1 sm:p-2 lg:p-3">
+        <div className="min-h-screen bg-[#F4F5F8] p-1 sm:p-2 lg:p-3 font-sans">
             <div className="container mx-auto">
 
                 {/* Page Header */}
-                <div className="bg-gradient-to-r from-blue-900 to-blue-700 rounded-xl p-6 mb-6 text-white">
-                    <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="bg-white border border-gray-200/80 rounded-2xl p-4 sm:p-5 mb-4 sm:mb-5 shadow-sm relative overflow-hidden">
+                    <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
                         <div>
-                            <h1 className="text-2xl lg:text-3xl font-bold mb-1">📚 Academic Results</h1>
-                            <p className="text-blue-200 text-sm">Subject-wise marks, grades & performance overview</p>
+                            <h1 className="text-xl lg:text-2xl font-extrabold text-[#0B0F28] mb-1 tracking-tight">📚 Academic Results</h1>
+                            <p className="text-gray-500 font-medium text-xs sm:text-sm">Subject-wise marks, grades & performance overview</p>
                         </div>
                         {currentStudent && (
-                            <div className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-right">
-                                <p className="text-white font-bold">{currentStudent.name || currentStudent.studentName || '—'}</p>
-                                <p className="text-blue-200 text-xs">Roll: {currentStudent.rollNumber || '—'}</p>
+                            <div className="bg-[#0B0F28]/5 border border-[#0B0F28]/10 rounded-xl px-3.5 py-2.5 text-right">
+                                <p className="text-[#0B0F28] font-bold font-heading text-sm">{currentStudent.name || currentStudent.studentName || '—'}</p>
+                                <p className="text-gray-500 text-[11px] font-semibold">Roll: {currentStudent.rollNumber || '—'}</p>
                             </div>
                         )}
                     </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#0B0F28]/5 rounded-bl-full -mr-8 -mt-8 z-0"></div>
                 </div>
 
                 {/* Error */}
                 {error && (
-                    <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-6 text-center">
+                    <div className="bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-2xl p-6 mb-6 text-center shadow-sm">
                         <div className="text-4xl mb-3">⚠️</div>
-                        <p className="text-red-700 font-semibold mb-1">Failed to load results</p>
-                        <p className="text-gray-500 text-sm mb-4">{error}</p>
+                        <p className="text-[#EF4444] font-bold mb-1 font-heading">Failed to load results</p>
+                        <p className="text-[#EF4444]/80 text-sm mb-4">{error}</p>
                         <button
                             onClick={() => currentStudent && fetchStudentResults(currentStudent._id)}
-                            className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm font-semibold"
+                            className="bg-[#EF4444] text-white px-5 py-2.5 rounded-xl hover:bg-red-600 transition-colors text-sm font-semibold shadow-sm"
                         >
                             🔄 Try Again
                         </button>
@@ -264,9 +265,9 @@ export default memo(function PortalAcademics() {
 
                 {/* Empty */}
                 {!error && results.length === 0 && (
-                    <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+                    <div className="bg-white border border-gray-100 rounded-2xl p-12 text-center shadow-sm">
                         <div className="text-6xl mb-4">📄</div>
-                        <h3 className="text-xl font-bold text-gray-800 mb-2">No Results Found</h3>
+                        <h3 className="text-xl font-bold text-[#0B0F28] mb-2 font-heading">No Results Found</h3>
                         <p className="text-gray-500 text-sm max-w-sm mx-auto">
                             Your examination results will appear here once they are published by the school administration.
                         </p>
@@ -275,124 +276,123 @@ export default memo(function PortalAcademics() {
 
                 {/* Results List */}
                 {!error && results.length > 0 && (
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                         {results.map((result) => {
                             const subjects = Array.isArray(result.subjects) ? result.subjects : [];
                             const pct = parseFloat(result.percentage) || 0;
                             const gs = gradeStyle(result.grade);
 
                             return (
-                                <div key={result._id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                <div key={result._id} className="bg-white border border-gray-200/80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
 
                                     {/* Exam Banner */}
-                                    <div className="bg-gradient-to-r from-blue-900 to-blue-700 px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                                    <div className="bg-[#0B0F28] px-6 py-5 flex flex-wrap items-center justify-between gap-4">
                                         <div>
-                                            <h2 className="text-lg font-bold text-white">
+                                            <h2 className="text-xl font-extrabold text-white font-heading tracking-tight">
                                                 {result.examName}
                                                 {result.examType ? ` — ${result.examType}` : ''}
                                             </h2>
-                                            <p className="text-blue-200 text-xs mt-0.5">
+                                            <p className="text-gray-300 text-xs mt-1 font-medium">
                                                 Class {result.class} - {result.section} &nbsp;|&nbsp; Academic Year: {result.academicYear}
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-2 flex-wrap">
                                             {result.meritPosition && (
-                                                <span className="px-3 py-1 bg-yellow-400 text-yellow-900 rounded-full text-xs font-bold">
+                                                <span className="px-3 py-1.5 bg-[#FF5500] text-white rounded-lg text-xs font-bold shadow-sm">
                                                     🏆 Position #{result.meritPosition}
                                                 </span>
                                             )}
 
                                             <button
                                                 onClick={() => downloadResultCard(result)}
-                                                className="px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-semibold hover:bg-purple-700 transition"
+                                                className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg text-xs font-semibold transition-colors shadow-sm"
                                                 title="Download result card PDF"
                                             >
                                                 📥 Download
                                             </button>
 
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                                                result.status === 'Pass'
-                                                    ? 'bg-green-100 text-green-800 border-green-300'
-                                                    : 'bg-red-100 text-red-800 border-red-300'
-                                            }`}>
+                                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm ${result.status === 'Pass'
+                                                ? 'bg-[#10B981] text-white'
+                                                : 'bg-[#EF4444] text-white'
+                                                }`}>
                                                 {result.status === 'Pass' ? '✅ Pass' : '❌ Fail'}
                                             </span>
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${gs.badge}`}>
+                                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm ${gs.badge} bg-white`}>
                                                 Grade {result.grade}
                                             </span>
                                         </div>
                                     </div>
 
                                     {/* Summary Stats */}
-                                    <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-gray-100 border-b border-gray-100">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-y sm:divide-y-0 divide-gray-100 border-b border-gray-100 bg-gray-50/50">
                                         {[
                                             { label: 'Subjects', value: subjects.length, icon: '📚' },
                                             { label: 'Marks Obtained', value: `${result.totalObtained}/${result.totalMarks}`, icon: '📝' },
                                             { label: 'Percentage', value: `${pct.toFixed(2)}%`, icon: '📊', highlight: true },
                                             { label: 'GPA / CGPA', value: `${result.gpa ?? '—'} / ${result.cgpa ? parseFloat(result.cgpa).toFixed(2) : '—'}`, icon: '⭐' },
                                         ].map((s, i) => (
-                                            <div key={i} className="px-4 py-4 text-center">
-                                                <span className="text-xl">{s.icon}</span>
-                                                <p className={`text-lg font-bold mt-1 ${s.highlight ? 'text-blue-700' : 'text-gray-900'}`}>{s.value}</p>
-                                                <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+                                            <div key={i} className="px-4 py-5 text-center">
+                                                <span className="text-2xl mb-2 block opacity-80">{s.icon}</span>
+                                                <p className={`text-xl font-bold font-heading ${s.highlight ? 'text-[#FF5500]' : 'text-[#0B0F28]'}`}>{s.value}</p>
+                                                <p className="text-xs text-gray-500 font-medium">{s.label}</p>
                                             </div>
                                         ))}
                                     </div>
 
                                     {/* Overall progress bar */}
-                                    <div className="px-6 pt-4 pb-2">
-                                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                            <span className="font-semibold text-gray-700">Overall Performance</span>
-                                            <span className="font-bold text-blue-700">{pct.toFixed(2)}%</span>
+                                    <div className="px-6 pt-5 pb-3">
+                                        <div className="flex justify-between text-xs text-gray-500 mb-2">
+                                            <span className="font-semibold text-gray-700 uppercase tracking-wide">Overall Performance</span>
+                                            <span className="font-bold text-[#FF5500]">{pct.toFixed(2)}%</span>
                                         </div>
-                                        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                                             <div
-                                                className={`h-full rounded-full transition-all ${pctBarColor(pct)}`}
+                                                className={`h-full rounded-full transition-all duration-1000 ${pctBarColor(pct)}`}
                                                 style={{ width: `${Math.min(pct, 100)}%` }}
                                             ></div>
                                         </div>
                                     </div>
 
                                     {/* Subject-wise table */}
-                                    <div className="px-6 pt-4 pb-6">
-                                        <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">Subject-wise Results</h3>
-                                        <div className="overflow-x-auto rounded-lg border border-gray-100">
+                                    <div className="px-6 pt-3 pb-6">
+                                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Subject-wise Results</h3>
+                                        <div className="overflow-x-auto rounded-xl border border-gray-100 shadow-sm">
                                             <table className="w-full text-sm">
                                                 <thead>
-                                                    <tr className="bg-gray-50 text-gray-600 text-xs font-semibold uppercase tracking-wide">
-                                                        <th className="px-4 py-3 text-left">#</th>
-                                                        <th className="px-4 py-3 text-left">Subject</th>
-                                                        <th className="px-4 py-3 text-center">Obtained</th>
-                                                        <th className="px-4 py-3 text-center">Total</th>
-                                                        <th className="px-4 py-3 text-center">%</th>
-                                                        <th className="px-4 py-3 text-center">Grade</th>
-                                                        <th className="px-4 py-3 text-center">GPA</th>
-                                                        <th className="px-4 py-3 min-w-[120px]">Progress</th>
+                                                    <tr className="bg-gray-50 text-gray-500 text-xs font-semibold uppercase tracking-wide border-b border-gray-100">
+                                                        <th className="px-4 py-3.5 text-left">#</th>
+                                                        <th className="px-4 py-3.5 text-left">Subject</th>
+                                                        <th className="px-4 py-3.5 text-center">Obtained</th>
+                                                        <th className="px-4 py-3.5 text-center">Total</th>
+                                                        <th className="px-4 py-3.5 text-center">%</th>
+                                                        <th className="px-4 py-3.5 text-center">Grade</th>
+                                                        <th className="px-4 py-3.5 text-center">GPA</th>
+                                                        <th className="px-4 py-3.5 min-w-[120px]">Progress</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-gray-100">
+                                                <tbody className="divide-y divide-gray-50">
                                                     {subjects.map((sub, si) => {
                                                         const subPct = sub.totalMarks > 0 ? (parseFloat(sub.marks) / parseInt(sub.totalMarks)) * 100 : 0;
                                                         const sg = gradeStyle(sub.grade);
                                                         return (
-                                                            <tr key={si} className={si % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                                                                <td className="px-4 py-3 text-gray-400 font-semibold">{si + 1}</td>
-                                                                <td className="px-4 py-3 font-semibold text-gray-900">{sub.subjectName}</td>
-                                                                <td className="px-4 py-3 text-center font-bold text-blue-700">{sub.marks}</td>
-                                                                <td className="px-4 py-3 text-center text-gray-500">{sub.totalMarks}</td>
-                                                                <td className="px-4 py-3 text-center font-semibold text-gray-700">{subPct.toFixed(1)}%</td>
-                                                                <td className="px-4 py-3 text-center">
-                                                                    <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold border ${sg.badge}`}>
+                                                            <tr key={si} className="bg-white hover:bg-gray-50/50 transition-colors">
+                                                                <td className="px-4 py-3.5 text-gray-400 font-medium">{si + 1}</td>
+                                                                <td className="px-4 py-3.5 font-semibold text-[#0B0F28]">{sub.subjectName}</td>
+                                                                <td className="px-4 py-3.5 text-center font-bold text-[#0B0F28]">{sub.marks}</td>
+                                                                <td className="px-4 py-3.5 text-center text-gray-500">{sub.totalMarks}</td>
+                                                                <td className="px-4 py-3.5 text-center font-semibold text-gray-700">{subPct.toFixed(1)}%</td>
+                                                                <td className="px-4 py-3.5 text-center">
+                                                                    <span className={`inline-block px-2.5 py-1 rounded-lg text-xs font-bold border ${sg.badge}`}>
                                                                         {sub.grade || '—'}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-4 py-3 text-center text-gray-600 font-medium">
+                                                                <td className="px-4 py-3.5 text-center text-gray-600 font-medium">
                                                                     {sub.gpa !== undefined ? sub.gpa : '—'}
                                                                 </td>
-                                                                <td className="px-4 py-3">
-                                                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                                                <td className="px-4 py-3.5">
+                                                                    <div className="w-full bg-gray-100 rounded-full h-1.5">
                                                                         <div
-                                                                            className={`h-2 rounded-full ${sg.bar}`}
+                                                                            className={`h-1.5 rounded-full ${sg.bar}`}
                                                                             style={{ width: `${Math.min(subPct, 100)}%` }}
                                                                         ></div>
                                                                     </div>
@@ -403,29 +403,29 @@ export default memo(function PortalAcademics() {
                                                 </tbody>
                                                 {/* Footer row — totals */}
                                                 <tfoot>
-                                                    <tr className="bg-blue-50 font-bold text-blue-900 border-t-2 border-blue-100">
-                                                        <td className="px-4 py-3" colSpan={2}>Total</td>
-                                                        <td className="px-4 py-3 text-center">{result.totalObtained}</td>
-                                                        <td className="px-4 py-3 text-center">{result.totalMarks}</td>
-                                                        <td className="px-4 py-3 text-center">{pct.toFixed(2)}%</td>
-                                                        <td className="px-4 py-3 text-center">
-                                                            <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold border ${gs.badge}`}>
+                                                    <tr className="bg-[#0B0F28]/5 font-bold text-[#0B0F28] border-t-2 border-[#0B0F28]/10">
+                                                        <td className="px-4 py-4" colSpan={2}>Total</td>
+                                                        <td className="px-4 py-4 text-center">{result.totalObtained}</td>
+                                                        <td className="px-4 py-4 text-center">{result.totalMarks}</td>
+                                                        <td className="px-4 py-4 text-center">{pct.toFixed(2)}%</td>
+                                                        <td className="px-4 py-4 text-center">
+                                                            <span className={`inline-block px-2.5 py-1 rounded-lg text-xs font-bold border ${gs.badge}`}>
                                                                 {result.grade}
                                                             </span>
                                                         </td>
-                                                        <td className="px-4 py-3 text-center">{result.cgpa ? parseFloat(result.cgpa).toFixed(2) : '—'}</td>
-                                                        <td className="px-4 py-3"></td>
+                                                        <td className="px-4 py-4 text-center">{result.cgpa ? parseFloat(result.cgpa).toFixed(2) : '—'}</td>
+                                                        <td className="px-4 py-4"></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
                                         </div>
 
                                         {/* Footer info */}
-                                        <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-500">
+                                        <div className="mt-5 flex flex-wrap gap-4 text-xs text-gray-500 bg-gray-50/50 p-3 rounded-xl border border-gray-100">
                                             <span>📅 Published: <strong className="text-gray-700">{result.publishStatus || '—'}</strong></span>
                                             <span>🗓️ Date: <strong className="text-gray-700">{formatDate(result.createdAt)}</strong></span>
                                             {result.remarks && (
-                                                <span className="w-full mt-1 p-2 bg-blue-50 rounded text-blue-800">
+                                                <span className="w-full mt-2 p-3 bg-[#F59E0B]/10 rounded-lg text-[#F59E0B] font-medium border border-[#F59E0B]/20">
                                                     💬 <strong>Remarks:</strong> {result.remarks}
                                                 </span>
                                             )}

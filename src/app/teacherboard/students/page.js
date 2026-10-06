@@ -435,19 +435,19 @@ export default function StudentManagement() {
     });
 
     return (
-        <div className="p-2 sm:p-4 lg:p-8 min-h-screen bg-gray-50">
-            <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 container mx-auto">
+        <div className="animate-fade-in font-sans space-y-4 sm:space-y-5">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-4 sm:p-5">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
                     <div>
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Student Management</h2>
-                        <p className="text-gray-600 text-sm sm:text-base">Manage all student records and information</p>
+                        <h2 className="text-base sm:text-xl font-extrabold text-[#0B0F28] tracking-tight">Student Directory</h2>
+                        <p className="text-gray-500 text-xs">Manage student records and class information</p>
                     </div>
                     <button
                         onClick={handleAddStudent}
-                        className="w-full sm:w-auto mt-2 sm:mt-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                        className="w-full sm:w-auto bg-[#FF5500] hover:bg-[#e04b00] text-white px-4 py-2 rounded-xl transition-colors flex items-center justify-center space-x-2 text-xs font-bold shadow-sm"
                     >
-                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
                         <span>Add Student</span>
@@ -462,7 +462,7 @@ export default function StudentManagement() {
                             placeholder="Search by name, email, roll number or class..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full px-3 py-2 sm:px-4 sm:py-3 pl-10 sm:pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                            className="w-full px-3 py-2 sm:px-4 sm:py-3 pl-10 sm:pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                         />
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 absolute left-3 sm:left-4 top-2.5 sm:top-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -477,7 +477,7 @@ export default function StudentManagement() {
                         <select
                             value={filterClass}
                             onChange={(e) => setFilterClass(e.target.value)}
-                            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                         >
                             <option value="">All Classes</option>
                             <option value="Play">Play</option>
@@ -502,7 +502,7 @@ export default function StudentManagement() {
                         <select
                             value={filterSection}
                             onChange={(e) => setFilterSection(e.target.value)}
-                            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                            className="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                         >
                             <option value="">All Sections</option>
                             <option value="A">A</option>
@@ -529,7 +529,7 @@ export default function StudentManagement() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 sm:p-4 rounded-xl border border-blue-100">
                         <p className="text-xs sm:text-sm text-gray-600">Total Students</p>
-                        <p className="text-xl sm:text-2xl font-bold text-blue-900 mt-1">{students.length}</p>
+                        <p className="text-xl sm:text-2xl font-bold text-[#1E3A5F] mt-1">{students.length}</p>
                     </div>
                     <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-3 sm:p-4 rounded-xl border border-green-100">
                         <p className="text-xs sm:text-sm text-gray-600">Active Students</p>
@@ -544,7 +544,7 @@ export default function StudentManagement() {
                 {/* Table */}
                 {loading ? (
                     <div className="text-center py-8 sm:py-12">
-                        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600 mx-auto"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-[#1E3A5F] mx-auto"></div>
                         <p className="mt-2 sm:mt-4 text-gray-600 text-sm sm:text-base">Loading students...</p>
                     </div>
                 ) : filteredStudents.length === 0 ? (
@@ -631,7 +631,7 @@ export default function StudentManagement() {
                                             <div className="flex space-x-1 sm:space-x-2">
                                                 <button
                                                     onClick={() => handleEditStudent(student)}
-                                                    className="text-blue-600 hover:text-blue-800 p-1 sm:p-2 hover:bg-blue-50 rounded-lg transition-all"
+                                                    className="text-[#1E3A5F] hover:text-[#F59E0B] p-1 sm:p-2 hover:bg-[#F8FAFC] rounded-lg transition-all"
                                                     title="Edit"
                                                 >
                                                     <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -662,7 +662,7 @@ export default function StudentManagement() {
             {isModalOpen && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 backdrop-blur-md">
                     <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-                        <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 sm:p-6 rounded-t-xl sm:rounded-t-2xl">
+                        <div className="sticky top-0 bg-[#1E3A5F] text-white p-4 sm:p-6 rounded-t-xl sm:rounded-t-2xl border-b border-[#1E3A5F]/10">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-lg sm:text-xl font-bold">
                                     {isEditMode ? 'Edit Student' : 'Add New Student'}
@@ -688,7 +688,7 @@ export default function StudentManagement() {
                                         value={formData.name}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                         placeholder="Enter student name"
                                     />
                                 </div>
@@ -701,7 +701,7 @@ export default function StudentManagement() {
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                         placeholder="student@example.com"
                                     />
                                 </div>
@@ -713,7 +713,7 @@ export default function StudentManagement() {
                                         value={formData.class}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                     >
                                         <option value="">Select Class</option>
                                         <option value="Play">Play</option>
@@ -741,7 +741,7 @@ export default function StudentManagement() {
                                         value={formData.section}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                     >
                                         <option value="">Select Section</option>
                                         <option value="A">A</option>
@@ -759,7 +759,7 @@ export default function StudentManagement() {
                                         value={formData.rollNumber}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                         placeholder="e.g., 2024001"
                                     />
                                 </div>
@@ -773,7 +773,7 @@ export default function StudentManagement() {
                                         onChange={handleInputChange}
                                         required
                                         readOnly={!isEditMode}
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] bg-gray-50 text-sm sm:text-base"
                                         placeholder="Auto-generated"
                                     />
                                 </div>
@@ -786,7 +786,7 @@ export default function StudentManagement() {
                                         value={formData.dateOfBirth}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                     />
                                 </div>
 
@@ -798,7 +798,7 @@ export default function StudentManagement() {
                                         value={formData.parentName}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                         placeholder="Parent name"
                                     />
                                 </div>
@@ -811,7 +811,7 @@ export default function StudentManagement() {
                                         value={formData.parentPhone}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                         placeholder="01XXXXXXXXX"
                                     />
                                 </div>
@@ -824,7 +824,7 @@ export default function StudentManagement() {
                                         onChange={handleInputChange}
                                         required
                                         rows="2"
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                         placeholder="Enter full address"
                                     />
                                 </div>
@@ -889,7 +889,7 @@ export default function StudentManagement() {
                                         value={formData.status}
                                         onChange={handleInputChange}
                                         required
-                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                                        className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] text-sm sm:text-base"
                                     >
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
@@ -907,7 +907,7 @@ export default function StudentManagement() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all duration-200 text-sm sm:text-base font-medium"
+                                    className="px-4 sm:px-6 py-2 sm:py-3 bg-[#1E3A5F] text-white rounded-xl hover:bg-[#1E3A5F]/90 transition-all duration-200 text-sm sm:text-base font-medium shadow-sm"
                                 >
                                     {isEditMode ? 'Update Student' : 'Add Student'}
                                 </button>

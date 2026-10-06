@@ -507,9 +507,10 @@ const MarksResultsPage = () => {
             <html>
             <head>
                 <title>${selectedCard ? `Results - ${selectedCard.class} ${selectedCard.section}` : 'All Results Report'}</title>
+                <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
                 <style>
                     body { 
-                        font-family: 'Tiro Bangla','Tiro Bangla Static',serif; 
+                        font-family: 'Sora', sans-serif; 
                         margin: 0; 
                         padding: 20px; 
                         background-color: white;
@@ -857,123 +858,131 @@ const MarksResultsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-6">
-            <div className="container mx-auto container">
-                {/* Header */}
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="animate-fade-in font-sans space-y-4 sm:space-y-5">
+            {/* Header */}
+            <div className="bg-white border border-gray-200/80 rounded-2xl shadow-sm p-4 sm:p-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-[#FF5500]/10 text-[#FF5500] rounded-xl flex items-center justify-center shrink-0">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
                         <div>
-                            <h1 className="text-xl sm:text-2xl font-bold text-blue-900">
-                                📊 Marks & Results Management
+                            <h1 className="text-base sm:text-xl font-extrabold text-[#0B0F28] tracking-tight">
+                                Marks & Results
                             </h1>
-                            <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Professional examination results management system</p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-                            <button
-                                onClick={() => setViewMode('entry')}
-                                className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-all text-sm sm:text-base ${
-                                    viewMode === 'entry'
-                                        ? 'bg-blue-900 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                            >
-                                📝 Entry Mode
-                            </button>
-                            <button
-                                onClick={() => {
-                                    fetchClassSectionCards();
-                                    setViewMode('view');
-                                    setSelectedCard(null);
-                                }}
-                                className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-all text-sm sm:text-base ${
-                                    viewMode === 'view'
-                                        ? 'bg-blue-900 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                            >
-                                👁️ View Results
-                            </button>
+                            <p className="text-gray-500 text-xs">Professional examination results management system</p>
                         </div>
                     </div>
-                </div>
-
-                {/* Filters Section */}
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold text-blue-900 mb-4 sm:mb-6">🎯 Selection Criteria</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
-                        {/* Class Selection */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Class</label>
-                            <select
-                                value={selectedClass}
-                                onChange={(e) => setSelectedClass(e.target.value)}
-                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
-                            >
-                                <option value="">Select Class</option>
-                                {classes.map((cls, index) => (
-                                    <option key={index} value={cls}>{cls}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Section Selection */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Section</label>
-                            <select
-                                value={selectedSection}
-                                onChange={(e) => setSelectedSection(e.target.value)}
-                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
-                                disabled={!selectedClass}
-                            >
-                                <option value="">Select Section</option>
-                                {sections.map((section, index) => (
-                                    <option key={index} value={section}>{section}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Exam Name */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Exam Name</label>
-                            <input
-                                type="text"
-                                value={examName}
-                                onChange={(e) => setExamName(e.target.value)}
-                                placeholder="e.g., First Terminal"
-                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
-                            />
-                        </div>
-
-                        {/* Exam Type */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Exam Type</label>
-                            <select
-                                value={examType}
-                                onChange={(e) => setExamType(e.target.value)}
-                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
-                            >
-                                <option value="">Select Type</option>
-                                <option value="Terminal">Terminal</option>
-                                <option value="Mid-Term">Mid-Term</option>
-                                <option value="Final">Final</option>
-                                <option value="Class Test">Class Test</option>
-                                <option value="Unit Test">Unit Test</option>
-                            </select>
-                        </div>
-
-                        {/* Academic Year */}
-                        <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Academic Year</label>
-                            <input
-                                type="text"
-                                value={academicYear}
-                                onChange={(e) => setAcademicYear(e.target.value)}
-                                placeholder="2026"
-                                className="w-full px-3 py-2 sm:px-4 sm:py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
-                            />
-                        </div>
+                    <div className="flex flex-row gap-2 w-full sm:w-auto bg-[#F4F5F8] p-1 rounded-xl border border-gray-200/70">
+                        <button
+                            onClick={() => setViewMode('entry')}
+                            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg font-bold transition-all text-xs flex items-center justify-center gap-1.5 ${
+                                viewMode === 'entry'
+                                    ? 'bg-[#FF5500] text-white shadow-sm'
+                                    : 'bg-transparent text-gray-600 hover:bg-gray-200/60'
+                            }`}
+                        >
+                            Entry Mode
+                        </button>
+                        <button
+                            onClick={() => {
+                                fetchClassSectionCards();
+                                setViewMode('view');
+                                setSelectedCard(null);
+                            }}
+                            className={`flex-1 sm:flex-none px-4 py-2 rounded-lg font-bold transition-all text-xs flex items-center justify-center gap-1.5 ${
+                                viewMode === 'view'
+                                    ? 'bg-[#FF5500] text-white shadow-sm'
+                                    : 'bg-transparent text-gray-600 hover:bg-gray-200/60'
+                            }`}
+                        >
+                            View Results
+                        </button>
                     </div>
                 </div>
+            </div>
+
+            {/* Filters Section */}
+            <div className="bg-white border border-gray-200/80 rounded-2xl shadow-sm p-4 sm:p-5">
+                <h2 className="text-sm font-extrabold text-[#0B0F28] mb-3 flex items-center gap-2">
+                    <span className="text-[#FF5500]">⚙️</span> Selection Criteria
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+                    {/* Class Selection */}
+                    <div>
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Class</label>
+                        <select
+                            value={selectedClass}
+                            onChange={(e) => setSelectedClass(e.target.value)}
+                            className="w-full px-3 py-2 bg-[#F4F5F8] border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
+                        >
+                            <option value="">Select Class</option>
+                            {classes.map((cls, index) => (
+                                <option key={index} value={cls}>{cls}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Section Selection */}
+                    <div>
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Section</label>
+                        <select
+                            value={selectedSection}
+                            onChange={(e) => setSelectedSection(e.target.value)}
+                            className="w-full px-3 py-2 bg-[#F4F5F8] border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
+                            disabled={!selectedClass}
+                        >
+                            <option value="">Select Section</option>
+                            {sections.map((section, index) => (
+                                <option key={index} value={section}>{section}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Exam Name */}
+                    <div>
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Exam Name</label>
+                        <input
+                            type="text"
+                            value={examName}
+                            onChange={(e) => setExamName(e.target.value)}
+                            placeholder="e.g., First Terminal"
+                            className="w-full px-3 py-2 bg-[#F4F5F8] border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
+                        />
+                    </div>
+
+                    {/* Exam Type */}
+                    <div>
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Exam Type</label>
+                        <select
+                            value={examType}
+                            onChange={(e) => setExamType(e.target.value)}
+                            className="w-full px-3 py-2 bg-[#F4F5F8] border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
+                        >
+                            <option value="">Select Type</option>
+                            <option value="Terminal">Terminal</option>
+                            <option value="Mid-Term">Mid-Term</option>
+                            <option value="Final">Final</option>
+                            <option value="Class Test">Class Test</option>
+                            <option value="Unit Test">Unit Test</option>
+                        </select>
+                    </div>
+
+                    {/* Academic Year */}
+                    <div>
+                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Academic Year</label>
+                        <input
+                            type="text"
+                            value={academicYear}
+                            onChange={(e) => setAcademicYear(e.target.value)}
+                            placeholder="2026"
+                            className="w-full px-3 py-2 bg-[#F4F5F8] border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
+                        />
+                    </div>
+                </div>
+            </div>
 
                 {/* Entry Mode */}
                 {viewMode === 'entry' && (
@@ -982,106 +991,114 @@ const MarksResultsPage = () => {
 
                         {/* Marks Entry Table */}
                         {students.length > 0 && (
-                            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
-                                    <h2 className="text-lg sm:text-xl font-bold text-blue-900">✍️ Marks Entry</h2>
+                            <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-6 sm:p-8">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                                    <h2 className="text-lg font-bold text-[#1E3A5F] font-heading flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                        Marks Entry
+                                    </h2>
                                     <button
                                         onClick={saveResults}
                                         disabled={loading}
-                                        className="px-6 py-2 sm:px-8 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all disabled:opacity-50 text-sm sm:text-base w-full sm:w-auto"
+                                        className="px-6 py-2.5 bg-[#1E3A5F] text-white rounded-xl font-semibold hover:bg-[#1E3A5F]/90 transition-all shadow-sm flex items-center gap-2 disabled:opacity-50 text-sm"
                                     >
-                                        {loading ? 'Saving...' : '💾 Save Results'}
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+                                        {loading ? 'Saving...' : 'Save All Results'}
                                     </button>
                                 </div>
 
-                                <div className="space-y-4">
+                                <div className="space-y-6">
                                     {marksData.map((student, studentIndex) => {
                                         const subjects = getSafeSubjects(student);
                                         const totals = calculateStudentTotal(student);
                                         return (
-                                            <div key={student.studentId} className="border-2 border-gray-200 rounded-lg overflow-hidden">
+                                            <div key={student.studentId} className="border border-gray-200 rounded-xl overflow-hidden hover:border-gray-300 transition-colors">
                                                 {/* Student Header */}
-                                                <div className="bg-blue-50 px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200">
+                                                <div className="bg-[#F8FAFC] px-5 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-gray-200">
                                                     <div className="flex items-center gap-3">
-                                                        <span className="text-xs font-bold text-gray-500 bg-white border border-gray-300 rounded px-2 py-0.5">Roll: {student.rollNumber}</span>
-                                                        <span className="text-sm font-bold text-blue-900">{student.studentName}</span>
+                                                        <span className="text-xs font-bold text-gray-500 bg-white border border-gray-200 rounded-md px-2.5 py-1 shadow-sm">Roll: {student.rollNumber}</span>
+                                                        <span className="text-base font-bold text-[#1E3A5F]">{student.studentName}</span>
                                                     </div>
-                                                    <div className="flex items-center gap-2 flex-wrap">
-                                                        <span className="text-xs text-gray-600 font-medium">{totals.totalObtained}/{totals.totalMarks}</span>
-                                                        <span className="text-xs font-bold text-blue-800">{totals.percentage}%</span>
-                                                        <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${
-                                                            totals.grade === 'A+' ? 'bg-green-100 text-green-800' :
-                                                            totals.grade === 'A' ? 'bg-blue-100 text-blue-800' :
-                                                            totals.grade === 'F' ? 'bg-red-100 text-red-800' :
-                                                            'bg-yellow-100 text-yellow-800'
+                                                    <div className="flex items-center gap-3 flex-wrap">
+                                                        <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
+                                                            <span className="text-xs text-gray-500 font-semibold uppercase">Total:</span>
+                                                            <span className="text-sm font-bold text-[#1E3A5F]">{totals.totalObtained}/{totals.totalMarks}</span>
+                                                        </div>
+                                                        <span className="text-sm font-bold text-[#1E3A5F] bg-white px-2.5 py-1.5 rounded-lg border border-gray-200 shadow-sm">{totals.percentage}%</span>
+                                                        <span className={`px-2.5 py-1.5 rounded-lg font-bold text-xs border ${
+                                                            totals.grade === 'A+' ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' :
+                                                            totals.grade === 'A' ? 'bg-blue-100 text-blue-700 border-blue-200' :
+                                                            totals.grade === 'F' ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20' :
+                                                            'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20'
                                                         }`}>{totals.grade}</span>
-                                                        <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${totals.status === 'Pass' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                                        <span className={`px-2.5 py-1.5 rounded-lg font-bold text-xs border ${totals.status === 'Pass' ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' : 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20'}`}>
                                                             {totals.status}
                                                         </span>
                                                         <button
                                                             onClick={() => saveStudentResult(studentIndex)}
                                                             disabled={savingIndex === studentIndex}
-                                                            className="px-3 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition-colors text-xs disabled:opacity-50"
+                                                            className="px-4 py-1.5 bg-[#10B981] text-white rounded-lg font-semibold hover:bg-[#10B981]/90 transition-colors text-xs disabled:opacity-50 shadow-sm flex items-center gap-1.5 ml-2"
                                                         >
-                                                            {savingIndex === studentIndex ? 'Saving...' : '💾 Save'}
+                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                                            {savingIndex === studentIndex ? 'Saving...' : 'Save'}
                                                         </button>
                                                     </div>
                                                 </div>
 
                                                 {/* Subjects Table */}
                                                 <div className="overflow-x-auto">
-                                                    <table className="w-full border-collapse text-xs sm:text-sm">
+                                                    <table className="w-full text-sm">
                                                         <thead>
-                                                            <tr className="bg-gray-100 text-gray-600">
-                                                                <th className="px-3 py-2 text-left font-semibold">#</th>
-                                                                <th className="px-3 py-2 text-left font-semibold">Subject Name</th>
-                                                                <th className="px-3 py-2 text-center font-semibold">Marks Obtained</th>
-                                                                <th className="px-3 py-2 text-center font-semibold">Total Marks</th>
-                                                                <th className="px-3 py-2 text-center font-semibold">Remove</th>
+                                                            <tr className="bg-white text-gray-500 border-b border-gray-100">
+                                                                <th className="px-5 py-3 text-left font-semibold text-xs uppercase tracking-wider">#</th>
+                                                                <th className="px-5 py-3 text-left font-semibold text-xs uppercase tracking-wider">Subject Name</th>
+                                                                <th className="px-5 py-3 text-center font-semibold text-xs uppercase tracking-wider">Marks Obtained</th>
+                                                                <th className="px-5 py-3 text-center font-semibold text-xs uppercase tracking-wider">Total Marks</th>
+                                                                <th className="px-5 py-3 text-center font-semibold text-xs uppercase tracking-wider">Remove</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody className="divide-y divide-gray-100">
                                                             {subjects.map((sub, subIndex) => (
-                                                                <tr key={subIndex} className={subIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                                    <td className="px-3 py-2 text-gray-400 font-bold">{subIndex + 1}</td>
-                                                                    <td className="px-3 py-2">
+                                                                <tr key={subIndex} className="bg-white hover:bg-gray-50/50 transition-colors">
+                                                                    <td className="px-5 py-3 text-gray-400 font-bold">{subIndex + 1}</td>
+                                                                    <td className="px-5 py-3">
                                                                         <input
                                                                             type="text"
                                                                             value={sub.subjectName}
                                                                             onChange={(e) => updateSubjectName(studentIndex, subIndex, e.target.value)}
-                                                                            className="w-full px-2 py-1.5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
-                                                                            placeholder="e.g. Bangla, English, Math"
+                                                                            className="w-full px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm font-medium text-[#1E3A5F]"
+                                                                            placeholder="e.g. Mathematics"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-center">
+                                                                    <td className="px-5 py-3 text-center">
                                                                         <input
                                                                             type="number"
                                                                             value={sub.marks}
                                                                             onChange={(e) => updateMarks(studentIndex, subIndex, e.target.value)}
-                                                                            className="w-20 px-2 py-1.5 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
+                                                                            className="w-24 px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg text-center focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm font-bold text-[#1E3A5F]"
                                                                             min="0"
                                                                             max={sub.totalMarks}
                                                                             placeholder="0"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-center">
+                                                                    <td className="px-5 py-3 text-center">
                                                                         <input
                                                                             type="number"
                                                                             value={sub.totalMarks}
                                                                             onChange={(e) => updateTotalMarks(studentIndex, subIndex, e.target.value)}
-                                                                            className="w-20 px-2 py-1.5 border-2 border-gray-300 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
+                                                                            className="w-24 px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg text-center focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm font-medium text-gray-500"
                                                                             min="1"
                                                                             placeholder="100"
                                                                         />
                                                                     </td>
-                                                                    <td className="px-3 py-2 text-center">
+                                                                    <td className="px-5 py-3 text-center">
                                                                         <button
                                                                             onClick={() => removeSubject(studentIndex, subIndex)}
                                                                             disabled={subjects.length === 1}
-                                                                            className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-600 hover:bg-red-200 font-bold text-base disabled:opacity-30 disabled:cursor-not-allowed transition-colors mx-auto"
+                                                                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#EF4444]/10 text-[#EF4444] hover:bg-[#EF4444]/20 font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-colors mx-auto"
                                                                             title="Remove subject"
                                                                         >
-                                                                            ×
+                                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                                                         </button>
                                                                     </td>
                                                                 </tr>
@@ -1091,12 +1108,13 @@ const MarksResultsPage = () => {
                                                 </div>
 
                                                 {/* Add Subject Button */}
-                                                <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+                                                <div className="px-5 py-3 bg-gray-50/50 border-t border-gray-100">
                                                     <button
                                                         onClick={() => addSubject(studentIndex)}
-                                                        className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded text-xs font-semibold hover:bg-blue-700 transition-colors"
+                                                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-[#1E3A5F] rounded-lg text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm"
                                                     >
-                                                        <span className="text-base leading-none">+</span> Add Subject
+                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                        Add Subject
                                                     </button>
                                                 </div>
                                             </div>
@@ -1113,168 +1131,182 @@ const MarksResultsPage = () => {
                     <>
                         {!selectedCard ? (
                             // Class/Section Cards View
-                            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
-                                    <h2 className="text-lg sm:text-xl font-bold text-blue-900">📚 Class & Section Results</h2>
+                            <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-6 sm:p-8">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                                    <h2 className="text-lg font-bold text-[#1E3A5F] font-heading flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                                        Class & Section Results
+                                    </h2>
                                     <button
                                         onClick={() => fetchResults()}
-                                        className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all text-sm sm:text-base w-full sm:w-auto"
+                                        className="px-6 py-2.5 bg-[#1E3A5F] text-white rounded-xl font-semibold hover:bg-[#1E3A5F]/90 transition-all text-sm shadow-sm flex items-center gap-2"
                                     >
-                                        🔍 View All Results
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                        View All Results
                                     </button>
                                 </div>
 
                                 {classSectionCards.length > 0 ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                                         {classSectionCards.map((card, index) => (
                                             <div
                                                 key={index}
                                                 onClick={() => handleCardClick(card)}
-                                                className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 cursor-pointer hover:shadow-lg transition-all hover:border-blue-400"
+                                                className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 cursor-pointer hover:shadow-md transition-all hover:border-[#1E3A5F]/30 group"
                                             >
-                                                <div className="flex items-center justify-between mb-3 sm:mb-4">
-                                                    <h3 className="text-lg sm:text-xl font-bold text-blue-900">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <h3 className="text-lg font-bold text-[#1E3A5F] font-heading group-hover:text-[#F59E0B] transition-colors">
                                                         {card.class} - {card.section}
                                                     </h3>
-                                                    <div className="text-xl sm:text-2xl">📊</div>
+                                                    <div className="w-10 h-10 bg-[#1E3A5F]/5 rounded-xl flex items-center justify-center group-hover:bg-[#F59E0B]/10 transition-colors">
+                                                        <svg className="w-5 h-5 text-[#1E3A5F] group-hover:text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                                                    </div>
                                                 </div>
                                                 
-                                                <div className="space-y-1 sm:space-y-2">
-                                                    <p className="text-xs sm:text-sm text-gray-600">
-                                                        <span className="font-semibold">Exam:</span> {card.examName}
+                                                <div className="space-y-2 bg-[#F8FAFC] p-4 rounded-xl border border-gray-50">
+                                                    <p className="text-xs text-gray-500 flex justify-between">
+                                                        <span className="font-semibold text-gray-600">Exam:</span> <span className="font-bold text-[#1E3A5F]">{card.examName}</span>
                                                     </p>
-                                                    <p className="text-xs sm:text-sm text-gray-600">
-                                                        <span className="font-semibold">Year:</span> {card.academicYear}
+                                                    <p className="text-xs text-gray-500 flex justify-between">
+                                                        <span className="font-semibold text-gray-600">Year:</span> <span className="font-bold text-[#1E3A5F]">{card.academicYear}</span>
                                                     </p>
-                                                    <p className="text-xs sm:text-sm text-gray-600">
-                                                        <span className="font-semibold">Students:</span> {card.totalStudents}
+                                                    <p className="text-xs text-gray-500 flex justify-between">
+                                                        <span className="font-semibold text-gray-600">Students:</span> <span className="font-bold text-[#1E3A5F]">{card.totalStudents}</span>
                                                     </p>
-                                                    <p className="text-xs sm:text-sm text-gray-600">
-                                                        <span className="font-semibold">Passed:</span> {card.passed} | 
-                                                        <span className="font-semibold"> Failed:</span> {card.failed}
+                                                    <p className="text-xs text-gray-500 flex justify-between">
+                                                        <span className="font-semibold text-gray-600">Passed:</span> <span className="font-bold text-[#10B981]">{card.passed}</span>
                                                     </p>
-                                                    <p className="text-xs sm:text-sm text-gray-600">
-                                                        <span className="font-semibold">Avg %:</span> {card.averagePercentage}%
+                                                    <p className="text-xs text-gray-500 flex justify-between">
+                                                        <span className="font-semibold text-gray-600">Failed:</span> <span className="font-bold text-[#EF4444]">{card.failed}</span>
                                                     </p>
-                                                </div>
-                                                
-                                                <div className="mt-3 sm:mt-4 text-center">
-                                                    <span className="inline-block px-3 py-1 sm:px-4 sm:py-2 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-colors text-xs sm:text-sm">
-                                                        View Details →
-                                                    </span>
+                                                    <p className="text-xs text-gray-500 flex justify-between pt-1 border-t border-gray-100 mt-1">
+                                                        <span className="font-semibold text-gray-600">Avg %:</span> <span className="font-bold text-[#1E3A5F]">{card.averagePercentage}%</span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center py-8 sm:py-12">
-                                        <div className="text-4xl sm:text-6xl mb-4">📊</div>
-                                        <h3 className="text-lg sm:text-2xl font-bold text-gray-800 mb-2">No Results Found</h3>
-                                        <p className="text-gray-600 text-sm sm:text-base">No results have been saved in the system yet</p>
+                                    <div className="text-center py-16">
+                                        <div className="w-20 h-20 bg-[#F8FAFC] rounded-full flex items-center justify-center mb-4 mx-auto border border-gray-100">
+                                            <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-[#1E3A5F] font-heading mb-1">No Results Found</h3>
+                                        <p className="text-gray-500 text-sm">No results have been saved in the system yet</p>
                                     </div>
                                 )}
                             </div>
                         ) : (
                             // Detailed Results View with Edit Capability
                             <>
-                                {/* Back Button */}
-                                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-                                    <button
-                                        onClick={() => setSelectedCard(null)}
-                                        className="px-4 py-2 sm:px-6 sm:py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition-all text-sm sm:text-base"
-                                    >
-                                        ← Back to Overview
-                                    </button>
-                                    <h2 className="text-lg sm:text-xl font-bold text-blue-900 mt-2 sm:mt-4">
-                                        📋 Results for {selectedCard.class} - {selectedCard.section} ({selectedCard.examName})
-                                    </h2>
-                                </div>
+                                {/* Back Button & Action Buttons Header */}
+                                <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-6 mb-6">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <button
+                                                onClick={() => setSelectedCard(null)}
+                                                className="w-10 h-10 flex items-center justify-center bg-gray-50 text-gray-600 rounded-xl hover:bg-gray-100 transition-colors border border-gray-200"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                                            </button>
+                                            <div>
+                                                <h2 className="text-xl font-bold text-[#1E3A5F] font-heading">
+                                                    Results for {selectedCard.class} - {selectedCard.section}
+                                                </h2>
+                                                <p className="text-sm text-gray-500 font-medium">Exam: {selectedCard.examName}</p>
+                                            </div>
+                                        </div>
 
-                                {/* Action Buttons */}
-                                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
-                                    <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center">
-                                        <button
-                                            onClick={exportToExcel}
-                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all text-sm sm:text-base w-full sm:w-auto"
-                                        >
-                                            📊 Export to Excel
-                                        </button>
-                                        <button
-                                            onClick={downloadPDF}
-                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all text-sm sm:text-base w-full sm:w-auto"
-                                        >
-                                            📄 Download PDF
-                                        </button>
-                                        <button
-                                            onClick={printResults}
-                                            className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all text-sm sm:text-base w-full sm:w-auto"
-                                        >
-                                            🖨️ Print Results
-                                        </button>
+                                        <div className="flex flex-row flex-wrap gap-3">
+                                            <button
+                                                onClick={exportToExcel}
+                                                className="px-4 py-2.5 bg-[#10B981] text-white rounded-xl font-semibold hover:bg-[#10B981]/90 transition-all text-sm shadow-sm flex items-center gap-2"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                                Export Excel
+                                            </button>
+                                            <button
+                                                onClick={downloadPDF}
+                                                className="px-4 py-2.5 bg-white text-[#EF4444] border border-[#EF4444]/20 rounded-xl font-semibold hover:bg-[#EF4444]/5 transition-all text-sm shadow-sm flex items-center gap-2"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                                PDF Report
+                                            </button>
+                                            <button
+                                                onClick={printResults}
+                                                className="px-4 py-2.5 bg-white text-[#1E3A5F] border border-gray-200 rounded-xl font-semibold hover:bg-gray-50 transition-all text-sm shadow-sm flex items-center gap-2"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                                                Print
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Statistics Cards */}
-                                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
-                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-3 sm:p-6">
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+                                    <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-5">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-gray-600 text-xs sm:text-sm">Total Students</p>
-                                                <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">{results.length}</p>
+                                                <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Total Students</p>
+                                                <p className="text-2xl font-bold text-[#1E3A5F] mt-1 font-heading">{results.length}</p>
                                             </div>
-                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded flex items-center justify-center">
-                                                <span className="text-blue-900 text-lg sm:text-xl">👥</span>
+                                            <div className="w-12 h-12 bg-[#1E3A5F]/10 rounded-xl flex items-center justify-center">
+                                                <svg className="w-6 h-6 text-[#1E3A5F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-3 sm:p-6">
+                                    <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-5">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-gray-600 text-xs sm:text-sm">Passed</p>
-                                                <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                                                <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Passed</p>
+                                                <p className="text-2xl font-bold text-[#10B981] mt-1 font-heading">
                                                     {results.filter(r => r.status === 'Pass').length}
                                                 </p>
                                             </div>
-                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded flex items-center justify-center">
-                                                <span className="text-blue-900 text-lg sm:text-xl">✅</span>
+                                            <div className="w-12 h-12 bg-[#10B981]/10 rounded-xl flex items-center justify-center">
+                                                <svg className="w-6 h-6 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-3 sm:p-6">
+                                    <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-5">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-gray-600 text-xs sm:text-sm">Failed</p>
-                                                <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
+                                                <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Failed</p>
+                                                <p className="text-2xl font-bold text-[#EF4444] mt-1 font-heading">
                                                     {results.filter(r => r.status === 'Fail').length}
                                                 </p>
                                             </div>
-                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded flex items-center justify-center">
-                                                <span className="text-blue-900 text-lg sm:text-xl">❌</span>
+                                            <div className="w-12 h-12 bg-[#EF4444]/10 rounded-xl flex items-center justify-center">
+                                                <svg className="w-6 h-6 text-[#EF4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-3 sm:p-6">
+                                    <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-5">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-gray-600 text-xs sm:text-sm">Average %</p>
-                                                <p className="text-lg sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
-                                                    {(results.reduce((sum, r) => sum + r.percentage, 0) / results.length).toFixed(2)}%
+                                                <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide">Average %</p>
+                                                <p className="text-2xl font-bold text-[#F59E0B] mt-1 font-heading">
+                                                    {(results.reduce((sum, r) => sum + r.percentage, 0) / (results.length || 1)).toFixed(2)}%
                                                 </p>
                                             </div>
-                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded flex items-center justify-center">
-                                                <span className="text-blue-900 text-lg sm:text-xl">📈</span>
+                                            <div className="w-12 h-12 bg-[#F59E0B]/10 rounded-xl flex items-center justify-center">
+                                                <svg className="w-6 h-6 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Results — card-based view + inline edit per student */}
-                                <div id="results-table-print" className="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6">
-                                    <h2 className="text-lg sm:text-xl font-bold text-blue-900 mb-4 sm:mb-6">📋 Student Results</h2>
-                                    <div className="space-y-4">
+                                <div id="results-table-print" className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-6">
+                                    <h2 className="text-lg font-bold text-[#1E3A5F] mb-6 font-heading flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-[#F59E0B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                                        Student Results
+                                    </h2>
+                                    <div className="space-y-5">
                                         {results.map((result, index) => {
                                             const resSubs = Array.isArray(result.subjects) && result.subjects.length
                                                 ? result.subjects
@@ -1291,84 +1323,91 @@ const MarksResultsPage = () => {
                                             const liveStatus = parseFloat(livePercentage) >= 33 ? 'Pass' : 'Fail';
 
                                             return (
-                                                <div key={result._id} className="border-2 border-gray-200 rounded-lg overflow-hidden">
+                                                <div key={result._id} className="border border-gray-200 rounded-xl overflow-hidden hover:border-[#1E3A5F]/30 transition-colors shadow-sm">
                                                     {/* Student header */}
-                                                    <div className={`px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 ${isEditing ? 'bg-blue-100' : 'bg-blue-50'}`}>
+                                                    <div className={`px-5 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 ${isEditing ? 'bg-[#F59E0B]/5' : 'bg-[#F8FAFC]'}`}>
                                                         <div className="flex items-center gap-3">
-                                                            <span className="text-xs font-bold text-gray-500 bg-white border border-gray-300 rounded px-2 py-0.5">#{index + 1}</span>
-                                                            <span className="text-xs font-bold text-gray-500 bg-white border border-gray-300 rounded px-2 py-0.5">Roll: {result.rollNumber}</span>
-                                                            <span className="text-sm font-bold text-blue-900">{result.studentName}</span>
+                                                            <div className="w-8 h-8 rounded-full bg-[#1E3A5F] text-white flex items-center justify-center font-bold text-xs">{index + 1}</div>
+                                                            <span className="text-xs font-bold text-gray-500 bg-white border border-gray-200 rounded-md px-2.5 py-1 shadow-sm">Roll: {result.rollNumber}</span>
+                                                            <span className="text-base font-bold text-[#1E3A5F]">{result.studentName}</span>
                                                         </div>
-                                                        <div className="flex items-center gap-2 flex-wrap">
-                                                            <span className="text-xs text-gray-600 font-medium">{liveTotalObtained}/{liveTotalMarks}</span>
-                                                            <span className="text-xs font-bold text-blue-800">{livePercentage}%</span>
-                                                            <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${
-                                                                liveGrade === 'A+' ? 'bg-green-100 text-green-800' :
-                                                                liveGrade === 'A' ? 'bg-blue-100 text-blue-800' :
-                                                                liveGrade === 'F' ? 'bg-red-100 text-red-800' :
-                                                                'bg-yellow-100 text-yellow-800'
+                                                        <div className="flex items-center gap-3 flex-wrap">
+                                                            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
+                                                                <span className="text-xs text-gray-500 font-semibold uppercase">Total:</span>
+                                                                <span className="text-sm font-bold text-[#1E3A5F]">{liveTotalObtained}/{liveTotalMarks}</span>
+                                                            </div>
+                                                            <span className="text-sm font-bold text-[#1E3A5F] bg-white px-2.5 py-1.5 rounded-lg border border-gray-200 shadow-sm">{livePercentage}%</span>
+                                                            <span className={`px-2.5 py-1.5 rounded-lg font-bold text-xs border ${
+                                                                liveGrade === 'A+' ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' :
+                                                                liveGrade === 'A' ? 'bg-blue-100 text-blue-700 border-blue-200' :
+                                                                liveGrade === 'F' ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20' :
+                                                                'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/20'
                                                             }`}>{liveGrade}</span>
-                                                            <span className={`px-2 py-0.5 rounded-full font-bold text-xs ${liveStatus === 'Pass' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                                            <span className={`px-2.5 py-1.5 rounded-lg font-bold text-xs border ${liveStatus === 'Pass' ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/20' : 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20'}`}>
                                                                 {liveStatus}
                                                             </span>
                                                             {isEditing ? (
-                                                                <>
+                                                                <div className="flex gap-2 ml-2">
                                                                     <button
                                                                         onClick={() => {
                                                                             updateResult(result._id, { ...result, subjects: editedSubs });
                                                                             setEditedResults(prev => { const c = { ...prev }; delete c[result._id]; return c; });
                                                                         }}
-                                                                        className="px-3 py-1 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition-colors text-xs"
+                                                                        className="px-4 py-1.5 bg-[#10B981] text-white rounded-lg font-semibold hover:bg-[#10B981]/90 transition-colors text-xs flex items-center gap-1.5 shadow-sm"
                                                                     >
-                                                                        ✓ Save
+                                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                                                        Save
                                                                     </button>
                                                                     <button
                                                                         onClick={() => setEditedResults(prev => { const c = { ...prev }; delete c[result._id]; return c; })}
-                                                                        className="px-3 py-1 bg-gray-400 text-white rounded font-semibold hover:bg-gray-500 transition-colors text-xs"
+                                                                        className="px-4 py-1.5 bg-white border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-xs flex items-center gap-1.5 shadow-sm"
                                                                     >
-                                                                        ✕ Cancel
+                                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                                        Cancel
                                                                     </button>
-                                                                </>
+                                                                </div>
                                                             ) : (
-                                                                <>
+                                                                <div className="flex gap-2 ml-2">
                                                                     <button
                                                                         onClick={() => downloadStudentCard(result)}
-                                                                        className="px-3 py-1 bg-purple-600 text-white rounded font-semibold hover:bg-purple-700 transition-colors text-xs"
+                                                                        className="px-3 py-1.5 bg-white text-[#1E3A5F] border border-gray-200 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-xs flex items-center gap-1.5 shadow-sm"
                                                                         title="Download Result Card PDF"
                                                                     >
-                                                                        📥 Card
+                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                                                        Card
                                                                     </button>
                                                                     <button
                                                                         onClick={() => setEditedResults(prev => ({
                                                                             ...prev,
                                                                             [result._id]: { subjects: resSubs.map(s => ({ ...s })) }
                                                                         }))}
-                                                                        className="px-3 py-1 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-colors text-xs"
+                                                                        className="px-3 py-1.5 bg-[#1E3A5F]/10 text-[#1E3A5F] rounded-lg font-semibold hover:bg-[#1E3A5F]/20 transition-colors text-xs flex items-center gap-1.5"
                                                                     >
-                                                                        ✏️ Edit
+                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                                        Edit
                                                                     </button>
-                                                                </>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     </div>
 
                                                     {/* Subjects table */}
                                                     <div className="overflow-x-auto">
-                                                        <table className="w-full border-collapse text-xs sm:text-sm">
+                                                        <table className="w-full text-sm">
                                                             <thead>
-                                                                <tr className="bg-gray-100 text-gray-600">
-                                                                    <th className="px-3 py-2 text-left font-semibold">#</th>
-                                                                    <th className="px-3 py-2 text-left font-semibold">Subject Name</th>
-                                                                    <th className="px-3 py-2 text-center font-semibold">Marks</th>
-                                                                    <th className="px-3 py-2 text-center font-semibold">Total</th>
-                                                                    {isEditing && <th className="px-3 py-2 text-center font-semibold">Remove</th>}
+                                                                <tr className="bg-white text-gray-500 border-b border-gray-100">
+                                                                    <th className="px-5 py-3 text-left font-semibold text-xs uppercase tracking-wider">#</th>
+                                                                    <th className="px-5 py-3 text-left font-semibold text-xs uppercase tracking-wider">Subject Name</th>
+                                                                    <th className="px-5 py-3 text-center font-semibold text-xs uppercase tracking-wider">Marks</th>
+                                                                    <th className="px-5 py-3 text-center font-semibold text-xs uppercase tracking-wider">Total</th>
+                                                                    {isEditing && <th className="px-5 py-3 text-center font-semibold text-xs uppercase tracking-wider">Remove</th>}
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody className="divide-y divide-gray-50">
                                                                 {(isEditing ? editedSubs : resSubs).map((sub, si) => (
-                                                                    <tr key={si} className={si % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                                        <td className="px-3 py-2 text-gray-400 font-bold">{si + 1}</td>
-                                                                        <td className="px-3 py-2">
+                                                                    <tr key={si} className="bg-white hover:bg-gray-50/50 transition-colors">
+                                                                        <td className="px-5 py-3 text-gray-400 font-bold">{si + 1}</td>
+                                                                        <td className="px-5 py-3">
                                                                             {isEditing ? (
                                                                                 <input
                                                                                     type="text"
@@ -1377,14 +1416,14 @@ const MarksResultsPage = () => {
                                                                                         const n = editedSubs.map((s, i) => i === si ? { ...s, subjectName: e.target.value } : s);
                                                                                         setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
                                                                                     }}
-                                                                                    className="w-full px-2 py-1.5 border-2 border-blue-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs sm:text-sm"
+                                                                                    className="w-full px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm font-medium text-[#1E3A5F]"
                                                                                     placeholder="Subject Name"
                                                                                 />
                                                                             ) : (
-                                                                                <span className="font-medium">{sub.subjectName}</span>
+                                                                                <span className="font-bold text-[#1E3A5F]">{sub.subjectName}</span>
                                                                             )}
                                                                         </td>
-                                                                        <td className="px-3 py-2 text-center">
+                                                                        <td className="px-5 py-3 text-center">
                                                                             {isEditing ? (
                                                                                 <input
                                                                                     type="number"
@@ -1393,14 +1432,14 @@ const MarksResultsPage = () => {
                                                                                         const n = editedSubs.map((s, i) => i === si ? { ...s, marks: e.target.value } : s);
                                                                                         setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
                                                                                     }}
-                                                                                    className="w-20 px-2 py-1.5 border-2 border-blue-300 rounded text-center focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+                                                                                    className="w-24 px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg text-center focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm font-bold text-[#1E3A5F]"
                                                                                     min="0"
                                                                                 />
                                                                             ) : (
-                                                                                <span className="font-semibold text-blue-800">{sub.marks}</span>
+                                                                                <span className="font-bold text-[#1E3A5F]">{sub.marks}</span>
                                                                             )}
                                                                         </td>
-                                                                        <td className="px-3 py-2 text-center">
+                                                                        <td className="px-5 py-3 text-center">
                                                                             {isEditing ? (
                                                                                 <input
                                                                                     type="number"
@@ -1409,15 +1448,15 @@ const MarksResultsPage = () => {
                                                                                         const n = editedSubs.map((s, i) => i === si ? { ...s, totalMarks: parseInt(e.target.value) || 100 } : s);
                                                                                         setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
                                                                                     }}
-                                                                                    className="w-20 px-2 py-1.5 border-2 border-blue-300 rounded text-center focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+                                                                                    className="w-24 px-3 py-2 bg-[#F8FAFC] border border-gray-200 rounded-lg text-center focus:ring-2 focus:ring-[#1E3A5F]/20 focus:border-[#1E3A5F] outline-none text-sm font-medium text-gray-500"
                                                                                     min="1"
                                                                                 />
                                                                             ) : (
-                                                                                <span className="text-gray-600">{sub.totalMarks}</span>
+                                                                                <span className="text-gray-500 font-medium">{sub.totalMarks}</span>
                                                                             )}
                                                                         </td>
                                                                         {isEditing && (
-                                                                            <td className="px-3 py-2 text-center">
+                                                                            <td className="px-5 py-3 text-center">
                                                                                 <button
                                                                                     onClick={() => {
                                                                                         if (editedSubs.length === 1) return;
@@ -1425,9 +1464,9 @@ const MarksResultsPage = () => {
                                                                                         setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
                                                                                     }}
                                                                                     disabled={editedSubs.length === 1}
-                                                                                    className="w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-600 hover:bg-red-200 font-bold text-base disabled:opacity-30 disabled:cursor-not-allowed transition-colors mx-auto"
+                                                                                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#EF4444]/10 text-[#EF4444] hover:bg-[#EF4444]/20 font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-colors mx-auto"
                                                                                 >
-                                                                                    ×
+                                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                                                                 </button>
                                                                             </td>
                                                                         )}
@@ -1439,15 +1478,16 @@ const MarksResultsPage = () => {
 
                                                     {/* Add subject — only in edit mode */}
                                                     {isEditing && (
-                                                        <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+                                                        <div className="px-5 py-3 bg-gray-50/50 border-t border-gray-100">
                                                             <button
                                                                 onClick={() => {
                                                                     const n = [...editedSubs, { subjectName: '', marks: '', totalMarks: 100 }];
                                                                     setEditedResults(prev => ({ ...prev, [result._id]: { subjects: n } }));
                                                                 }}
-                                                                className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded text-xs font-semibold hover:bg-blue-700 transition-colors"
+                                                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-[#1E3A5F] rounded-lg text-xs font-bold hover:bg-gray-50 transition-colors shadow-sm"
                                                             >
-                                                                <span className="text-base leading-none">+</span> Add Subject
+                                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                                Add Subject
                                                             </button>
                                                         </div>
                                                     )}
@@ -1568,22 +1608,25 @@ const MarksResultsPage = () => {
 
                 {/* Empty State */}
                 {viewMode === 'view' && !selectedCard && classSectionCards.length === 0 && (
-                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8 sm:p-12 text-center">
-                        <div className="text-4xl sm:text-6xl mb-4">📊</div>
-                        <h3 className="text-lg sm:text-xl font-bold text-blue-900 mb-2">No Results Found</h3>
-                        <p className="text-gray-600 text-sm sm:text-base">No results have been saved in the system yet</p>
+                    <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-12 sm:p-16 text-center">
+                        <div className="w-20 h-20 bg-[#F8FAFC] rounded-full flex items-center justify-center mb-4 mx-auto border border-gray-100">
+                            <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        </div>
+                        <h3 className="text-xl font-bold text-[#1E3A5F] font-heading mb-2">No Results Found</h3>
+                        <p className="text-gray-500">No results have been saved in the system yet</p>
                     </div>
                 )}
 
                 {viewMode === 'entry' && students.length === 0 && selectedClass && selectedSection && (
-                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8 sm:p-12 text-center">
-                        <div className="text-4xl sm:text-6xl mb-4">👥</div>
-                        <h3 className="text-lg sm:text-xl font-bold text-blue-900 mb-2">No Students Found</h3>
-                        <p className="text-gray-600 text-sm sm:text-base">No active students in selected class and section</p>
+                    <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-12 sm:p-16 text-center">
+                        <div className="w-20 h-20 bg-[#F8FAFC] rounded-full flex items-center justify-center mb-4 mx-auto border border-gray-100">
+                            <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                        </div>
+                        <h3 className="text-xl font-bold text-[#1E3A5F] font-heading mb-2">No Students Found</h3>
+                        <p className="text-gray-500">No active students in selected class and section</p>
                     </div>
                 )}
             </div>
-        </div>
     );
 };
 

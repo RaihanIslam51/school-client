@@ -22,7 +22,7 @@ const AboutPage = () => {
     return (
         <div className="min-h-screen bg-[#F9FAFB] font-[Inter,sans-serif] text-[#374151]">
             {/* Hero Section */}
-            <div className="relative bg-[#132348] overflow-hidden py-16 md:py-24 border-b border-white/10">
+            <div className="relative bg-[#132348] overflow-hidden py-10 sm:py-16 md:py-24 border-b border-white/10">
                 {/* Background Blobs */}
                 <div className="absolute top-[-20%] left-[-10%] w-[400px] h-[400px] rounded-full bg-[#1a2e5a]/50 blur-[100px] pointer-events-none"></div>
                 <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#f5a623]/10 blur-[120px] pointer-events-none"></div>
@@ -44,15 +44,15 @@ const AboutPage = () => {
             </div>
 
             {/* Stats Section */}
-            <div className="py-12 md:py-20 bg-white border-b border-[#E5E7EB]">
+            <div className="py-10 sm:py-12 md:py-20 bg-white border-b border-[#E5E7EB]">
                 <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                         {stats.map((stat, index) => (
-                            <div key={index} className="text-center group bg-[#F9FAFB] border border-[#E5E7EB] rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
-                                <div className="w-14 h-14 sm:w-16 md:w-20 bg-[#1a2e5a] border-2 border-[#f5a623]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform duration-300">
-                                    <span className="text-base sm:text-lg md:text-xl font-black text-[#f5a623]">{stat.number}</span>
+                            <div key={index} className="text-center group bg-[#F9FAFB] border border-[#E5E7EB] rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                                <div className="w-12 h-12 sm:w-16 md:w-20 bg-[#1a2e5a] border-2 border-[#f5a623]/20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-105 transition-transform duration-300">
+                                    <span className="text-sm sm:text-lg md:text-xl font-black text-[#f5a623]">{stat.number}</span>
                                 </div>
-                                <h3 className="text-xs sm:text-sm font-extrabold text-[#1F2937] uppercase tracking-wider">{stat.label}</h3>
+                                <h3 className="text-[10px] sm:text-xs font-extrabold text-[#1F2937] uppercase tracking-wider">{stat.label}</h3>
                             </div>
                         ))}
                     </div>
@@ -60,11 +60,11 @@ const AboutPage = () => {
             </div>
 
             {/* Mission & Vision */}
-            <div className="py-12 md:py-20 bg-[#F9FAFB]">
+            <div className="py-10 sm:py-12 md:py-20 bg-[#F9FAFB]">
                 <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-stretch">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-stretch">
                         <div className="space-y-6 flex flex-col justify-between">
-                            <div className="bg-white border border-[#E5E7EB] p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col justify-center">
+                            <div className="bg-white border border-[#E5E7EB] p-5 sm:p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col justify-center">
                                 <div className="flex items-center mb-6">
                                     <div className="w-12 h-12 bg-[#1a2e5a]/10 border border-[#f5a623]/25 rounded-xl flex items-center justify-center mr-4 text-[#f5a623]">
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +78,7 @@ const AboutPage = () => {
                                 </p>
                             </div>
 
-                            <div className="bg-white border border-[#E5E7EB] p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col justify-center mt-6 lg:mt-0">
+                            <div className="bg-white border border-[#E5E7EB] p-5 sm:p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex-1 flex flex-col justify-center mt-6 lg:mt-0">
                                 <div className="flex items-center mb-6">
                                     <div className="w-12 h-12 bg-[#1a2e5a]/10 border border-[#f5a623]/25 rounded-xl flex items-center justify-center mr-4 text-[#f5a623]">
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,7 +94,7 @@ const AboutPage = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white border border-[#E5E7EB] p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-center">
+                        <div className="bg-white border border-[#E5E7EB] p-5 sm:p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-center">
                             <h3 className="text-2xl font-extrabold text-[#1F2937] tracking-tight mb-6">{t('about.whyTitle')}</h3>
                             <ul className="space-y-4">
                                 {[
@@ -116,15 +116,15 @@ const AboutPage = () => {
             </div>
 
             {/* History Section */}
-            <div className="py-12 md:py-20 bg-white border-y border-[#E5E7EB]">
+            <div className="py-10 sm:py-12 md:py-20 bg-white border-y border-[#E5E7EB]">
                 <div className="container mx-auto px-4">
                     <div className="max-w-6xl mx-auto">
-                        <div className="text-center mb-12 md:mb-16">
+                        <div className="text-center mb-8 sm:mb-12 md:mb-16">
                             <h2 className="text-3xl md:text-4xl font-extrabold text-[#1F2937] tracking-tight mb-4">{t('about.legacy.title')}</h2>
                             <p className="text-sm sm:text-base md:text-lg text-[#6B7280] max-w-3xl mx-auto">{t('about.legacy.subtitle')}</p>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch">
                             <div className="space-y-6 flex flex-col justify-between">
                                 {[
                                     { yearKey: '1995', title: t('about.history.1995.title'), text: t('about.history.1995.text') },
@@ -141,7 +141,7 @@ const AboutPage = () => {
                                 ))}
                             </div>
 
-                            <div className="bg-[#132348] border border-[#f5a623]/15 p-6 sm:p-8 rounded-2xl text-white flex flex-col justify-between relative overflow-hidden shadow-xl">
+                            <div className="bg-[#132348] border border-[#f5a623]/15 p-5 sm:p-8 rounded-2xl text-white flex flex-col justify-between relative overflow-hidden shadow-xl">
                                 {/* Gradient Blobs */}
                                 <div className="absolute top-[-30%] right-[-20%] w-60 h-60 rounded-full bg-[#f5a623]/10 blur-[80px] pointer-events-none"></div>
                                 <div className="absolute bottom-[-30%] left-[-20%] w-60 h-60 rounded-full bg-[#1a2e5a]/40 blur-[80px] pointer-events-none"></div>
@@ -167,9 +167,9 @@ const AboutPage = () => {
             </div>
 
             {/* Academic Programs */}
-            <div className="py-12 md:py-20 bg-[#F9FAFB]">
+            <div className="py-10 sm:py-12 md:py-20 bg-[#F9FAFB]">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12 md:mb-16">
+                    <div className="text-center mb-8 sm:mb-12 md:mb-16">
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#1F2937] tracking-tight mb-4">{t('about.programs.title')}</h2>
                         <p className="text-sm sm:text-base md:text-lg text-[#6B7280] max-w-3xl mx-auto">{t('about.programs.subtitle')}</p>
                     </div>
@@ -225,9 +225,9 @@ const AboutPage = () => {
             </div>
 
             {/* Achievements Section */}
-            <div className="py-12 md:py-20 bg-white">
+            <div className="py-10 sm:py-12 md:py-20 bg-white">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12 md:mb-16">
+                    <div className="text-center mb-8 sm:mb-12 md:mb-16">
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#1F2937] tracking-tight mb-4">{t('achievements.title')}</h2>
                         <p className="text-sm sm:text-base md:text-lg text-[#6B7280] max-w-3xl mx-auto">{t('achievements.subtitle')}</p>
                     </div>
@@ -247,9 +247,9 @@ const AboutPage = () => {
             </div>
 
             {/* Facilities */}
-            <div className="py-12 md:py-20 bg-[#F9FAFB] border-t border-[#E5E7EB]">
+            <div className="py-10 sm:py-12 md:py-20 bg-[#F9FAFB] border-t border-[#E5E7EB]">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12 md:mb-16">
+                    <div className="text-center mb-8 sm:mb-12 md:mb-16">
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#1F2937] tracking-tight mb-4">{t('facilities.title')}</h2>
                         <p className="text-sm sm:text-base md:text-lg text-[#6B7280] max-w-3xl mx-auto">{t('facilities.subtitle')}</p>
                     </div>
@@ -276,9 +276,9 @@ const AboutPage = () => {
             </div>
 
             {/* Core Values */}
-            <div className="py-12 md:py-20 bg-white border-b border-[#E5E7EB]">
+            <div className="py-10 sm:py-12 md:py-20 bg-white border-b border-[#E5E7EB]">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12 md:mb-16">
+                    <div className="text-center mb-8 sm:mb-12 md:mb-16">
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#1F2937] tracking-tight mb-4">{t('about.coreValues.title')}</h2>
                         <p className="text-sm sm:text-base md:text-lg text-[#6B7280] max-w-3xl mx-auto">{t('about.coreValues.subtitle')}</p>
                     </div>
@@ -304,9 +304,9 @@ const AboutPage = () => {
             </div>
 
             {/* Contact Information */}
-            <div className="py-12 md:py-20 bg-[#F9FAFB]">
+            <div className="py-10 sm:py-12 md:py-20 bg-[#F9FAFB]">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12 md:mb-16">
+                    <div className="text-center mb-8 sm:mb-12 md:mb-16">
                         <h2 className="text-3xl md:text-4xl font-extrabold text-[#1F2937] tracking-tight mb-4">{t('contact.title')}</h2>
                         <p className="text-sm sm:text-base md:text-lg text-[#6B7280] max-w-3xl mx-auto">{t('about.contactSubtitle')}</p>
                     </div>

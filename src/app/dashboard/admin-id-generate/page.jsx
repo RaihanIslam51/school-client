@@ -35,7 +35,7 @@ function buildIdCardHtml(student, tpl) {
         : `<div style="width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.2);border:3px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:34px;color:#fff;font-weight:800;letter-spacing:-1px;">${(student.name||'S')[0].toUpperCase()}</div>`;
 
     return `
-<div style="width:360px;font-family:'Tiro Bangla','Tiro Bangla Static',serif;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.18);border:1px solid #e2e8f0;background:#fff;">
+<div style="width:360px;font-family:'Sora',sans-serif;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.18);border:1px solid #e2e8f0;background:#fff;">
 
   <!-- top gradient header -->
   <div style="background:linear-gradient(135deg,${tpl.color} 0%,${tpl.accent} 100%);padding:22px 20px 56px;position:relative;text-align:center;">
@@ -118,7 +118,7 @@ function buildAdmitCardHtml(student, exam, tpl) {
     </tr>`).join('');
 
     return `
-<div style="width:700px;font-family:'Tiro Bangla','Tiro Bangla Static',serif;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.16);border:2px solid ${tpl.color};background:#fff;">
+<div style="width:700px;font-family:'Sora',sans-serif;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.16);border:2px solid ${tpl.color};background:#fff;">
 
   <!-- top bar -->
   <div style="height:6px;background:linear-gradient(90deg,${tpl.color},${tpl.accent},${tpl.color});"></div>

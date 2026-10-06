@@ -269,7 +269,7 @@ export default function AdminManagement() {
             printDiv.style.top = '-9999px';
             printDiv.style.width = '800px';
             printDiv.style.backgroundColor = 'white';
-            printDiv.style.fontFamily = "'Tiro Bangla','Tiro Bangla Static',serif";
+            printDiv.style.fontFamily = "'Sora', sans-serif";
             printDiv.innerHTML = `
                 <div style="padding: 30px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; text-align: center; margin-bottom: 20px;">
                     <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Sunlight School</h1>

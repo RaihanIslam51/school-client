@@ -85,9 +85,9 @@ export default memo(function StudentFees() {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Paid': return 'text-green-600 bg-green-50 border-green-200';
-            case 'Partial': return 'text-orange-600 bg-orange-50 border-orange-200';
-            case 'Pending': return 'text-red-600 bg-red-50 border-red-200';
+            case 'Paid': return 'text-[#10B981] bg-[#10B981]/10 border-[#10B981]/20';
+            case 'Partial': return 'text-[#FF5500] bg-[#FF5500]/10 border-[#FF5500]/20';
+            case 'Pending': return 'text-[#EF4444] bg-[#EF4444]/10 border-[#EF4444]/20';
             default: return 'text-gray-600 bg-gray-50 border-gray-200';
         }
     };
@@ -104,164 +104,164 @@ export default memo(function StudentFees() {
     const generatePDF = async (fee) => {
         try {
             setGeneratingPDF(true);
-            
+
             // Create a new jsPDF instance
             const pdf = new jsPDF();
-            
+
             // Set font
             pdf.setFont('helvetica');
-            
+
             // Add border/frame
             pdf.setDrawColor(0, 0, 0);
             pdf.setLineWidth(0.5);
             pdf.rect(10, 10, 190, 277);
-            
+
             // Add inner border for content
             pdf.setLineWidth(0.2);
             pdf.rect(15, 15, 180, 267);
-            
+
             // School Header with professional styling
             pdf.setFontSize(22);
             pdf.setFont('helvetica', 'bold');
-            pdf.setTextColor(0, 0, 0);
-            pdf.text('SCHOOL MANAGEMENT SYSTEM', 105, 30, { align: 'center' });
-            
+            pdf.setTextColor(11, 15, 40);
+            pdf.text('SALMELA INTERNATIONAL SCHOOL', 105, 30, { align: 'center' });
+
             // Add underline for header
             pdf.setLineWidth(0.5);
             pdf.line(50, 35, 160, 35);
-            
+
             pdf.setFontSize(18);
             pdf.setFont('helvetica', 'bold');
             pdf.text('PAYMENT RECEIPT', 105, 50, { align: 'center' });
-            
+
             // Receipt details box
             pdf.setDrawColor(0, 0, 0);
             pdf.setLineWidth(0.2);
             pdf.rect(20, 60, 170, 15);
-            
+
             pdf.setFontSize(11);
             pdf.setFont('helvetica', 'normal');
             pdf.text(`Receipt No: ${fee.receiptNumber}`, 25, 70);
             pdf.text(`Date: ${formatDate(fee.paymentDate)}`, 140, 70);
-            
+
             // Student Information Section
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
             pdf.text('STUDENT INFORMATION', 20, 90);
-            
+
             // Student info box
             pdf.setDrawColor(0, 0, 0);
             pdf.setLineWidth(0.2);
             pdf.rect(20, 95, 170, 25);
-            
+
             pdf.setFontSize(10);
             pdf.setFont('helvetica', 'normal');
             pdf.text(`Student Name: ${fee.studentName}`, 25, 105);
             pdf.text(`Roll Number: ${fee.rollNumber}`, 25, 115);
             pdf.text(`Class & Section: ${fee.class} - ${fee.section}`, 120, 105);
             pdf.text(`Academic Year: ${fee.academicYear}`, 120, 115);
-            
+
             // Payment Information Section
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
             pdf.text('PAYMENT DETAILS', 20, 135);
-            
+
             // Payment info box
             pdf.setDrawColor(0, 0, 0);
             pdf.setLineWidth(0.2);
             pdf.rect(20, 140, 170, 20);
-            
+
             pdf.setFontSize(10);
             pdf.setFont('helvetica', 'normal');
             pdf.text(`Payment Method: ${fee.paymentMethod}`, 25, 150);
             pdf.text(`Payment Status: ${fee.status}`, 120, 150);
-            
+
             if (fee.transactionId) {
                 pdf.text(`Transaction ID: ${fee.transactionId}`, 25, 160);
             }
-            
+
             // Fee Breakdown Section
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
             pdf.text('FEE BREAKDOWN', 20, 175);
-            
+
             // Fee breakdown table
             pdf.setDrawColor(0, 0, 0);
             pdf.setLineWidth(0.2);
             pdf.rect(20, 180, 170, 40);
-            
+
             // Table headers
             pdf.setFontSize(10);
             pdf.setFont('helvetica', 'bold');
             pdf.text('Fee Category', 25, 190);
             pdf.text('Amount', 150, 190);
-            
+
             // Table line
             pdf.line(20, 195, 190, 195);
-            
+
             // Fee items
             let yPosition = 205;
             pdf.setFont('helvetica', 'normal');
-            
+
             if (fee.fees && fee.fees.length > 0) {
                 fee.fees.forEach((feeItem, index) => {
                     pdf.text(`${feeItem.feeCategory}`, 25, yPosition);
                     pdf.text(`৳${formatAmount(feeItem.amount)}`, 150, yPosition);
                     yPosition += 8;
-                    
+
                     // Add line between items if not last
                     if (index < fee.fees.length - 1) {
                         pdf.line(20, yPosition - 3, 190, yPosition - 3);
                     }
                 });
             }
-            
+
             // Payment Summary Section
             pdf.setFontSize(14);
             pdf.setFont('helvetica', 'bold');
             pdf.text('PAYMENT SUMMARY', 20, 235);
-            
+
             // Summary box
             pdf.setDrawColor(0, 0, 0);
             pdf.setLineWidth(0.2);
             pdf.rect(20, 240, 170, 25);
-            
+
             pdf.setFontSize(10);
             pdf.setFont('helvetica', 'bold');
             pdf.text(`Total Amount: ৳${formatAmount(fee.totalAmount)}`, 25, 250);
             pdf.text(`Paid Amount: ৳${formatAmount(fee.paidAmount)}`, 25, 258);
             pdf.text(`Due Amount: ৳${formatAmount(fee.dueAmount)}`, 25, 266);
-            
+
             // Remarks Section (if any)
             let remarksY = 275;
             if (fee.remarks) {
                 pdf.setFontSize(10);
                 pdf.setFont('helvetica', 'bold');
                 pdf.text('REMARKS:', 20, remarksY);
-                
+
                 pdf.setFont('helvetica', 'normal');
                 const splitRemarks = pdf.splitTextToSize(fee.remarks, 160);
                 pdf.text(splitRemarks, 20, remarksY + 8);
-                
+
                 remarksY += 20 + (splitRemarks.length * 5);
             }
-            
+
             // Professional Footer
             pdf.setFontSize(8);
             pdf.setFont('helvetica', 'italic');
             pdf.setTextColor(100, 100, 100);
-            
+
             const footerY = remarksY + 10;
             pdf.text('This is a computer generated receipt and does not require signature.', 105, footerY, { align: 'center' });
             pdf.text('Generated by School Management System on ' + new Date().toLocaleDateString(), 105, footerY + 5, { align: 'center' });
-            
+
             // Add school contact info
             pdf.setFontSize(7);
             pdf.text('For any queries, please contact school administration.', 105, footerY + 12, { align: 'center' });
-            
+
             // Save the PDF
             pdf.save(`receipt_${fee.receiptNumber}.pdf`);
-            
+
         } catch (error) {
             console.error('Error generating PDF:', error);
             alert('Error generating PDF. Please try again.');
@@ -283,11 +283,11 @@ export default memo(function StudentFees() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 p-1 sm:p-2 lg:p-3">
-                <div className="max-w-6xl mx-auto">
+            <div className="min-h-screen bg-[#F4F5F8] p-4 sm:p-6 lg:p-8">
+                <div className="container mx-auto max-w-5xl">
                     <div className="text-center py-12">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">Loading fee records...</p>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF5500] mx-auto"></div>
+                        <p className="mt-4 text-gray-500 font-medium">Loading fee records...</p>
                     </div>
                 </div>
             </div>
@@ -295,98 +295,106 @@ export default memo(function StudentFees() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-1 sm:p-2 lg:p-3">
+        <div className="min-h-screen bg-[#F4F5F8] p-1 sm:p-2 lg:p-3 font-sans">
             <div className="container mx-auto">
                 {/* Header */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
-                    <h1 className="text-2xl lg:text-3xl font-bold text-blue-900 mb-2">
-                        💰 My Fee Records
-                    </h1>
-                    <p className="text-gray-600">
-                        View your fee payment history and outstanding amounts
-                    </p>
+                <div className="bg-white border border-gray-200/80 rounded-2xl p-4 sm:p-5 mb-4 sm:mb-5 shadow-sm relative overflow-hidden">
+                    <div className="relative z-10">
+                        <h1 className="text-xl lg:text-2xl font-extrabold text-[#0B0F28] mb-1 tracking-tight">
+                            💰 My Fee Records
+                        </h1>
+                        <p className="text-gray-500 font-medium text-xs sm:text-sm">
+                            View your fee payment history and outstanding amounts
+                        </p>
+                    </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#0B0F28]/5 rounded-bl-full -mr-8 -mt-8 z-0"></div>
                 </div>
 
                 {/* Summary Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white border border-gray-200 rounded-lg p-6">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-3xl">💵</span>
-                            <span className="text-2xl font-bold text-gray-900">৳{formatAmount(summary.totalAmount)}</span>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm flex flex-col justify-center relative overflow-hidden group">
+                        <div className="flex items-center justify-between mb-3 relative z-10">
+                            <span className="text-3xl opacity-80">💵</span>
+                            <span className="text-2xl font-extrabold text-[#0B0F28]">৳{formatAmount(summary.totalAmount)}</span>
                         </div>
-                        <h3 className="text-gray-900 font-semibold">Total Amount</h3>
-                        <p className="text-gray-600 text-sm">All time fees</p>
+                        <h3 className="text-gray-500 font-semibold text-xs mb-1 relative z-10 uppercase tracking-wide">Total Amount</h3>
+                        <p className="text-[#0B0F28]/70 text-xs font-semibold relative z-10">All time fees</p>
+                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-[#0B0F28]/5 rounded-full transition-transform group-hover:scale-110 z-0"></div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-lg p-6">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-3xl">✅</span>
-                            <span className="text-2xl font-bold text-green-600">৳{formatAmount(summary.totalPaid)}</span>
+                    <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.08)] flex flex-col justify-center relative overflow-hidden group">
+                        <div className="flex items-center justify-between mb-3 relative z-10">
+                            <span className="text-3xl opacity-80">✅</span>
+                            <span className="text-2xl font-bold text-[#10B981] font-heading">৳{formatAmount(summary.totalPaid)}</span>
                         </div>
-                        <h3 className="text-gray-900 font-semibold">Total Paid</h3>
-                        <p className="text-gray-600 text-sm">Amount paid</p>
+                        <h3 className="text-gray-500 font-medium text-sm mb-1 relative z-10 uppercase tracking-wide">Total Paid</h3>
+                        <p className="text-[#10B981]/80 text-xs font-semibold relative z-10">Amount paid</p>
+                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-[#10B981]/5 rounded-full transition-transform group-hover:scale-110 z-0"></div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-lg p-6">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-3xl">⏳</span>
-                            <span className="text-2xl font-bold text-red-600">৳{formatAmount(summary.totalDue)}</span>
+                    <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.08)] flex flex-col justify-center relative overflow-hidden group">
+                        <div className="flex items-center justify-between mb-3 relative z-10">
+                            <span className="text-3xl opacity-80">⏳</span>
+                            <span className="text-2xl font-bold text-[#EF4444] font-heading">৳{formatAmount(summary.totalDue)}</span>
                         </div>
-                        <h3 className="text-gray-900 font-semibold">Total Due</h3>
-                        <p className="text-gray-600 text-sm">Outstanding amount</p>
+                        <h3 className="text-gray-500 font-medium text-sm mb-1 relative z-10 uppercase tracking-wide">Total Due</h3>
+                        <p className="text-[#EF4444]/80 text-xs font-semibold relative z-10">Outstanding amount</p>
+                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-[#EF4444]/5 rounded-full transition-transform group-hover:scale-110 z-0"></div>
                     </div>
                 </div>
 
                 {/* Fee Records */}
                 {error ? (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                    <div className="bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-2xl p-6 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
                         <div className="text-4xl mb-4">⚠️</div>
-                        <h3 className="text-lg font-semibold text-red-900 mb-2">Error Loading Fee Records</h3>
-                        <p className="text-red-700 mb-4">{error}</p>
+                        <h3 className="text-lg font-bold text-[#EF4444] mb-2 font-heading">Error Loading Fee Records</h3>
+                        <p className="text-[#EF4444]/80 mb-4">{error}</p>
                         <button
                             onClick={() => currentStudent && fetchStudentFees(currentStudent._id)}
-                            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+                            className="bg-[#EF4444] text-white px-5 py-2.5 rounded-xl hover:bg-red-600 transition-colors font-semibold shadow-sm"
                         >
-                            Try Again
+                            🔄 Try Again
                         </button>
                     </div>
                 ) : fees.length === 0 ? (
-                    <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
+                    <div className="bg-white border border-gray-100 rounded-2xl p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
                         <div className="text-6xl mb-4">📄</div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No Fee Records Found</h3>
-                        <p className="text-gray-600 mb-4">
+                        <h3 className="text-xl font-bold text-[#0B0F28] mb-2 font-heading">No Fee Records Found</h3>
+                        <p className="text-gray-500 mb-6">
                             Your fee records will appear here once payments are processed by the school administration.
                         </p>
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left max-w-md mx-auto">
-                            <h4 className="font-semibold text-blue-900 mb-2">💡 Note for Testing:</h4>
-                            <p className="text-sm text-blue-800">
+                        <div className="bg-[#0B0F28]/5 border border-[#0B0F28]/10 rounded-xl p-5 text-left max-w-md mx-auto">
+                            <h4 className="font-bold text-[#0B0F28] mb-2 font-heading flex items-center gap-2">
+                                <span>💡</span> Note for Testing:
+                            </h4>
+                            <p className="text-sm text-[#0B0F28]/80 leading-relaxed">
                                 If you are testing this feature, fee records need to be created by an administrator through the admin panel or by using the fee management system.
                             </p>
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         {fees.map((fee) => (
-                            <div key={fee._id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                            <div key={fee._id} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-md transition-shadow">
                                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
                                     <div className="flex-1">
-                                        <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-start justify-between mb-6">
                                             <div>
-                                                <h3 className="text-xl font-bold text-gray-900 mb-1">
+                                                <h3 className="text-xl font-bold text-[#0B0F28] mb-1 font-heading">
                                                     Receipt #{fee.receiptNumber}
                                                 </h3>
-                                                <p className="text-blue-900 font-medium mb-2">
+                                                <p className="text-[#FF5500] font-semibold">
                                                     {fee.academicYear} - {fee.feeMonth || 'Full Year'}
                                                 </p>
                                             </div>
-                                            <div className="flex flex-col items-end gap-2">
-                                                <span className={`px-4 py-2 rounded-full text-sm font-bold border ${getStatusColor(fee.status)}`}>
+                                            <div className="flex flex-col items-end gap-3">
+                                                <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${getStatusColor(fee.status)} shadow-sm`}>
                                                     {getStatusIcon(fee.status)} {fee.status}
                                                 </span>
                                                 <button
                                                     onClick={() => generatePDF(fee)}
                                                     disabled={generatingPDF}
-                                                    className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900 disabled:bg-gray-500 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none"
+                                                    className="bg-[#FF5500] text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-[#FF5500]/90 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 disabled:transform-none"
                                                     title="Download Professional PDF Receipt"
                                                 >
                                                     {generatingPDF ? (
@@ -410,40 +418,40 @@ export default memo(function StudentFees() {
                                         </div>
 
                                         {/* Fee Breakdown */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                                            <div className="bg-gray-50 rounded-lg p-3">
-                                                <p className="text-sm text-gray-600 font-medium">Total Amount</p>
-                                                <p className="text-lg font-bold text-gray-900">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                            <div className="bg-[#F8FAFC] border border-gray-100 rounded-xl p-4">
+                                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Total Amount</p>
+                                                <p className="text-xl font-bold text-[#0B0F28] font-heading">
                                                     ৳{formatAmount(fee.totalAmount)}
                                                 </p>
                                             </div>
-                                            <div className="bg-gray-50 rounded-lg p-3">
-                                                <p className="text-sm text-gray-600 font-medium">Paid Amount</p>
-                                                <p className="text-lg font-bold text-green-600">
+                                            <div className="bg-[#10B981]/5 border border-[#10B981]/10 rounded-xl p-4">
+                                                <p className="text-xs text-[#10B981]/70 font-bold uppercase tracking-wide mb-1">Paid Amount</p>
+                                                <p className="text-xl font-bold text-[#10B981] font-heading">
                                                     ৳{formatAmount(fee.paidAmount)}
                                                 </p>
                                             </div>
-                                            <div className="bg-gray-50 rounded-lg p-3">
-                                                <p className="text-sm text-gray-600 font-medium">Due Amount</p>
-                                                <p className="text-lg font-bold text-red-600">
+                                            <div className="bg-[#EF4444]/5 border border-[#EF4444]/10 rounded-xl p-4">
+                                                <p className="text-xs text-[#EF4444]/70 font-bold uppercase tracking-wide mb-1">Due Amount</p>
+                                                <p className="text-xl font-bold text-[#EF4444] font-heading">
                                                     ৳{formatAmount(fee.dueAmount)}
                                                 </p>
                                             </div>
-                                            <div className="bg-gray-50 rounded-lg p-3">
-                                                <p className="text-sm text-gray-600 font-medium">Payment Date</p>
-                                                <p className="text-lg font-bold text-gray-900">{formatDate(fee.paymentDate)}</p>
+                                            <div className="bg-[#F8FAFC] border border-gray-100 rounded-xl p-4">
+                                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide mb-1">Payment Date</p>
+                                                <p className="text-lg font-bold text-[#0B0F28]">{formatDate(fee.paymentDate)}</p>
                                             </div>
                                         </div>
 
                                         {/* Fee Categories */}
                                         {fee.fees && fee.fees.length > 0 && (
-                                            <div className="mb-4">
-                                                <h4 className="text-sm font-semibold text-gray-900 mb-2">Fee Breakdown:</h4>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            <div className="mb-6 bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+                                                <h4 className="text-sm font-bold text-[#0B0F28] mb-3 uppercase tracking-wide">Fee Breakdown:</h4>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                                     {fee.fees.map((feeItem, index) => (
-                                                        <div key={index} className="flex justify-between items-center bg-gray-50 rounded p-2">
-                                                            <span className="text-sm text-gray-700">{feeItem.feeCategory}</span>
-                                                            <span className="text-sm font-medium text-gray-900">
+                                                        <div key={index} className="flex justify-between items-center bg-[#F8FAFC] border border-gray-100 rounded-lg p-2.5">
+                                                            <span className="text-sm text-gray-600 font-medium">{feeItem.feeCategory}</span>
+                                                            <span className="text-sm font-bold text-[#0B0F28]">
                                                                 ৳{formatAmount(feeItem.amount)}
                                                             </span>
                                                         </div>
@@ -453,30 +461,30 @@ export default memo(function StudentFees() {
                                         )}
 
                                         {/* Additional Details */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm bg-[#F8FAFC] p-4 rounded-xl border border-gray-100">
                                             <div>
-                                                <span className="font-medium text-gray-900">Class:</span>
-                                                <p className="text-gray-600">{fee.class} - {fee.section}</p>
+                                                <span className="text-xs text-gray-500 font-medium block mb-0.5">Class</span>
+                                                <p className="font-semibold text-[#0B0F28]">{fee.class} - {fee.section}</p>
                                             </div>
                                             <div>
-                                                <span className="font-medium text-gray-900">Roll Number:</span>
-                                                <p className="text-gray-600">{fee.rollNumber}</p>
+                                                <span className="text-xs text-gray-500 font-medium block mb-0.5">Roll Number</span>
+                                                <p className="font-semibold text-[#0B0F28]">{fee.rollNumber}</p>
                                             </div>
                                             <div>
-                                                <span className="font-medium text-gray-900">Payment Method:</span>
-                                                <p className="text-gray-600">{fee.paymentMethod}</p>
+                                                <span className="text-xs text-gray-500 font-medium block mb-0.5">Payment Method</span>
+                                                <p className="font-semibold text-[#0B0F28]">{fee.paymentMethod}</p>
                                             </div>
                                             {fee.transactionId && (
                                                 <div>
-                                                    <span className="font-medium text-gray-900">Transaction ID:</span>
-                                                    <p className="text-gray-600">{fee.transactionId}</p>
+                                                    <span className="text-xs text-gray-500 font-medium block mb-0.5">Transaction ID</span>
+                                                    <p className="font-semibold text-[#0B0F28]">{fee.transactionId}</p>
                                                 </div>
                                             )}
                                         </div>
 
                                         {fee.remarks && (
-                                            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                                                <p className="text-sm text-blue-900">
+                                            <div className="mt-5 p-4 bg-[#FF5500]/5 border border-[#FF5500]/20 rounded-xl">
+                                                <p className="text-sm text-[#FF5500] font-medium">
                                                     <strong>Note:</strong> {fee.remarks}
                                                 </p>
                                             </div>

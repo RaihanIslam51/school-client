@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { API_URL } from '../../../../config/api';
 import Swal from 'sweetalert2';
 
@@ -9,6 +9,15 @@ export default function ExamManagement() {
     const [loading, setLoading] = useState(false);
     const [teachers, setTeachers] = useState([]);
     const [scheduleViewMode, setScheduleViewMode] = useState('edit'); // 'edit' or 'view'
+
+    // Search query for Exam List filtering
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // Track active editing state for Exam Setup
+    const [editingExamId, setEditingExamId] = useState(null);
+
+    // Form validation errors state
+    const [errors, setErrors] = useState({});
 
     // Exam Setup State
     const [examSetup, setExamSetup] = useState({
@@ -22,14 +31,20 @@ export default function ExamManagement() {
         passMarks: '',
         startDate: '',
         endDate: '',
-        status: 'Draft'
+        status: 'Draft',
+        // Optional local UI states
+        duration: '120',
+        description: ''
     });
 
     // Subject Schedule State
     const [subjects, setSubjects] = useState([]);
-    const [selectedExam, setSelectedExam] = useState(null);
+    const [selectedExam, setSelectedExam] = useState('');
 
-    // Mark Distribution State
+    // Mark Distribution Local State for Tab 3 Inline Editing
+    const [distributions, setDistributions] = useState([]);
+
+    // Mark Distribution Legacy State (Retained to prevent reference crashes)
     const [markDistribution, setMarkDistribution] = useState({
         examId: '',
         subject: '',
@@ -59,9 +74,32 @@ export default function ExamManagement() {
         if (selectedExam) {
             fetchExamDetails(selectedExam);
         } else {
-            setSubjects([]); // Clear subjects when no exam selected
+            setSubjects([]);
         }
     }, [selectedExam]);
+
+    // Load and sync mark distributions for Tab 3
+    useEffect(() => {
+        if (selectedExam && activeTab === 'marks') {
+            const exam = exams.find(e => e._id === selectedExam);
+            if (exam) {
+                const initialDist = (exam.subjects || []).map(subject => {
+                    const existing = (exam.markDistribution || []).find(md => md.subject === subject.subjectName);
+                    return {
+                        subject: subject.subjectName,
+                        fullMarks: existing ? existing.mcq : 100, // Map Full Marks to mcq
+                        passMarks: existing ? existing.viva : 33,  // Map Pass Marks to viva
+                        practicalMarks: existing ? existing.practical : 0, // Practical
+                        theoryMarks: existing ? existing.written : 0, // Written
+                        isOptional: existing ? existing.isOptional : false
+                    };
+                });
+                setDistributions(initialDist);
+            }
+        } else if (!selectedExam) {
+            setDistributions([]);
+        }
+    }, [selectedExam, activeTab, exams]);
 
     const fetchExams = async () => {
         try {
@@ -75,7 +113,6 @@ export default function ExamManagement() {
             }
         } catch (error) {
             console.error('Error fetching exams:', error);
-            // Don't show error on initial load, just log it
             if (error.message !== 'Failed to fetch') {
                 Swal.fire({
                     icon: 'error',
@@ -99,7 +136,6 @@ export default function ExamManagement() {
             }
         } catch (error) {
             console.error('Error fetching teachers:', error);
-            // Silently fail - teachers are optional for initial setup
         }
     };
 
@@ -111,11 +147,10 @@ export default function ExamManagement() {
             }
             const data = await response.json();
             if (data.success) {
-                // Add id to each subject for local management
                 const subjectsWithIds = data.data.subjects.map((subject, index) => ({
                     ...subject,
-                    id: subject._id || `existing-${index}-${Date.now()}`, // Use _id if available, else generate
-                    examDate: subject.examDate ? new Date(subject.examDate).toISOString().split('T')[0] : '' // Format date for input
+                    id: subject._id || `existing-${index}-${Date.now()}`,
+                    examDate: subject.examDate ? new Date(subject.examDate).toISOString().split('T')[0] : ''
                 }));
                 setSubjects(subjectsWithIds);
             }
@@ -132,40 +167,28 @@ export default function ExamManagement() {
 
     const handleExamSetupSubmit = async (e) => {
         e.preventDefault();
-        
-        // Check all required fields
-        if (!examSetup.examName || !examSetup.class || !examSetup.section || 
-            !examSetup.academicYear || !examSetup.examCategory || 
-            !examSetup.totalMarks || !examSetup.passMarks || 
-            !examSetup.startDate || !examSetup.endDate) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Missing Information',
-                text: 'Please fill all required fields',
-                customClass: { container: 'swal-high-z-index' }
-            });
-            return;
+
+        // Client-side Validation without alert()
+        let tempErrors = {};
+        if (!examSetup.examName) tempErrors.examName = "Exam Title is required";
+        if (!examSetup.class) tempErrors.class = "Class is required";
+        if (!examSetup.section) tempErrors.section = "Section is required";
+        if (!examSetup.academicYear) tempErrors.academicYear = "Term/Session is required";
+        if (!examSetup.totalMarks) tempErrors.totalMarks = "Total Marks is required";
+        if (!examSetup.passMarks) tempErrors.passMarks = "Pass Marks is required";
+        if (!examSetup.startDate) tempErrors.startDate = "Start Date is required";
+        if (!examSetup.endDate) tempErrors.endDate = "End Date is required";
+
+        if (examSetup.passMarks && examSetup.totalMarks && parseInt(examSetup.passMarks) > parseInt(examSetup.totalMarks)) {
+            tempErrors.passMarks = "Pass marks cannot exceed total marks";
         }
 
-        // Validate pass marks
-        if (parseInt(examSetup.passMarks) > parseInt(examSetup.totalMarks)) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Invalid Marks',
-                text: 'Pass marks cannot be greater than total marks',
-                customClass: { container: 'swal-high-z-index' }
-            });
-            return;
+        if (examSetup.startDate && examSetup.endDate && new Date(examSetup.startDate) > new Date(examSetup.endDate)) {
+            tempErrors.endDate = "End date must be after start date";
         }
 
-        // Validate dates
-        if (new Date(examSetup.startDate) > new Date(examSetup.endDate)) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Invalid Dates',
-                text: 'End date must be after start date',
-                customClass: { container: 'swal-high-z-index' }
-            });
+        if (Object.keys(tempErrors).length > 0) {
+            setErrors(tempErrors);
             return;
         }
 
@@ -176,9 +199,13 @@ export default function ExamManagement() {
                 totalMarks: parseInt(examSetup.totalMarks),
                 passMarks: parseInt(examSetup.passMarks)
             };
-            
-            const response = await fetch(`${API_URL}/api/exams`, {
-                method: 'POST',
+
+            const isEditing = !!editingExamId;
+            const url = isEditing ? `${API_URL}/api/exams/${editingExamId}` : `${API_URL}/api/exams`;
+            const method = isEditing ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(examData)
             });
@@ -189,7 +216,7 @@ export default function ExamManagement() {
                 await Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: 'Exam created successfully',
+                    text: isEditing ? 'Exam updated successfully' : 'Exam created successfully',
                     timer: 2000,
                     showConfirmButton: false,
                     customClass: { container: 'swal-high-z-index' }
@@ -206,18 +233,23 @@ export default function ExamManagement() {
                     passMarks: '',
                     startDate: '',
                     endDate: '',
-                    status: 'Draft'
+                    status: 'Draft',
+                    duration: '120',
+                    description: ''
                 });
-                setActiveTab('list');
+                setErrors({});
+                setEditingExamId(null);
+                setSelectedExam(data.data._id || editingExamId);
+                setActiveTab('schedule'); // Save & Continue moves to Subject Schedule automatically
             } else {
-                throw new Error(data.message || 'Failed to create exam');
+                throw new Error(data.message || 'Failed to save exam');
             }
         } catch (error) {
-            console.error('Error creating exam:', error);
+            console.error('Error saving exam:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: error.message || 'Failed to create exam',
+                text: error.message || 'Failed to save exam',
                 customClass: { container: 'swal-high-z-index' }
             });
         } finally {
@@ -232,7 +264,7 @@ export default function ExamManagement() {
             examDate: '',
             startTime: '',
             endTime: '',
-            duration: '',
+            duration: examSetup.duration || '120',
             room: '',
             invigilator: ''
         }]);
@@ -259,8 +291,7 @@ export default function ExamManagement() {
             return;
         }
 
-        // Validate subjects
-        const validSubjects = subjects.filter(subject => 
+        const validSubjects = subjects.filter(subject =>
             subject.subjectName && subject.examDate && subject.startTime && subject.endTime && subject.duration
         );
 
@@ -274,7 +305,6 @@ export default function ExamManagement() {
             return;
         }
 
-        // Process subjects data for API
         const processedSubjects = validSubjects.map(subject => ({
             subjectName: subject.subjectName,
             examDate: new Date(subject.examDate),
@@ -294,7 +324,7 @@ export default function ExamManagement() {
             });
 
             const data = await response.json();
-            
+
             if (data.success) {
                 await Swal.fire({
                     icon: 'success',
@@ -305,7 +335,8 @@ export default function ExamManagement() {
                     customClass: { container: 'swal-high-z-index' }
                 });
                 setSubjects([]);
-                fetchExams(); // Refresh exam list to show updated data
+                fetchExams();
+                setActiveTab('marks'); // Moves to next logical step
             } else {
                 throw new Error(data.message || 'Failed to save schedule');
             }
@@ -322,51 +353,69 @@ export default function ExamManagement() {
         }
     };
 
-    const handleMarkDistributionSubmit = async (e) => {
-        e.preventDefault();
-        
+    // Redesigned Mark Distribution Submission logic (saves all rows dynamically)
+    const handleSaveAllDistributions = async () => {
+        if (!selectedExam) return;
+
+        // Auto-validate: Pass Marks <= Full Marks
+        const hasInvalid = distributions.some(d => parseInt(d.passMarks) > parseInt(d.fullMarks));
+        if (hasInvalid) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validation Warning',
+                text: 'Some subjects have pass marks exceeding full marks. Please correct them.',
+                customClass: { container: 'swal-high-z-index' }
+            });
+            return;
+        }
+
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/api/exams/marks-distribution`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(markDistribution)
-            });
+            for (const dist of distributions) {
+                const payload = {
+                    examId: selectedExam,
+                    subject: dist.subject,
+                    written: parseInt(dist.theoryMarks) || 0, // Theory
+                    mcq: parseInt(dist.fullMarks) || 0,       // Full Marks mapped to mcq
+                    practical: parseInt(dist.practicalMarks) || 0, // Practical
+                    viva: parseInt(dist.passMarks) || 0,      // Pass Marks mapped to viva
+                    isOptional: dist.isOptional || false
+                };
 
-            const data = await response.json();
-            
-            if (data.success) {
-                await Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Mark distribution saved successfully',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    customClass: { container: 'swal-high-z-index' }
-                });
-                // Refresh exams list to show updated mark distributions
-                await fetchExams();
-                setMarkDistribution({
-                    examId: '',
-                    subject: '',
-                    written: '',
-                    mcq: '',
-                    practical: '',
-                    viva: '',
-                    isOptional: false
+                await fetch(`${API_URL}/api/exams/marks-distribution`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
             }
+
+            await Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Mark distribution saved successfully',
+                timer: 2000,
+                showConfirmButton: false,
+                customClass: { container: 'swal-high-z-index' }
+            });
+            fetchExams();
+            setActiveTab('list'); // Transition to final tab
         } catch (error) {
             console.error('Error saving mark distribution:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to save mark distribution',
+                text: 'Failed to save mark distributions',
                 customClass: { container: 'swal-high-z-index' }
             });
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleMarkDistributionSubmit = async (e) => {
+        e.preventDefault();
+        // Fallback legacy handler (for compatibility)
+        handleSaveAllDistributions();
     };
 
     const updateExamStatus = async (examId, newStatus) => {
@@ -378,7 +427,7 @@ export default function ExamManagement() {
             });
 
             const data = await response.json();
-            
+
             if (data.success) {
                 await Swal.fire({
                     icon: 'success',
@@ -475,7 +524,7 @@ export default function ExamManagement() {
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
                     await Swal.fire({
                         icon: 'success',
@@ -493,164 +542,249 @@ export default function ExamManagement() {
         }
     };
 
+    const handleEditExam = (exam) => {
+        setEditingExamId(exam._id);
+        setExamSetup({
+            examName: exam.examName || '',
+            examType: exam.examType || 'Mid Term',
+            academicYear: exam.academicYear || '',
+            class: exam.class || '',
+            section: exam.section || '',
+            examCategory: exam.examCategory || 'Written',
+            totalMarks: exam.totalMarks ? exam.totalMarks.toString() : '',
+            passMarks: exam.passMarks ? exam.passMarks.toString() : '',
+            startDate: exam.startDate ? new Date(exam.startDate).toISOString().split('T')[0] : '',
+            endDate: exam.endDate ? new Date(exam.endDate).toISOString().split('T')[0] : '',
+            status: exam.status || 'Draft',
+            duration: '120',
+            description: ''
+        });
+        setErrors({});
+        setActiveTab('setup');
+    };
+
+    // Filter exams based on search bar
+    const filteredExams = useMemo(() => {
+        return exams.filter(exam => {
+            const query = searchQuery.toLowerCase();
+            return (
+                (exam.examName || '').toLowerCase().includes(query) ||
+                (exam.class || '').toLowerCase().includes(query) ||
+                (exam.examType || '').toLowerCase().includes(query)
+            );
+        });
+    }, [exams, searchQuery]);
+
+    // Sum of all full marks for Mark Distribution tab
+    const totalFullMarks = useMemo(() => {
+        return distributions.reduce((sum, d) => sum + (parseInt(d.fullMarks) || 0), 0);
+    }, [distributions]);
+
     return (
-        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
+        <div className="min-h-screen bg-slate-50/50 p-3 sm:p-6 font-sans">
             <style jsx global>{`
                 .swal-high-z-index {
                     z-index: 10000 !important;
                 }
+                .scrollbar-none::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollbar-none {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
             `}</style>
-            <div className="container mx-auto bg-white border border-gray-200 rounded-lg shadow-sm">
-                {/* Header */}
-                <div className="border-b border-gray-200 p-4 sm:p-6">
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c] mb-1 sm:mb-2">
-                        Exam Management System
-                    </h2>
-                    <p className="text-sm sm:text-base text-black">Professional exam setup, scheduling & mark distribution</p>
-                </div>
 
+            <div className="container mx-auto bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
+                {/* Header Section */}
+                <div className="border-b border-slate-100 bg-white px-6 py-6 sm:px-8">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h2 className="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
+                                Exam Management
+                            </h2>
+                            <p className="text-sm text-slate-500 mt-1">Configure parameters, set timetables, manage mark keys, and generate schedules.</p>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Tab Navigation */}
-                <div className="flex flex-wrap gap-1 sm:gap-2 border-b border-gray-300 p-3 sm:p-4 lg:p-6">
-                    <button
-                        onClick={() => setActiveTab('setup')}
-                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
-                            activeTab === 'setup'
-                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
-                                : 'bg-white text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                        Exam Setup
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('schedule')}
-                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
-                            activeTab === 'schedule'
-                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
-                                : 'bg-white text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                        Subject Schedule
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('marks')}
-                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
-                            activeTab === 'marks'
-                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
-                                : 'bg-white text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                        Mark Distribution
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('list')}
-                        className={`px-3 sm:px-4 lg:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all ${
-                            activeTab === 'list'
-                                ? 'bg-blue-900 text-white border-b-2 border-blue-900'
-                                : 'bg-white text-gray-700 hover:bg-gray-50'
-                        }`}
-                    >
-                        Exam List
-                    </button>
+                <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-3 sm:px-8">
+                    <nav className="flex space-x-1 overflow-x-auto scrollbar-none pb-1 sm:pb-0" aria-label="Tabs">
+                        {[
+                            { id: 'setup', name: 'Exam Setup' },
+                            { id: 'schedule', name: 'Subject Schedule' },
+                            { id: 'marks', name: 'Mark Distribution' },
+                            { id: 'list', name: 'Exam List' }
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-150 whitespace-nowrap ${activeTab === tab.id
+                                    ? 'bg-blue-900 text-white shadow-sm'
+                                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                    }`}
+                            >
+                                {tab.name}
+                            </button>
+                        ))}
+                    </nav>
                 </div>
 
-                {/* Content Area */}
-                <div className="p-4 sm:p-6">
-                    {/* Exam Setup Tab */}
+                {/* Tab Content Panels */}
+                <div className="p-6 sm:p-8">
+
+                    {/* Tab 1: Exam Setup */}
                     {activeTab === 'setup' && (
-                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
-                            <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">
-                                Create New Exam
-                            </h3>
-                            
-                            <form onSubmit={handleExamSetupSubmit}>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                                    <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Name *</label>
+                        <div className="max-w-4xl mx-auto">
+                            <div className="mb-6 flex justify-between items-center">
+                                <div>
+                                    <h3 className="text-lg font-bold text-slate-800">
+                                        {editingExamId ? 'Edit Exam Setup' : 'Exam Setup'}
+                                    </h3>
+                                    <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Specify basic parameters, category, and threshold metrics.</p>
+                                </div>
+                                {editingExamId && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setEditingExamId(null);
+                                            setExamSetup({
+                                                examName: '',
+                                                examType: 'Mid Term',
+                                                academicYear: new Date().getFullYear().toString(),
+                                                class: '',
+                                                section: '',
+                                                examCategory: 'Written',
+                                                totalMarks: '',
+                                                passMarks: '',
+                                                startDate: '',
+                                                endDate: '',
+                                                status: 'Draft',
+                                                duration: '120',
+                                                description: ''
+                                            });
+                                            setErrors({});
+                                        }}
+                                        className="px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold rounded-lg transition-colors"
+                                    >
+                                        Cancel Edit
+                                    </button>
+                                )}
+                            </div>
+
+                            <form onSubmit={handleExamSetupSubmit} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                                    {/* Exam Title - Full Width */}
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Exam Title *</label>
                                         <input
                                             type="text"
                                             value={examSetup.examName}
-                                            onChange={(e) => setExamSetup({...examSetup, examName: e.target.value})}
-                                            placeholder="e.g., Mid Term Exam 2024"
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, examName: e.target.value });
+                                                if (errors.examName) setErrors({ ...errors, examName: null });
+                                            }}
+                                            placeholder="e.g., Mid Term Exam 2026"
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.examName ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
                                         />
+                                        {errors.examName && <p className="text-red-500 text-xs mt-1">{errors.examName}</p>}
                                     </div>
 
+                                    {/* Class */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Type *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Class *</label>
                                         <select
-                                            value={examSetup.examType}
-                                            onChange={(e) => setExamSetup({...examSetup, examType: e.target.value})}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
+                                            value={examSetup.class}
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, class: e.target.value });
+                                                if (errors.class) setErrors({ ...errors, class: null });
+                                            }}
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.class ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
                                         >
-                                            <option value="Mid Term">Mid Term</option>
-                                            <option value="Final">Final</option>
-                                            <option value="Class Test">Class Test</option>
-                                            <option value="Monthly Test">Monthly Test</option>
-                                            <option value="Half Yearly">Half Yearly</option>
+                                            <option value="">Select Class</option>
+                                            {['Play', 'Nursery', 'KG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'].map(cls => (
+                                                <option key={cls} value={cls}>{cls}</option>
+                                            ))}
                                         </select>
+                                        {errors.class && <p className="text-red-500 text-xs mt-1">{errors.class}</p>}
                                     </div>
 
+                                    {/* Section */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Academic Year *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Section *</label>
+                                        <select
+                                            value={examSetup.section}
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, section: e.target.value });
+                                                if (errors.section) setErrors({ ...errors, section: null });
+                                            }}
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.section ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
+                                        >
+                                            <option value="">Select Section</option>
+                                            {['A', 'B', 'C', 'D'].map(sec => (
+                                                <option key={sec} value={sec}>{sec}</option>
+                                            ))}
+                                        </select>
+                                        {errors.section && <p className="text-red-500 text-xs mt-1">{errors.section}</p>}
+                                    </div>
+
+                                    {/* Term/Session */}
+                                    <div>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Term/Session *</label>
                                         <input
                                             type="text"
                                             value={examSetup.academicYear}
-                                            onChange={(e) => setExamSetup({...examSetup, academicYear: e.target.value})}
-                                            placeholder="2024-2025"
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, academicYear: e.target.value });
+                                                if (errors.academicYear) setErrors({ ...errors, academicYear: null });
+                                            }}
+                                            placeholder="e.g., 2026-2027"
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.academicYear ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
                                         />
+                                        {errors.academicYear && <p className="text-red-500 text-xs mt-1">{errors.academicYear}</p>}
                                     </div>
 
+                                    {/* Exam Type - Pill Selector */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Class *</label>
-                                        <select
-                                            value={examSetup.class}
-                                            onChange={(e) => setExamSetup({...examSetup, class: e.target.value})}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
-                                        >
-                                            <option value="">Select Class</option>
-                                            <option value="Play">Play</option>
-                                            <option value="Nursery">Nursery</option>
-                                            <option value="KG">KG</option>
-                                            <option value="Class 1">Class 1</option>
-                                            <option value="Class 2">Class 2</option>
-                                            <option value="Class 3">Class 3</option>
-                                            <option value="Class 4">Class 4</option>
-                                            <option value="Class 5">Class 5</option>
-                                            <option value="Class 6">Class 6</option>
-                                            <option value="Class 7">Class 7</option>
-                                            <option value="Class 8">Class 8</option>
-                                            <option value="Class 9">Class 9</option>
-                                            <option value="Class 10">Class 10</option>
-                                        </select>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">Exam Type *</label>
+                                        <div className="flex flex-wrap gap-2 py-1">
+                                            {[
+                                                { label: 'Half-Yearly', val: 'Half Yearly' },
+                                                { label: 'Final', val: 'Final' },
+                                                { label: 'Unit Test', val: 'Class Test' },
+                                                { label: 'Mock', val: 'Monthly Test' }
+                                            ].map((type) => {
+                                                const isSelected = examSetup.examType === type.val;
+                                                return (
+                                                    <button
+                                                        key={type.val}
+                                                        type="button"
+                                                        onClick={() => setExamSetup({ ...examSetup, examType: type.val })}
+                                                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-150 ${isSelected
+                                                            ? 'bg-blue-900 text-white border-blue-900'
+                                                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                                                            }`}
+                                                    >
+                                                        {type.label}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
 
+                                    {/* Exam Category */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Section *</label>
-                                        <select
-                                            value={examSetup.section}
-                                            onChange={(e) => setExamSetup({...examSetup, section: e.target.value})}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
-                                        >
-                                            <option value="">Select Section</option>
-                                            <option value="A">A</option>
-                                            <option value="B">B</option>
-                                            <option value="C">C</option>
-                                            <option value="D">D</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Category *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Exam Category *</label>
                                         <select
                                             value={examSetup.examCategory}
-                                            onChange={(e) => setExamSetup({...examSetup, examCategory: e.target.value})}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
+                                            onChange={(e) => setExamSetup({ ...examSetup, examCategory: e.target.value })}
+                                            className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all"
                                         >
                                             <option value="Written">Written</option>
                                             <option value="MCQ">MCQ</option>
@@ -660,58 +794,91 @@ export default function ExamManagement() {
                                         </select>
                                     </div>
 
+                                    {/* Total Duration */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Total Marks *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Default Duration (minutes)</label>
+                                        <input
+                                            type="number"
+                                            value={examSetup.duration}
+                                            onChange={(e) => setExamSetup({ ...examSetup, duration: e.target.value })}
+                                            placeholder="120"
+                                            className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all"
+                                        />
+                                    </div>
+
+                                    {/* Total Marks */}
+                                    <div>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Total Marks *</label>
                                         <input
                                             type="number"
                                             value={examSetup.totalMarks}
-                                            onChange={(e) => setExamSetup({...examSetup, totalMarks: e.target.value})}
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, totalMarks: e.target.value });
+                                                if (errors.totalMarks) setErrors({ ...errors, totalMarks: null });
+                                            }}
                                             placeholder="100"
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.totalMarks ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
                                         />
+                                        {errors.totalMarks && <p className="text-red-500 text-xs mt-1">{errors.totalMarks}</p>}
                                     </div>
 
+                                    {/* Pass Marks */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Pass Marks *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Pass Marks *</label>
                                         <input
                                             type="number"
                                             value={examSetup.passMarks}
-                                            onChange={(e) => setExamSetup({...examSetup, passMarks: e.target.value})}
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, passMarks: e.target.value });
+                                                if (errors.passMarks) setErrors({ ...errors, passMarks: null });
+                                            }}
                                             placeholder="33"
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.passMarks ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
                                         />
+                                        {errors.passMarks && <p className="text-red-500 text-xs mt-1">{errors.passMarks}</p>}
                                     </div>
 
+                                    {/* Start Date */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Start Date *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Start Date *</label>
                                         <input
                                             type="date"
                                             value={examSetup.startDate}
-                                            onChange={(e) => setExamSetup({...examSetup, startDate: e.target.value})}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, startDate: e.target.value });
+                                                if (errors.startDate) setErrors({ ...errors, startDate: null });
+                                            }}
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.startDate ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
                                         />
+                                        {errors.startDate && <p className="text-red-500 text-xs mt-1">{errors.startDate}</p>}
                                     </div>
 
+                                    {/* End Date */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">End Date *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">End Date *</label>
                                         <input
                                             type="date"
                                             value={examSetup.endDate}
-                                            onChange={(e) => setExamSetup({...examSetup, endDate: e.target.value})}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            required
+                                            onChange={(e) => {
+                                                setExamSetup({ ...examSetup, endDate: e.target.value });
+                                                if (errors.endDate) setErrors({ ...errors, endDate: null });
+                                            }}
+                                            className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all ${errors.endDate ? 'border-red-500 bg-red-50/20' : 'border-slate-200'
+                                                }`}
                                         />
+                                        {errors.endDate && <p className="text-red-500 text-xs mt-1">{errors.endDate}</p>}
                                     </div>
 
+                                    {/* Exam Status */}
                                     <div>
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Exam Status *</label>
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Exam Status *</label>
                                         <select
                                             value={examSetup.status}
-                                            onChange={(e) => setExamSetup({...examSetup, status: e.target.value})}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
+                                            onChange={(e) => setExamSetup({ ...examSetup, status: e.target.value })}
+                                            className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all"
                                         >
                                             <option value="Draft">Draft</option>
                                             <option value="Published">Published</option>
@@ -719,32 +886,49 @@ export default function ExamManagement() {
                                             <option value="Completed">Completed</option>
                                         </select>
                                     </div>
+
+                                    {/* Description (Optional Textarea) */}
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Description (optional)</label>
+                                        <textarea
+                                            value={examSetup.description}
+                                            onChange={(e) => setExamSetup({ ...examSetup, description: e.target.value })}
+                                            placeholder="Write additional instructions or exam remarks here..."
+                                            rows="3"
+                                            className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all resize-none"
+                                        ></textarea>
+                                    </div>
                                 </div>
 
-                                <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                                <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row gap-3">
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all disabled:opacity-50 text-sm sm:text-base"
+                                        className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold rounded-xl transition-all duration-150 flex items-center justify-center gap-2 shadow-sm shadow-blue-900/10 disabled:opacity-50"
                                     >
-                                        {loading ? 'Creating...' : 'Create Exam'}
+                                        {loading ? 'Processing...' : (editingExamId ? 'Update & Continue →' : 'Save & Continue →')}
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => setExamSetup({
-                                            examName: '',
-                                            examType: 'Mid Term',
-                                            academicYear: new Date().getFullYear().toString(),
-                                            class: '',
-                                            section: '',
-                                            examCategory: 'Written',
-                                            totalMarks: '',
-                                            passMarks: '',
-                                            startDate: '',
-                                            endDate: '',
-                                            status: 'Draft'
-                                        })}
-                                        className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 border border-gray-300 text-black rounded hover:bg-gray-50 transition-all font-semibold text-sm sm:text-base"
+                                        onClick={() => {
+                                            setExamSetup({
+                                                examName: '',
+                                                examType: 'Mid Term',
+                                                academicYear: new Date().getFullYear().toString(),
+                                                class: '',
+                                                section: '',
+                                                examCategory: 'Written',
+                                                totalMarks: '',
+                                                passMarks: '',
+                                                startDate: '',
+                                                endDate: '',
+                                                status: 'Draft',
+                                                duration: '120',
+                                                description: ''
+                                            });
+                                            setErrors({});
+                                        }}
+                                        className="px-6 py-3 border border-slate-200 text-slate-700 hover:bg-slate-50 text-sm font-semibold rounded-xl transition-all duration-150"
                                     >
                                         Reset
                                     </button>
@@ -753,247 +937,270 @@ export default function ExamManagement() {
                         </div>
                     )}
 
-                    {/* Subject Schedule Tab - Will be implemented in next message */}
+                    {/* Tab 2: Subject Schedule */}
                     {activeTab === 'schedule' && (
-                        <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c]">
-                                    Subject-wise Exam Scheduling
-                                </h3>
-                                <button
-                                    onClick={() => setScheduleViewMode(scheduleViewMode === 'edit' ? 'view' : 'edit')}
-                                    className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
-                                >
-                                    {scheduleViewMode === 'edit' ? 'View Schedules' : 'Edit Schedules'}
-                                </button>
+                        <div className="space-y-6">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-100">
+                                <div>
+                                    <h3 className="text-lg font-bold text-slate-800">Subject Schedule</h3>
+                                    <p className="text-sm text-slate-500 mt-0.5">Assign date, timeframes, and room numbers for subjects.</p>
+                                </div>
+                                <div className="flex bg-slate-100 p-1 rounded-lg">
+                                    <button
+                                        type="button"
+                                        onClick={() => setScheduleViewMode('edit')}
+                                        className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${scheduleViewMode === 'edit'
+                                            ? 'bg-white text-slate-800 shadow-sm'
+                                            : 'text-slate-600 hover:text-slate-800'
+                                            }`}
+                                    >
+                                        Edit Schedules
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setScheduleViewMode('view')}
+                                        className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${scheduleViewMode === 'view'
+                                            ? 'bg-white text-slate-800 shadow-sm'
+                                            : 'text-slate-600 hover:text-slate-800'
+                                            }`}
+                                    >
+                                        Overview List
+                                    </button>
+                                </div>
                             </div>
 
                             {scheduleViewMode === 'edit' ? (
-                                <>
-                                    <div className="bg-gray-50 border border-gray-200 rounded p-3 sm:p-4 mb-4 sm:mb-6">
-                                        <p className="text-xs sm:text-sm text-black">
-                                            <span className="font-semibold">Required Fields:</span> Fields marked with <span className="text-red-600">*</span> are required: Subject Name, Exam Date, Start Time, End Time, and Duration.
-                                        </p>
-                                    </div>
-                                    
-                                    <div className="mb-4 sm:mb-6">
-                                        <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Select Exam *</label>
+                                <div className="space-y-6">
+                                    <div className="max-w-xl">
+                                        <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Select Target Exam *</label>
                                         <select
-                                            value={selectedExam || ''}
+                                            value={selectedExam}
                                             onChange={(e) => setSelectedExam(e.target.value)}
-                                            className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
+                                            className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all"
                                         >
                                             <option value="">Choose an exam</option>
                                             {exams.map(exam => (
                                                 <option key={exam._id} value={exam._id}>
-                                                    {exam.examName} - {exam.class} ({exam.section})
+                                                    {exam.examName} — Class {exam.class} ({exam.section})
                                                 </option>
                                             ))}
                                         </select>
                                     </div>
 
-                                    {selectedExam && (
-                                        <>
-                                            <div className="space-y-3 sm:space-y-4">
-                                                {subjects.map((subject, index) => (
-                                                    <div key={subject.id} className="bg-white border border-gray-300 rounded p-3 sm:p-5">
-                                                        <div className="flex items-center justify-between mb-3 sm:mb-4">
-                                                            <h4 className="text-base sm:text-lg font-semibold text-[#1a202c]">Subject #{index + 1}</h4>
-                                                            <button
-                                                                onClick={() => handleRemoveSubject(subject.id)}
-                                                                className="text-red-600 hover:text-red-800 font-semibold text-sm"
-                                                            >
-                                                                Remove
-                                                            </button>
-                                                        </div>
-                                                        
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                                                            <div>
-                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Subject Name <span className="text-red-600">*</span></label>
-                                                                <input
-                                                                    type="text"
-                                                                    value={subject.subjectName}
-                                                                    onChange={(e) => handleSubjectChange(subject.id, 'subjectName', e.target.value)}
-                                                                    placeholder="Mathematics"
-                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                                    required
-                                                                />
-                                                            </div>
-
-                                                            <div>
-                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Exam Date <span className="text-red-600">*</span></label>
-                                                                <input
-                                                                    type="date"
-                                                                    value={subject.examDate}
-                                                                    onChange={(e) => handleSubjectChange(subject.id, 'examDate', e.target.value)}
-                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                                    required
-                                                                />
-                                                            </div>
-
-                                                            <div>
-                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Start Time <span className="text-red-600">*</span></label>
-                                                                <input
-                                                                    type="time"
-                                                                    value={subject.startTime}
-                                                                    onChange={(e) => handleSubjectChange(subject.id, 'startTime', e.target.value)}
-                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                                    required
-                                                                />
-                                                            </div>
-
-                                                            <div>
-                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">End Time <span className="text-red-600">*</span></label>
-                                                                <input
-                                                                    type="time"
-                                                                    value={subject.endTime}
-                                                                    onChange={(e) => handleSubjectChange(subject.id, 'endTime', e.target.value)}
-                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                                    required
-                                                                />
-                                                            </div>
-
-                                                            <div>
-                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Duration (minutes) <span className="text-red-600">*</span></label>
-                                                                <input
-                                                                    type="number"
-                                                                    value={subject.duration}
-                                                                    onChange={(e) => handleSubjectChange(subject.id, 'duration', e.target.value)}
-                                                                    placeholder="120"
-                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                                    required
-                                                                />
-                                                            </div>
-
-                                                            <div>
-                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Room / Hall</label>
-                                                                <input
-                                                                    type="text"
-                                                                    value={subject.room}
-                                                                    onChange={(e) => handleSubjectChange(subject.id, 'room', e.target.value)}
-                                                                    placeholder="Room 101"
-                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                                />
-                                                            </div>
-
-                                                            <div className="sm:col-span-2">
-                                                                <label className="block text-xs sm:text-sm font-medium text-black mb-1 sm:mb-2">Invigilator (Teacher)</label>
-                                                                <select
-                                                                    value={subject.invigilator}
-                                                                    onChange={(e) => handleSubjectChange(subject.id, 'invigilator', e.target.value)}
-                                                                    className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                                >
-                                                                    <option value="">Select Teacher</option>
-                                                                    {teachers.map(teacher => (
-                                                                        <option key={teacher._id} value={teacher._id}>
-                                                                            {teacher.name}
-                                                                        </option>
-                                                                    ))}
-                                                                </select>
-                                                            </div>
-                                                        </div>
+                                    {selectedExam ? (
+                                        <div className="space-y-6">
+                                            {subjects.length === 0 ? (
+                                                <div className="text-center py-12 border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+                                                    <svg className="w-10 h-10 text-slate-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                                    <h4 className="text-sm font-semibold text-slate-800">No subjects scheduled</h4>
+                                                    <p className="text-xs text-slate-500 mt-1 mb-4">Click the button below to add your first subject schedule.</p>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleAddSubject}
+                                                        className="px-4 py-2 border border-blue-900 text-blue-900 hover:bg-blue-50 text-xs font-semibold rounded-lg transition-colors inline-flex items-center"
+                                                    >
+                                                        <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                                                        + Add Subject
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm">
+                                                    <div className="overflow-x-auto">
+                                                        <table className="w-full text-sm text-left text-slate-600">
+                                                            <thead className="text-xs font-semibold text-slate-700 uppercase bg-slate-50 border-b border-slate-100">
+                                                                <tr>
+                                                                    <th className="px-4 py-3.5">Subject Name *</th>
+                                                                    <th className="px-4 py-3.5">Date *</th>
+                                                                    <th className="px-4 py-3.5">Start Time *</th>
+                                                                    <th className="px-4 py-3.5">End Time *</th>
+                                                                    <th className="px-4 py-3.5 w-24">Duration (min) *</th>
+                                                                    <th className="px-4 py-3.5 w-32">Room No</th>
+                                                                    <th className="px-4 py-3.5">Invigilator</th>
+                                                                    <th className="px-4 py-3.5 text-right">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody className="divide-y divide-slate-100">
+                                                                {subjects.map((subject) => (
+                                                                    <tr key={subject.id} className="hover:bg-[#F8FAFC]">
+                                                                        <td className="px-4 py-3">
+                                                                            <input
+                                                                                type="text"
+                                                                                value={subject.subjectName}
+                                                                                onChange={(e) => handleSubjectChange(subject.id, 'subjectName', e.target.value)}
+                                                                                placeholder="Mathematics"
+                                                                                className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-4 py-3">
+                                                                            <input
+                                                                                type="date"
+                                                                                value={subject.examDate}
+                                                                                onChange={(e) => handleSubjectChange(subject.id, 'examDate', e.target.value)}
+                                                                                className="w-full px-2 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-4 py-3">
+                                                                            <input
+                                                                                type="time"
+                                                                                value={subject.startTime}
+                                                                                onChange={(e) => handleSubjectChange(subject.id, 'startTime', e.target.value)}
+                                                                                className="w-full px-2 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-4 py-3">
+                                                                            <input
+                                                                                type="time"
+                                                                                value={subject.endTime}
+                                                                                onChange={(e) => handleSubjectChange(subject.id, 'endTime', e.target.value)}
+                                                                                className="w-full px-2 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-4 py-3">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={subject.duration}
+                                                                                onChange={(e) => handleSubjectChange(subject.id, 'duration', e.target.value)}
+                                                                                placeholder="120"
+                                                                                className="w-full px-2 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-4 py-3">
+                                                                            <input
+                                                                                type="text"
+                                                                                value={subject.room}
+                                                                                onChange={(e) => handleSubjectChange(subject.id, 'room', e.target.value)}
+                                                                                placeholder="Room 101"
+                                                                                className="w-full px-2 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-4 py-3">
+                                                                            <select
+                                                                                value={subject.invigilator}
+                                                                                onChange={(e) => handleSubjectChange(subject.id, 'invigilator', e.target.value)}
+                                                                                className="w-full px-2 py-1.5 border border-slate-200 rounded-lg text-sm outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            >
+                                                                                <option value="">Select Teacher</option>
+                                                                                {teachers.map(t => (
+                                                                                    <option key={t._id} value={t._id}>{t.name}</option>
+                                                                                ))}
+                                                                            </select>
+                                                                        </td>
+                                                                        <td className="px-4 py-3 text-right">
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => handleRemoveSubject(subject.id)}
+                                                                                className="px-2 py-1 border border-red-200 hover:border-red-600 text-red-600 hover:bg-red-50 text-xs font-semibold rounded-lg transition-colors"
+                                                                            >
+                                                                                Remove
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
                                                     </div>
-                                                ))}
-                                            </div>
+                                                </div>
+                                            )}
 
-                                            <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                                            <div className="flex flex-col sm:flex-row gap-3 pt-2">
                                                 <button
+                                                    type="button"
                                                     onClick={handleAddSubject}
-                                                    className="w-full sm:w-auto px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
+                                                    className="px-5 py-2.5 border border-blue-900 text-blue-900 hover:bg-blue-50 text-sm font-semibold rounded-xl transition-colors inline-flex items-center justify-center gap-1.5"
                                                 >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                                                     + Add Subject
                                                 </button>
                                                 {subjects.length > 0 && (
                                                     <button
+                                                        type="button"
                                                         onClick={handleScheduleSubmit}
                                                         disabled={loading}
-                                                        className="w-full sm:w-auto px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold disabled:opacity-50 text-sm sm:text-base"
+                                                        className="px-5 py-2.5 bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
                                                     >
                                                         {loading ? 'Saving...' : 'Save Schedule'}
                                                     </button>
                                                 )}
                                             </div>
-                                        </>
+                                        </div>
+                                    ) : (
+                                        <div className="p-8 text-center border border-slate-100 rounded-2xl bg-slate-50/50">
+                                            <p className="text-slate-500 text-sm">Please select an exam above to view and configure its subject schedules.</p>
+                                        </div>
                                     )}
-                                </>
+                                </div>
                             ) : (
-                                // View Mode
-                                <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
-                                    <h4 className="text-base sm:text-lg font-bold text-[#1a202c] mb-4 sm:mb-6">
-                                        All Subject Schedules Overview
-                                    </h4>
-
+                                /* Subject Schedule View Mode */
+                                <div className="space-y-6">
                                     {exams.length === 0 ? (
-                                        <div className="text-center py-12 sm:py-16">
-                                            <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Exams Found</h3>
-                                            <p className="text-black mb-4 sm:mb-6 text-sm sm:text-base">Create exams first to view their schedules</p>
+                                        <div className="text-center py-16 bg-slate-50/50 border border-slate-100 rounded-2xl">
+                                            <svg className="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                            <h3 className="text-base font-bold text-slate-700">No Exams Scheduled Yet</h3>
+                                            <p className="text-xs text-slate-500 mt-1 mb-4">Go to the setup tab to create your first exam.</p>
                                             <button
+                                                type="button"
                                                 onClick={() => setActiveTab('setup')}
-                                                className="px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
+                                                className="px-4 py-2 bg-blue-900 text-white text-xs font-semibold rounded-lg transition-colors hover:bg-blue-800"
                                             >
                                                 Create New Exam
                                             </button>
                                         </div>
                                     ) : (
-                                        <div className="space-y-4 sm:space-y-6">
+                                        <div className="space-y-6">
                                             {exams.map((exam) => (
-                                                <div key={exam._id} className="bg-white border border-gray-300 rounded overflow-hidden">
-                                                    <div className="bg-[#1a202c] text-white px-4 sm:px-6 py-3 sm:py-4">
-                                                        <h5 className="text-base sm:text-lg font-bold">{exam.examName}</h5>
-                                                        <p className="text-xs sm:text-sm mt-1">
-                                                            {exam.class} - Section {exam.section} | {exam.examType} | {exam.academicYear}
-                                                        </p>
+                                                <div key={exam._id} className="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm">
+                                                    <div className="bg-slate-800 text-white px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                                        <div>
+                                                            <h5 className="text-base font-bold">{exam.examName}</h5>
+                                                            <p className="text-xs text-slate-300 mt-0.5">
+                                                                Class {exam.class} ({exam.section}) | {exam.examType} | Academic Year {exam.academicYear}
+                                                            </p>
+                                                        </div>
+                                                        <span className="self-start sm:self-auto px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 text-white border border-white/10">
+                                                            {exam.status}
+                                                        </span>
                                                     </div>
 
                                                     {exam.subjects && exam.subjects.length > 0 ? (
                                                         <div className="overflow-x-auto">
-                                                            <table className="w-full text-xs sm:text-sm">
-                                                                <thead className="bg-gray-100">
+                                                            <table className="w-full text-sm text-left text-slate-600">
+                                                                <thead className="text-xs font-semibold text-slate-700 uppercase bg-slate-50 border-b border-slate-100">
                                                                     <tr>
-                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Subject</th>
-                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Date</th>
-                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Time</th>
-                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Duration</th>
-                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Room</th>
-                                                                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Invigilator</th>
+                                                                        <th className="px-5 py-3">Subject</th>
+                                                                        <th className="px-5 py-3">Date</th>
+                                                                        <th className="px-5 py-3">Timeframe</th>
+                                                                        <th className="px-5 py-3">Duration</th>
+                                                                        <th className="px-5 py-3">Room / Location</th>
+                                                                        <th className="px-5 py-3">Invigilator</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody>
-                                                                    {exam.subjects.map((subject, index) => (
-                                                                        <tr key={index} className="border-t border-gray-200 hover:bg-gray-50">
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 font-medium text-black">
-                                                                                {subject.subjectName}
+                                                                <tbody className="divide-y divide-slate-100">
+                                                                    {exam.subjects.map((sub, idx) => (
+                                                                        <tr key={idx} className="hover:bg-[#F8FAFC]">
+                                                                            <td className="px-5 py-3 font-semibold text-slate-800">{sub.subjectName}</td>
+                                                                            <td className="px-5 py-3 text-slate-600">
+                                                                                {sub.examDate ? new Date(sub.examDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
                                                                             </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {subject.examDate ? new Date(subject.examDate).toLocaleDateString() : 'N/A'}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {subject.startTime} - {subject.endTime}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {subject.duration} min
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {subject.room || 'Not assigned'}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {subject.invigilator ? 
-                                                                                    teachers.find(t => t._id === subject.invigilator)?.name || 'Unknown' 
-                                                                                    : 'Not assigned'}
-                                                                            </td>
+                                                                            <td className="px-5 py-3 text-slate-600">{sub.startTime} — {sub.endTime}</td>
+                                                                            <td className="px-5 py-3 text-slate-600">{sub.duration} minutes</td>
+                                                                            <td className="px-5 py-3 text-slate-600">{sub.room || '—'}</td>
+                                                                            <td className="px-5 py-3 text-slate-600">{getTeacherName(sub.invigilator)}</td>
                                                                         </tr>
                                                                     ))}
                                                                 </tbody>
                                                             </table>
                                                         </div>
                                                     ) : (
-                                                        <div className="px-4 sm:px-6 py-6 sm:py-8 text-center">
-                                                            <p className="text-black font-medium text-sm sm:text-base">No subjects scheduled for this exam</p>
+                                                        <div className="p-6 text-center">
+                                                            <p className="text-slate-500 text-xs font-medium">No subjects scheduled for this exam yet.</p>
                                                             <button
-                                                                onClick={() => setScheduleViewMode('edit')}
-                                                                className="mt-3 px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-sm sm:text-base font-semibold"
+                                                                onClick={() => {
+                                                                    setSelectedExam(exam._id);
+                                                                    setScheduleViewMode('edit');
+                                                                }}
+                                                                className="mt-3 px-4 py-2 border border-blue-900 text-blue-900 hover:bg-blue-50 text-xs font-semibold rounded-lg transition-all"
                                                             >
-                                                                Schedule Subjects
+                                                                Schedule Now
                                                             </button>
                                                         </div>
                                                     )}
@@ -1006,267 +1213,236 @@ export default function ExamManagement() {
                         </div>
                     )}
 
-
-
-                    {/* Mark Distribution Tab - Continuing in next section */}
+                    {/* Tab 3: Mark Distribution */}
                     {activeTab === 'marks' && (
-                        <div className="space-y-4 sm:space-y-6">
-                            <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
-                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Subject Mark Distribution</h3>
-                                
-                                <form onSubmit={handleMarkDistributionSubmit}>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                                        <div>
-                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Select Exam *</label>
-                                            <select
-                                                value={markDistribution.examId}
-                                                onChange={(e) => setMarkDistribution({...markDistribution, examId: e.target.value})}
-                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                                required
-                                            >
-                                                <option value="">Choose an exam</option>
-                                                {exams.map(exam => (
-                                                    <option key={exam._id} value={exam._id}>
-                                                        {exam.examName} - {exam.class} ({exam.section})
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Subject Name *</label>
-                                            <input
-                                                type="text"
-                                                value={markDistribution.subject}
-                                                onChange={(e) => setMarkDistribution({...markDistribution, subject: e.target.value})}
-                                                placeholder="Mathematics"
-                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Written Marks</label>
-                                            <input
-                                                type="number"
-                                                value={markDistribution.written}
-                                                onChange={(e) => setMarkDistribution({...markDistribution, written: e.target.value})}
-                                                placeholder="50"
-                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">MCQ Marks</label>
-                                            <input
-                                                type="number"
-                                                value={markDistribution.mcq}
-                                                onChange={(e) => setMarkDistribution({...markDistribution, mcq: e.target.value})}
-                                                placeholder="30"
-                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Practical Marks</label>
-                                            <input
-                                                type="number"
-                                                value={markDistribution.practical}
-                                                onChange={(e) => setMarkDistribution({...markDistribution, practical: e.target.value})}
-                                                placeholder="10"
-                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs sm:text-sm font-semibold text-black mb-1 sm:mb-2">Viva Marks</label>
-                                            <input
-                                                type="number"
-                                                value={markDistribution.viva}
-                                                onChange={(e) => setMarkDistribution({...markDistribution, viva: e.target.value})}
-                                                placeholder="10"
-                                                className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c] focus:border-[#1a202c]"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-4 sm:mb-6">
-                                        <label className="flex items-center cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                checked={markDistribution.isOptional}
-                                                onChange={(e) => setMarkDistribution({...markDistribution, isOptional: e.target.checked})}
-                                                className="w-4 h-4 border-gray-300 rounded focus:ring-[#1a202c]"
-                                            />
-                                            <span className="ml-3 text-xs sm:text-sm font-semibold text-black">Optional Subject</span>
-                                        </label>
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-blue-900 text-white rounded font-semibold hover:bg-blue-800 transition-all disabled:opacity-50 text-sm sm:text-base"
-                                    >
-                                        {loading ? 'Saving...' : 'Save Mark Distribution'}
-                                    </button>
-                                </form>
+                        <div className="space-y-6">
+                            <div className="pb-4 border-b border-slate-100">
+                                <h3 className="text-lg font-bold text-slate-800">Mark Distribution</h3>
+                                <p className="text-sm text-slate-500 mt-0.5">Define weightings, pass limits, practical components, and theory bounds.</p>
                             </div>
 
-                            {/* Existing Mark Distributions Display */}
-                            <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
-                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">
-                                    Existing Mark Distributions
-                                </h3>
+                            <div className="max-w-xl">
+                                <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">Select Exam *</label>
+                                <select
+                                    value={selectedExam}
+                                    onChange={(e) => setSelectedExam(e.target.value)}
+                                    className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 outline-none transition-all"
+                                >
+                                    <option value="">Choose an exam</option>
+                                    {exams.map(exam => (
+                                        <option key={exam._id} value={exam._id}>
+                                            {exam.examName} — Class {exam.class} ({exam.section})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
 
-                                {exams.length === 0 ? (
-                                    <div className="text-center py-12 sm:py-16">
-                                        <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Exams Found</h3>
-                                        <p className="text-black mb-4 sm:mb-6 text-sm sm:text-base">Create exams first to view mark distributions</p>
-                                        <button
-                                            onClick={() => setActiveTab('setup')}
-                                            className="px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
-                                        >
-                                            Create New Exam
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4 sm:space-y-6">
-                                        {exams.map((exam) => (
-                                            <div key={exam._id} className="bg-white border border-gray-300 rounded overflow-hidden">
-                                                <div className="bg-[#1a202c] text-white px-4 sm:px-6 py-3 sm:py-4">
-                                                    <h4 className="text-base sm:text-lg font-bold">{exam.examName}</h4>
-                                                    <p className="text-xs sm:text-sm mt-1">
-                                                        {exam.class} - Section {exam.section} | {exam.examType} | Total: {exam.totalMarks} marks
-                                                    </p>
-                                                </div>
-
-                                                {exam.markDistribution && exam.markDistribution.length > 0 ? (
-                                                    <div className="overflow-x-auto">
-                                                        <table className="w-full text-xs sm:text-sm">
-                                                            <thead className="bg-gray-100">
-                                                                <tr>
-                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Subject</th>
-                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Written</th>
-                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">MCQ</th>
-                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Practical</th>
-                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Viva</th>
-                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Total</th>
-                                                                    <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold text-[#1a202c]">Type</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {exam.markDistribution.map((mark, index) => {
-                                                                    const total = (mark.written || 0) + (mark.mcq || 0) + (mark.practical || 0) + (mark.viva || 0);
-                                                                    return (
-                                                                        <tr key={index} className="border-t border-gray-200 hover:bg-gray-50">
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 font-medium text-black">
-                                                                                {mark.subject}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {mark.written || 0}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {mark.mcq || 0}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {mark.practical || 0}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                {mark.viva || 0}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 font-semibold text-[#1a202c]">
-                                                                                {total}
-                                                                            </td>
-                                                                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-black">
-                                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                                                    mark.isOptional 
-                                                                                        ? 'bg-gray-200 text-black' 
-                                                                                        : 'bg-[#1a202c] text-white'
-                                                                                }`}>
-                                                                                    {mark.isOptional ? 'Optional' : 'Compulsory'}
+                            {selectedExam ? (
+                                <div className="space-y-8">
+                                    {distributions.length === 0 ? (
+                                        <div className="p-8 text-center border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+                                            <p className="text-slate-500 text-sm">Please schedule subjects under Tab 2 first before distributing marks.</p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-6">
+                                            <div className="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm">
+                                                <div className="overflow-x-auto">
+                                                    <table className="w-full text-sm text-left text-slate-600">
+                                                        <thead className="text-xs font-semibold text-slate-700 uppercase bg-slate-50 border-b border-slate-100">
+                                                            <tr>
+                                                                <th className="px-5 py-4">Subject</th>
+                                                                <th className="px-5 py-4">Theory Marks</th>
+                                                                <th className="px-5 py-4">Practical Marks</th>
+                                                                <th className="px-5 py-4">Pass Marks</th>
+                                                                <th className="px-5 py-4">Full Marks</th>
+                                                                <th className="px-5 py-4 w-28">Type</th>
+                                                                <th className="px-5 py-4 text-right">Validation Alert</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="divide-y divide-slate-100">
+                                                            {distributions.map((dist, index) => {
+                                                                const isInvalid = parseInt(dist.passMarks) > parseInt(dist.fullMarks);
+                                                                return (
+                                                                    <tr key={index} className="hover:bg-[#F8FAFC]">
+                                                                        <td className="px-5 py-4 font-semibold text-slate-800">{dist.subject}</td>
+                                                                        <td className="px-5 py-4">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={dist.theoryMarks}
+                                                                                onChange={(e) => {
+                                                                                    const val = Math.max(0, parseInt(e.target.value) || 0);
+                                                                                    setDistributions(distributions.map((d, i) =>
+                                                                                        i === index ? { ...d, theoryMarks: val } : d
+                                                                                    ));
+                                                                                }}
+                                                                                className="w-20 px-2 py-1.5 border border-slate-200 rounded-lg text-sm text-center outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-5 py-4">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={dist.practicalMarks}
+                                                                                onChange={(e) => {
+                                                                                    const val = Math.max(0, parseInt(e.target.value) || 0);
+                                                                                    setDistributions(distributions.map((d, i) =>
+                                                                                        i === index ? { ...d, practicalMarks: val } : d
+                                                                                    ));
+                                                                                }}
+                                                                                className="w-20 px-2 py-1.5 border border-slate-200 rounded-lg text-sm text-center outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-5 py-4">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={dist.passMarks}
+                                                                                onChange={(e) => {
+                                                                                    const val = Math.max(0, parseInt(e.target.value) || 0);
+                                                                                    setDistributions(distributions.map((d, i) =>
+                                                                                        i === index ? { ...d, passMarks: val } : d
+                                                                                    ));
+                                                                                }}
+                                                                                className={`w-20 px-2 py-1.5 border rounded-lg text-sm text-center outline-none focus:ring-1 ${isInvalid ? 'border-red-500 focus:ring-red-500 bg-red-50/20' : 'border-slate-200 focus:ring-blue-900'
+                                                                                    }`}
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-5 py-4">
+                                                                            <input
+                                                                                type="number"
+                                                                                value={dist.fullMarks}
+                                                                                onChange={(e) => {
+                                                                                    const val = Math.max(0, parseInt(e.target.value) || 0);
+                                                                                    setDistributions(distributions.map((d, i) =>
+                                                                                        i === index ? { ...d, fullMarks: val } : d
+                                                                                    ));
+                                                                                }}
+                                                                                className="w-20 px-2 py-1.5 border border-slate-200 rounded-lg text-sm text-center outline-none focus:ring-1 focus:ring-blue-900"
+                                                                            />
+                                                                        </td>
+                                                                        <td className="px-5 py-4">
+                                                                            <label className="inline-flex items-center cursor-pointer select-none">
+                                                                                <input
+                                                                                    type="checkbox"
+                                                                                    checked={dist.isOptional}
+                                                                                    onChange={(e) => {
+                                                                                        const val = e.target.checked;
+                                                                                        setDistributions(distributions.map((d, i) =>
+                                                                                            i === index ? { ...d, isOptional: val } : d
+                                                                                        ));
+                                                                                    }}
+                                                                                    className="w-4 h-4 border-slate-300 rounded text-blue-900 focus:ring-blue-900/10 cursor-pointer"
+                                                                                />
+                                                                                <span className="ml-2 text-xs font-semibold text-slate-500">Optional</span>
+                                                                            </label>
+                                                                        </td>
+                                                                        <td className="px-5 py-4 text-right">
+                                                                            {isInvalid && (
+                                                                                <span className="text-red-500 text-[11px] font-bold bg-red-50 px-2.5 py-1 rounded-md inline-flex items-center gap-1 animate-pulse">
+                                                                                    ⚠️ Pass Marks &gt; Full Marks
                                                                                 </span>
-                                                                            </td>
-                                                                        </tr>
-                                                                    );
-                                                                })}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                ) : (
-                                                    <div className="px-4 sm:px-6 py-6 sm:py-8 text-center">
-                                                        <p className="text-black font-medium text-sm sm:text-base">No mark distributions set for this exam</p>
-                                                        <button
-                                                            onClick={() => {
-                                                                setMarkDistribution({...markDistribution, examId: exam._id});
-                                                                // Scroll to form
-                                                                document.querySelector('.bg-white.border.border-gray-200.rounded')?.scrollIntoView({ behavior: 'smooth' });
-                                                            }}
-                                                            className="mt-3 px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all text-xs sm:text-sm font-semibold"
-                                                        >
-                                                            Add Mark Distribution
-                                                        </button>
-                                                    </div>
-                                                )}
+                                                                            )}
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })}
+                                                        </tbody>
+                                                        <tfoot className="bg-slate-50/80 font-bold text-slate-800 border-t border-slate-100">
+                                                            <tr>
+                                                                <td className="px-5 py-3.5">Sum/Total Full Marks</td>
+                                                                <td className="px-5 py-3.5" colSpan="3"></td>
+                                                                <td className="px-5 py-3.5 text-center">{totalFullMarks}</td>
+                                                                <td className="px-5 py-3.5" colSpan="2"></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
 
-                            {/* Grade System */}
-                            <div className="bg-white border border-gray-200 rounded p-4 sm:p-6">
-                                <h3 className="text-lg sm:text-xl font-bold text-[#1a202c] mb-4 sm:mb-6">Grading System</h3>
-                                
-                                <div className="overflow-x-auto">
-                                    <table className="w-full border-collapse text-xs sm:text-sm">
-                                        <thead>
-                                            <tr className="bg-gray-100">
-                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Grade</th>
-                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Min Marks</th>
-                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Max Marks</th>
-                                                <th className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-left font-bold text-[#1a202c]">Grade Point</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {gradeSystem.map((grade, index) => (
-                                                <tr key={index} className="hover:bg-gray-50 transition-colors">
-                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3">
-                                                        <span className="font-bold text-base sm:text-lg text-[#1a202c]">{grade.grade}</span>
-                                                    </td>
-                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-black">{grade.minMarks}</td>
-                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-black">{grade.maxMarks}</td>
-                                                    <td className="border border-gray-300 px-3 sm:px-4 py-2 sm:py-3">
-                                                        <span className="font-semibold text-black">
-                                                            {grade.grade === 'A+' ? '5.00' : 
-                                                             grade.grade === 'A' ? '4.00' : 
-                                                             grade.grade === 'A-' ? '3.50' : 
-                                                             grade.grade === 'B' ? '3.00' : 
-                                                             grade.grade === 'C' ? '2.00' : 
-                                                             grade.grade === 'D' ? '1.00' : '0.00'}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            <div className="flex justify-start">
+                                                <button
+                                                    type="button"
+                                                    onClick={handleSaveAllDistributions}
+                                                    disabled={loading}
+                                                    className="px-6 py-3 bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
+                                                >
+                                                    {loading ? 'Saving...' : 'Save Distribution'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Grade System Reference Panel */}
+                                    <div className="max-w-3xl border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm">
+                                        <div className="bg-slate-800 text-white px-5 py-3">
+                                            <h4 className="text-sm font-bold">Grading System Reference</h4>
+                                        </div>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-sm text-left text-slate-600">
+                                                <thead className="text-xs font-semibold text-slate-700 bg-slate-50 border-b border-slate-100">
+                                                    <tr>
+                                                        <th className="px-5 py-3">Grade</th>
+                                                        <th className="px-5 py-3">Min Marks</th>
+                                                        <th className="px-5 py-3">Max Marks</th>
+                                                        <th className="px-5 py-3">Grade Point</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100">
+                                                    {gradeSystem.map((g, idx) => (
+                                                        <tr key={idx} className="hover:bg-slate-50/50">
+                                                            <td className="px-5 py-3.5 font-bold text-slate-800">{g.grade}</td>
+                                                            <td className="px-5 py-3.5 text-slate-600">{g.minMarks}%</td>
+                                                            <td className="px-5 py-3.5 text-slate-600">{g.maxMarks}%</td>
+                                                            <td className="px-5 py-3.5 font-semibold text-slate-700">
+                                                                {g.grade === 'A+' ? '5.00' :
+                                                                    g.grade === 'A' ? '4.00' :
+                                                                        g.grade === 'A-' ? '3.50' :
+                                                                            g.grade === 'B' ? '3.00' :
+                                                                                g.grade === 'C' ? '2.00' :
+                                                                                    g.grade === 'D' ? '1.00' : '0.00'}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="p-8 text-center border border-slate-100 rounded-2xl bg-slate-50/50">
+                                    <p className="text-slate-500 text-sm">Please select an exam above to configure the mark keys per subject.</p>
+                                </div>
+                            )}
                         </div>
                     )}
 
-                    {/* Exam List Tab */}
+                    {/* Tab 4: Exam List */}
                     {activeTab === 'list' && (
-                        <div className="space-y-4">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-                                <h3 className="text-xl sm:text-2xl font-bold text-[#1a202c]">All Exams</h3>
-                                <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="text-xs sm:text-sm text-black bg-gray-100 px-4 py-2 rounded font-semibold">
-                                        {exams.length} Exam{exams.length !== 1 ? 's' : ''} Found
-                                    </span>
+                        <div className="space-y-6">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-100">
+                                <div>
+                                    <h3 className="text-lg font-bold text-slate-800">Exam List</h3>
+                                    <p className="text-sm text-slate-500 mt-0.5">Manage created exams, update statuses, and generate PDF schedules.</p>
+                                </div>
+
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                                    {/* Search Bar */}
+                                    <div className="relative flex-1 sm:flex-initial">
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                        </span>
+                                        <input
+                                            type="text"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            placeholder="Filter by class or exam name..."
+                                            className="w-full sm:w-64 pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900 transition-all bg-slate-50/30 focus:bg-white"
+                                        />
+                                    </div>
+
                                     {exams.length > 0 && (
                                         <button
+                                            type="button"
                                             onClick={downloadAllExamsPDF}
-                                            className="px-3 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition-all text-xs sm:text-sm font-semibold flex items-center gap-1"
+                                            className="px-4 py-2.5 border border-blue-900 text-blue-900 hover:bg-blue-50 text-xs sm:text-sm font-semibold rounded-xl transition-all inline-flex items-center justify-center gap-1.5"
                                         >
                                             📥 Download All PDF
                                         </button>
@@ -1274,180 +1450,212 @@ export default function ExamManagement() {
                                 </div>
                             </div>
 
-                            {exams.length === 0 ? (
-                                <div className="text-center py-12 sm:py-16">
-                                    <h3 className="text-lg sm:text-2xl font-bold text-[#1a202c] mb-2">No Exams Created Yet</h3>
-                                    <p className="text-black mb-4 sm:mb-6 text-sm sm:text-base">Start by creating your first exam in the Exam Setup tab</p>
+                            {filteredExams.length === 0 ? (
+                                <div className="text-center py-16 bg-slate-50/50 border border-slate-200/50 border-dashed rounded-2xl max-w-lg mx-auto">
+                                    <svg className="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    <h3 className="text-base font-bold text-slate-700">No exams created yet</h3>
+                                    <p className="text-xs text-slate-500 mt-1 mb-5">Start by creating your first exam parameters in the setup tab.</p>
                                     <button
+                                        type="button"
                                         onClick={() => setActiveTab('setup')}
-                                        className="px-5 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded hover:bg-blue-800 transition-all font-semibold text-sm sm:text-base"
+                                        className="px-5 py-2.5 bg-blue-900 text-white text-xs font-semibold rounded-xl transition-colors hover:bg-blue-800 shadow-sm shadow-blue-900/10"
                                     >
-                                        Create New Exam
+                                        Create First Exam
                                     </button>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
-                                    {exams.map((exam) => (
-                                        <div key={exam._id} className="bg-white border border-gray-300 rounded p-4 sm:p-6 hover:shadow-lg transition-all">
-                                            <div className="flex items-start justify-between mb-3 sm:mb-4">
-                                                <div className="flex-1">
-                                                    <h4 className="text-base sm:text-xl font-bold text-[#1a202c] mb-2">{exam.examName}</h4>
-                                                    <div className="space-y-1 text-xs sm:text-sm text-black">
-                                                        <p>{exam.class} - Section {exam.section}</p>
-                                                        <p>{new Date(exam.startDate).toLocaleDateString()} - {new Date(exam.endDate).toLocaleDateString()}</p>
-                                                        <p>Total: {exam.totalMarks} | Pass: {exam.passMarks}</p>
-                                                    </div>
-                                                </div>
-                                                <div className={`px-2 sm:px-3 py-1 rounded text-xs font-bold ${
-                                                    exam.status === 'Published' ? 'bg-[#1a202c] text-white' :
-                                                    exam.status === 'Ongoing' ? 'bg-[#1a202c] text-white' :
-                                                    exam.status === 'Completed' ? 'bg-gray-800 text-white' :
-                                                    'bg-gray-200 text-black'
-                                                }`}>
-                                                    {exam.status}
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col sm:flex-row gap-2 pt-3 sm:pt-4 border-t border-gray-200">
-                                                <select
-                                                    onChange={(e) => updateExamStatus(exam._id, e.target.value)}
-                                                    className="flex-1 px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#1a202c]"
-                                                    defaultValue={exam.status}
-                                                >
-                                                    <option value="Draft">Draft</option>
-                                                    <option value="Published">Published</option>
-                                                    <option value="Ongoing">Ongoing</option>
-                                                    <option value="Completed">Completed</option>
-                                                </select>
-                                                <button
-                                                    onClick={() => downloadExamPDF(exam)}
-                                                    className="px-3 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition-all text-xs sm:text-sm font-semibold"
-                                                >
-                                                    📥 PDF
-                                                </button>
-                                                <button
-                                                    onClick={() => deleteExam(exam._id)}
-                                                    className="px-3 sm:px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-all text-xs sm:text-sm font-semibold"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </div>
-
-                                            {/* Hidden PDF template for this exam */}
-                                            <div id={`admin-exam-pdf-${exam._id}`} style={{ position: 'fixed', left: '-9999px', top: 0, width: '794px', padding: '40px', background: '#fff', fontFamily: 'Arial, sans-serif', color: '#000' }}>
-                                                {/* Header */}
-                                                <div style={{ textAlign: 'center', borderBottom: '3px solid #1a202c', paddingBottom: '16px', marginBottom: '24px' }}>
-                                                    <h1 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1a202c', margin: 0 }}>EXAM SCHEDULE</h1>
-                                                    <p style={{ fontSize: '13px', color: '#555', margin: '4px 0 0' }}>Academic Year {exam.academicYear}</p>
-                                                </div>
-                                                {/* Exam Info Grid */}
-                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '24px', background: '#f8f9fa', padding: '16px', borderRadius: '6px' }}>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Exam Name:</span> <span>{exam.examName}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Type:</span> <span>{exam.examType}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Class:</span> <span>{exam.class} — Section {exam.section}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Category:</span> <span>{exam.examCategory}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Start Date:</span> <span>{formatDatePdf(exam.startDate)}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>End Date:</span> <span>{formatDatePdf(exam.endDate)}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Total Marks:</span> <span>{exam.totalMarks}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Pass Marks:</span> <span>{exam.passMarks}</span></div>
-                                                    <div><span style={{ fontWeight: 'bold', color: '#333' }}>Status:</span> <span style={{ fontWeight: 'bold', color: exam.status === 'Published' ? '#065f46' : exam.status === 'Ongoing' ? '#1e40af' : '#374151' }}>{exam.status}</span></div>
-                                                </div>
-                                                {/* Subjects Table */}
-                                                {exam.subjects && exam.subjects.length > 0 && (
-                                                    <div>
-                                                        <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1a202c', marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '6px' }}>Subject Schedule</h3>
-                                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-                                                            <thead>
-                                                                <tr style={{ background: '#1a202c', color: '#fff' }}>
-                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Subject</th>
-                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Date</th>
-                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Time</th>
-                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Duration</th>
-                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Room</th>
-                                                                    <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Invigilator</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {exam.subjects.map((sub, idx) => (
-                                                                    <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f9fafb' }}>
-                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd', fontWeight: '600' }}>{sub.subjectName}</td>
-                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{formatDatePdf(sub.examDate)}</td>
-                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{formatTimePdf(sub.startTime)}{sub.endTime ? ` – ${formatTimePdf(sub.endTime)}` : ''}</td>
-                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{sub.duration ? `${sub.duration} min` : '—'}</td>
-                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{sub.roomNumber || '—'}</td>
-                                                                        <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{getTeacherName(sub.invigilator)}</td>
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                )}
-                                                {/* Footer */}
-                                                <div style={{ marginTop: '32px', borderTop: '1px solid #ccc', paddingTop: '12px', fontSize: '11px', color: '#777', textAlign: 'center' }}>
-                                                    Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })} | School Management System
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                <div className="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-sm">
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm text-left text-slate-600">
+                                            <thead className="text-xs font-semibold text-slate-700 uppercase bg-slate-50 border-b border-slate-100">
+                                                <tr>
+                                                    <th className="px-5 py-4">Exam Name</th>
+                                                    <th className="px-5 py-4">Class &amp; Sec</th>
+                                                    <th className="px-5 py-4">Term</th>
+                                                    <th className="px-5 py-4">Date Range</th>
+                                                    <th className="px-5 py-4 w-28">Type</th>
+                                                    <th className="px-5 py-4 w-36">Status</th>
+                                                    <th className="px-5 py-4 text-right">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-100">
+                                                {filteredExams.map((exam) => (
+                                                    <tr key={exam._id} className="hover:bg-[#F8FAFC] transition-colors">
+                                                        <td className="px-5 py-4">
+                                                            <div className="font-semibold text-slate-800">{exam.examName}</div>
+                                                            <div className="text-[11px] text-slate-400 mt-0.5">Total: {exam.totalMarks} | Pass: {exam.passMarks}</div>
+                                                        </td>
+                                                        <td className="px-5 py-4 text-slate-700 font-medium">{exam.class} — {exam.section}</td>
+                                                        <td className="px-5 py-4 text-slate-600">{exam.academicYear}</td>
+                                                        <td className="px-5 py-4 text-slate-600 text-xs">
+                                                            {formatDatePdf(exam.startDate)} — {formatDatePdf(exam.endDate)}
+                                                        </td>
+                                                        <td className="px-5 py-4">
+                                                            <span className="inline-flex rounded-full text-[12px] py-0.5 px-2.5 font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                                                                {exam.examType}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-5 py-4">
+                                                            <select
+                                                                value={exam.status}
+                                                                onChange={(e) => updateExamStatus(exam._id, e.target.value)}
+                                                                className={`text-[12px] font-bold rounded-full py-0.5 px-2.5 border cursor-pointer outline-none transition-all ${exam.status === 'Published' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                                                                    exam.status === 'Ongoing' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                                                                        exam.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                                                                            'bg-gray-100 text-gray-600 border-gray-200'
+                                                                    }`}
+                                                            >
+                                                                <option value="Draft" className="text-gray-900 bg-white">Draft</option>
+                                                                <option value="Published" className="text-gray-900 bg-white">Upcoming</option>
+                                                                <option value="Ongoing" className="text-gray-900 bg-white">Ongoing</option>
+                                                                <option value="Completed" className="text-gray-900 bg-white">Completed</option>
+                                                            </select>
+                                                        </td>
+                                                        <td className="px-5 py-4 text-right">
+                                                            <div className="inline-flex gap-1.5">
+                                                                <button
+                                                                    onClick={() => downloadExamPDF(exam)}
+                                                                    className="p-1.5 border border-slate-200 text-slate-500 hover:text-blue-900 hover:bg-slate-50 rounded-lg transition-colors group relative"
+                                                                    title="View/Download PDF"
+                                                                >
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleEditExam(exam)}
+                                                                    className="p-1.5 border border-slate-200 text-slate-500 hover:text-blue-900 hover:bg-slate-50 rounded-lg transition-colors group relative"
+                                                                    title="Edit Exam"
+                                                                >
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => deleteExam(exam._id)}
+                                                                    className="p-1.5 border border-red-100 hover:border-red-600 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors group relative"
+                                                                    title="Delete Exam"
+                                                                >
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             )}
 
-                            {/* Hidden PDF element for Download All */}
-                            <div id="admin-all-exams-pdf" style={{ position: 'fixed', left: '-9999px', top: 0, width: '1050px', padding: '40px', background: '#fff', fontFamily: 'Arial, sans-serif', color: '#000' }}>
-                                <div style={{ textAlign: 'center', borderBottom: '3px solid #1a202c', paddingBottom: '16px', marginBottom: '28px' }}>
-                                    <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a202c', margin: 0 }}>ALL EXAM SCHEDULES</h1>
-                                    <p style={{ fontSize: '13px', color: '#555', margin: '4px 0 0' }}>Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
-                                </div>
-                                {exams.map((exam, examIdx) => (
-                                    <div key={exam._id} style={{ marginBottom: '36px', pageBreakInside: 'avoid' }}>
-                                        <div style={{ background: '#1a202c', color: '#fff', padding: '10px 16px', borderRadius: '4px 4px 0 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <span style={{ fontWeight: 'bold', fontSize: '15px' }}>{examIdx + 1}. {exam.examName}</span>
-                                            <span style={{ fontSize: '12px', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '12px' }}>{exam.status}</span>
+                            {/* Hidden PDF templates required by jsPDF & html2canvas */}
+                            <div className="hidden">
+                                {exams.map((exam) => (
+                                    <div key={exam._id} id={`admin-exam-pdf-${exam._id}`} style={{ padding: '40px', background: '#fff', fontFamily: 'Arial, sans-serif', color: '#000', width: '794px' }}>
+                                        <div style={{ textAlign: 'center', borderBottom: '3px solid #1a202c', paddingBottom: '16px', marginBottom: '24px' }}>
+                                            <h1 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1a202c', margin: 0 }}>EXAM SCHEDULE</h1>
+                                            <p style={{ fontSize: '13px', color: '#555', margin: '4px 0 0' }}>Academic Year {exam.academicYear}</p>
                                         </div>
-                                        <div style={{ border: '1px solid #ddd', borderTop: 'none', padding: '12px 16px', background: '#f9fafb', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', fontSize: '12px' }}>
-                                            <div><b>Class:</b> {exam.class} — Sec {exam.section}</div>
-                                            <div><b>Type:</b> {exam.examType}</div>
-                                            <div><b>Year:</b> {exam.academicYear}</div>
-                                            <div><b>Start:</b> {formatDatePdf(exam.startDate)}</div>
-                                            <div><b>End:</b> {formatDatePdf(exam.endDate)}</div>
-                                            <div><b>Total / Pass:</b> {exam.totalMarks} / {exam.passMarks}</div>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '24px', background: '#f8f9fa', padding: '16px', borderRadius: '6px' }}>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Exam Name:</span> <span>{exam.examName}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Type:</span> <span>{exam.examType}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Class:</span> <span>{exam.class} — Section {exam.section}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Category:</span> <span>{exam.examCategory}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Start Date:</span> <span>{formatDatePdf(exam.startDate)}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>End Date:</span> <span>{formatDatePdf(exam.endDate)}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Total Marks:</span> <span>{exam.totalMarks}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Pass Marks:</span> <span>{exam.passMarks}</span></div>
+                                            <div><span style={{ fontWeight: 'bold', color: '#333' }}>Status:</span> <span style={{ fontWeight: 'bold', color: exam.status === 'Published' ? '#065f46' : exam.status === 'Ongoing' ? '#1e40af' : '#374151' }}>{exam.status}</span></div>
                                         </div>
                                         {exam.subjects && exam.subjects.length > 0 && (
-                                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-                                                <thead>
-                                                    <tr style={{ background: '#374151', color: '#fff' }}>
-                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Subject</th>
-                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Date</th>
-                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Time</th>
-                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Duration</th>
-                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Room</th>
-                                                        <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Invigilator</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {exam.subjects.map((sub, idx) => (
-                                                        <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f3f4f6' }}>
-                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd', fontWeight: '600' }}>{sub.subjectName}</td>
-                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{formatDatePdf(sub.examDate)}</td>
-                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{formatTimePdf(sub.startTime)}{sub.endTime ? ` – ${formatTimePdf(sub.endTime)}` : ''}</td>
-                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{sub.duration ? `${sub.duration} min` : '—'}</td>
-                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{sub.roomNumber || '—'}</td>
-                                                            <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{getTeacherName(sub.invigilator)}</td>
+                                            <div>
+                                                <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1a202c', marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '6px' }}>Subject Schedule</h3>
+                                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                                                    <thead>
+                                                        <tr style={{ background: '#1a202c', color: '#fff' }}>
+                                                            <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Subject</th>
+                                                            <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Date</th>
+                                                            <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Time</th>
+                                                            <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Duration</th>
+                                                            <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Room</th>
+                                                            <th style={{ padding: '8px 10px', textAlign: 'left', border: '1px solid #333' }}>Invigilator</th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        {exam.subjects.map((sub, idx) => (
+                                                            <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                                                                <td style={{ padding: '7px 10px', border: '1px solid #ddd', fontWeight: '600' }}>{sub.subjectName}</td>
+                                                                <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{formatDatePdf(sub.examDate)}</td>
+                                                                <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{formatTimePdf(sub.startTime)}{sub.endTime ? ` – ${formatTimePdf(sub.endTime)}` : ''}</td>
+                                                                <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{sub.duration ? `${sub.duration} min` : '—'}</td>
+                                                                <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{sub.room || '—'}</td>
+                                                                <td style={{ padding: '7px 10px', border: '1px solid #ddd' }}>{getTeacherName(sub.invigilator)}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         )}
+                                        <div style={{ marginTop: '32px', borderTop: '1px solid #ccc', paddingTop: '12px', fontSize: '11px', color: '#777', textAlign: 'center' }}>
+                                            Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })} | School Management System
+                                        </div>
                                     </div>
                                 ))}
-                                <div style={{ borderTop: '1px solid #ccc', paddingTop: '12px', fontSize: '11px', color: '#777', textAlign: 'center' }}>
-                                    School Management System — Confidential
+
+                                <div id="admin-all-exams-pdf" style={{ padding: '40px', background: '#fff', fontFamily: 'Arial, sans-serif', color: '#000', width: '1050px' }}>
+                                    <div style={{ textAlign: 'center', borderBottom: '3px solid #1a202c', paddingBottom: '16px', marginBottom: '28px' }}>
+                                        <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a202c', margin: 0 }}>ALL EXAM SCHEDULES</h1>
+                                        <p style={{ fontSize: '13px', color: '#555', margin: '4px 0 0' }}>Generated on {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                                    </div>
+                                    {exams.map((exam, examIdx) => (
+                                        <div key={exam._id} style={{ marginBottom: '36px', pageBreakInside: 'avoid' }}>
+                                            <div style={{ background: '#1a202c', color: '#fff', padding: '10px 16px', borderRadius: '4px 4px 0 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span style={{ fontWeight: 'bold', fontSize: '15px' }}>{examIdx + 1}. {exam.examName}</span>
+                                                <span style={{ fontSize: '12px', background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: '12px' }}>{exam.status}</span>
+                                            </div>
+                                            <div style={{ border: '1px solid #ddd', borderTop: 'none', padding: '12px 16px', background: '#f9fafb', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', fontSize: '12px' }}>
+                                                <div><b>Class:</b> {exam.class} — Sec {exam.section}</div>
+                                                <div><b>Type:</b> {exam.examType}</div>
+                                                <div><b>Year:</b> {exam.academicYear}</div>
+                                                <div><b>Start:</b> {formatDatePdf(exam.startDate)}</div>
+                                                <div><b>End:</b> {formatDatePdf(exam.endDate)}</div>
+                                                <div><b>Total / Pass:</b> {exam.totalMarks} / {exam.passMarks}</div>
+                                            </div>
+                                            {exam.subjects && exam.subjects.length > 0 && (
+                                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                                                    <thead>
+                                                        <tr style={{ background: '#374151', color: '#fff' }}>
+                                                            <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Subject</th>
+                                                            <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Date</th>
+                                                            <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Time</th>
+                                                            <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Duration</th>
+                                                            <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Room</th>
+                                                            <th style={{ padding: '7px 10px', textAlign: 'left', border: '1px solid #555' }}>Invigilator</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {exam.subjects.map((sub, idx) => (
+                                                            <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f3f4f6' }}>
+                                                                <td style={{ padding: '6px 10px', border: '1px solid #ddd', fontWeight: '600' }}>{sub.subjectName}</td>
+                                                                <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{formatDatePdf(sub.examDate)}</td>
+                                                                <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{formatTimePdf(sub.startTime)}{sub.endTime ? ` – ${formatTimePdf(sub.endTime)}` : ''}</td>
+                                                                <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{sub.duration ? `${sub.duration} min` : '—'}</td>
+                                                                <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{sub.room || '—'}</td>
+                                                                <td style={{ padding: '6px 10px', border: '1px solid #ddd' }}>{getTeacherName(sub.invigilator)}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            )}
+                                        </div>
+                                    ))}
+                                    <div style={{ borderTop: '1px solid #ccc', paddingTop: '12px', fontSize: '11px', color: '#777', textAlign: 'center' }}>
+                                        School Management System — Confidential
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     )}
+
                 </div>
             </div>
         </div>
     );
-};
+}

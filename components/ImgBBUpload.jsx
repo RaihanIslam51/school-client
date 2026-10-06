@@ -170,14 +170,14 @@ const ImgBBUpload = ({ onUploadSuccess, onUploadError, multiple = false, maxFile
                 </div>
 
                 {/* Content */}
-                <div className="relative flex flex-col items-center justify-center p-6 text-center">
+                <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 text-center">
                     {uploading ? (
                         /* Uploading State */
-                        <div className="flex flex-col items-center space-y-3">
+                        <div className="flex flex-col items-center space-y-2 sm:space-y-3">
                             <div className="relative">
-                                <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                                     </svg>
                                 </div>
@@ -191,50 +191,27 @@ const ImgBBUpload = ({ onUploadSuccess, onUploadError, multiple = false, maxFile
                         </div>
                     ) : (
                         /* Default State */
-                        <div className="flex flex-col items-center space-y-4">
+                        <div className="flex flex-col items-center space-y-3 sm:space-y-4">
                             <div className="relative">
-                                <div className={`w-16 h-16 ${isDragOver ? 'bg-linear-to-br from-green-500 to-emerald-600' : 'bg-linear-to-br from-blue-500 to-purple-600'} rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className={`w-12 h-12 sm:w-16 sm:h-16 ${isDragOver ? 'bg-linear-to-br from-green-500 to-emerald-600' : 'bg-linear-to-br from-blue-500 to-purple-600'} rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}>
+                                    <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isDragOver ? "M5 13l4 4L19 7" : "M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"} />
                                     </svg>
                                 </div>
-                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
                                 </div>
                             </div>
 
                             <div className="text-center">
-                                <h3 className="text-lg font-bold text-gray-900 mb-1">
-                                    {isDragOver ? 'Drop Images Here' : 'Upload Images'}
+                                <h3 className="text-base font-bold text-[#1a2e5a]">
+                                    {isDragOver ? 'Drop Photo Here' : 'Select Photo'}
                                 </h3>
-                                <p className="text-sm text-gray-600 mb-2">
-                                    {isDragOver
-                                        ? 'Release to upload your files'
-                                        : 'Drag & drop your images here, or click to browse'
-                                    }
+                                <p className="text-[11px] text-[#6B7280] mt-1 font-medium">
+                                    Click to browse or drag & drop
                                 </p>
-                                <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
-                                    <span className="flex items-center">
-                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        JPG, PNG, GIF
-                                    </span>
-                                    <span className="flex items-center">
-                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V1a1 1 0 011-1h2a1 1 0 011 1v3M7 4H5a1 1 0 00-1 1v16a1 1 0 001 1h14a1 1 0 001-1V5a1 1 0 00-1-1h-2M7 4h10M9 9h6m-6 4h6m-6 4h6" />
-                                        </svg>
-                                        Max 32MB each
-                                    </span>
-                                    <span className="flex items-center">
-                                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                        </svg>
-                                        Up to {maxFiles} files
-                                    </span>
-                                </div>
                             </div>
                         </div>
                     )}

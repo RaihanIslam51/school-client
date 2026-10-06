@@ -188,8 +188,9 @@ async function handleNavigationRequest(request) {
         <head>
           <title>Offline - Sunlight School</title>
           <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
           <style>
-            body { font-family: 'Tiro Bangla','Tiro Bangla Static',serif; text-align: center; padding: 50px; }
+            body { font-family: 'Sora', sans-serif; text-align: center; padding: 50px; }
             h1 { color: #ef4444; }
             p { color: #666; }
           </style>

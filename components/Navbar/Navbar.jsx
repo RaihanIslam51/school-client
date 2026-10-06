@@ -1,172 +1,338 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Menu, X, ChevronDown, LogOut, User, LayoutDashboard,
-    BookOpen, Globe, Sparkles, GraduationCap
+    Menu, X, ChevronDown, ChevronRight, LogOut, LayoutDashboard,
+    BookOpen, Globe, GraduationCap, Phone, Lock, FileText
 } from 'lucide-react';
 import { useLanguage } from '../../src/contexts/LanguageContext';
 
-/* ── animation variants ── */
 const mobileMenuVariant = {
     hidden: { opacity: 0, height: 0, transition: { duration: 0.3, ease: 'easeInOut' } },
     show: { opacity: 1, height: 'auto', transition: { duration: 0.35, ease: 'easeOut' } },
 };
 
-const mobileItemVariant = {
-    hidden: { opacity: 0, x: -16 },
-    show: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
-};
-
 const dropdownVariant = {
-    hidden: { opacity: 0, scale: 0.95, y: -8, transition: { duration: 0.15 } },
-    show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' } },
+    hidden: { opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.15 } },
+    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.2, ease: 'easeOut' } },
 };
 
 const Navbar = ({ onOpenLogin }) => {
+    const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const [user, setUser] = useState(null);
+    const [imgError, setImgError] = useState(false);
+    const [activeDropdown, setActiveDropdown] = useState(null);
+    const [activeSubDropdown, setActiveSubDropdown] = useState(null);
     const profileRef = useRef(null);
+    const headerRef = useRef(null);
 
     const { t, language, changeLanguage } = useLanguage();
 
-    /* ── read user from localStorage (SSR-safe) ── */
+    /* ── Reset all open dropdowns/menus when route changes ── */
     useEffect(() => {
+        setIsMenuOpen(false);
+        setShowProfile(false);
+        setActiveDropdown(null);
+        setActiveSubDropdown(null);
+    }, [pathname]);
+
+    /* ── Read & sync user state from localStorage (SSR-safe with event listener) ── */
+    const loadUserFromStorage = useCallback(() => {
         if (typeof window === 'undefined') return;
-        const raw = localStorage.getItem('user');
-        if (!raw) return;
-        let cancelled = false;
-        const parsed = (() => { try { return JSON.parse(raw); } catch { return null; } })();
-        const id = window.setTimeout(() => { if (!cancelled) setUser(parsed); }, 0);
-        return () => { cancelled = true; clearTimeout(id); };
+        try {
+            const raw = localStorage.getItem('user');
+            setUser(raw ? JSON.parse(raw) : null);
+        } catch (error) {
+            console.error('Error parsing user from localStorage:', error);
+            setUser(null);
+        }
     }, []);
 
-    /* ── scroll detection for background/shadow transformation ── */
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 10);
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+        loadUserFromStorage();
 
-    /* ── close profile dropdown on outside click ── */
-    useEffect(() => {
-        const handler = (e) => {
-            if (profileRef.current && !profileRef.current.contains(e.target))
-                setShowProfile(false);
+        const handleStorageChange = () => loadUserFromStorage();
+        window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('authChange', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('authChange', handleStorageChange);
         };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+    }, [loadUserFromStorage]);
+
+    /* ── Close dropdowns on click outside & Escape key ── */
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (profileRef.current && !profileRef.current.contains(e.target)) {
+                setShowProfile(false);
+            }
+            if (headerRef.current && !headerRef.current.contains(e.target)) {
+                setActiveDropdown(null);
+                setActiveSubDropdown(null);
+            }
+        };
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setIsMenuOpen(false);
+                setShowProfile(false);
+                setActiveDropdown(null);
+                setActiveSubDropdown(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('touchstart', handleOutsideClick);
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+            document.removeEventListener('touchstart', handleOutsideClick);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
     }, []);
 
-    const handleLogout = () => {
+    /* ── Handlers ── */
+    const handleNavClick = useCallback((e, link) => {
+        if (link.dropdown && link.dropdown.length > 0) {
+            e.preventDefault();
+            setActiveDropdown(prev => prev === link.name ? null : link.name);
+            setActiveSubDropdown(null);
+            return;
+        }
+
+        setActiveDropdown(null);
+        setActiveSubDropdown(null);
+
+        if (link.href === '/' && pathname === '/') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [pathname]);
+
+    const handleSubItemClick = useCallback((e, subItem) => {
+        if (subItem.hasSub && subItem.subItems?.length) {
+            e.preventDefault();
+            setActiveSubDropdown(prev => prev === subItem.name ? null : subItem.name);
+            return;
+        }
+
+        setActiveDropdown(null);
+        setActiveSubDropdown(null);
+    }, []);
+
+    const handleMobileNavClick = useCallback((e, link) => {
+        if (link.dropdown && link.dropdown.length > 0) {
+            e.preventDefault();
+            setActiveDropdown(prev => prev === link.name ? null : link.name);
+            return;
+        }
+
+        setIsMenuOpen(false);
+        setActiveDropdown(null);
+        setActiveSubDropdown(null);
+
+        if (link.href === '/' && pathname === '/') {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [pathname]);
+
+    const handleLogout = useCallback(() => {
         localStorage.removeItem('user');
         setUser(null);
         setShowProfile(false);
+        window.dispatchEvent(new Event('authChange'));
         window.location.reload();
-    };
+    }, []);
 
-    const toggleLanguage = () => changeLanguage(language === 'en' ? 'bn' : 'en');
+    const toggleLanguage = useCallback(() => {
+        changeLanguage(language === 'en' ? 'bn' : 'en');
+    }, [changeLanguage, language]);
 
-    /* ── nav links (excluding Admissions as it's the main CTA) ── */
-    const baseLinks = [
-        { name: t('nav.aboutUs'), href: '/about' },
-        { name: t('nav.academics'), href: '/academics' },
-        { name: t('nav.notices'), href: '/notices' },
-        { name: t('nav.contact'), href: '/contact' },
-    ];
+    /* ── Nav Links Configuration (Memoized) ── */
+    const baseLinks = useMemo(() => [
+        { name: t('nav.home') || 'Home', href: '/' },
+        {
+            name: t('nav.aboutUs') || 'About Us',
+            href: '/about',
+            dropdown: [
+                { name: 'Message from the chairman', href: '/about/chairman' },
+                { name: 'How did it all start?', href: '/about/history' },
+                { name: 'Mission', href: '/about/mission' },
+                { name: 'Vision', href: '/about/vision' },
+                { name: 'Arrival & Attendance', href: '/about/attendance' },
+                { name: 'Admission', href: '/about/admission' },
+                {
+                    name: 'Student Facilities',
+                    href: '/about#facilities',
+                    hasSub: true,
+                    subItems: [
+                        { name: 'Library', href: '/about/facilities/library' },
+                        { name: 'Computer Lab', href: '/about/facilities/computer-lab' },
+                        { name: 'Security', href: '/about/facilities/security' },
+                        { name: 'Play Ground', href: '/about/facilities/playground' },
+                        { name: 'Re-Admission', href: '/about/facilities/readmission' },
+                    ]
+                },
+            ]
+        },
+        {
+            name: t('About School') || 'About School',
+            href: '#',
+            dropdown: [
+                {
+                    name: 'Academic Calendar',
+                    href: '#',
+                    hasSub: true,
+                    subItems: [
+                        { name: 'English Medium Academic Calendar', href: '/academics/calendar' },
+                        { name: 'Bangla Medium Academic Calendar', href: '/notices' },
+                    ]
+                },
+                { name: 'Visiting Hours', href: '/about/visiting-hours' },
+                { name: 'Security & discipline', href: '/about/security-discipline' },
+                {
+                    name: 'Facilities',
+                    href: '#',
+                    hasSub: true,
+                    subItems: [
+                        { name: 'Multimedia Classroom', href: '/about/facilities/multimedia-classroom' },
+                        { name: 'Medical Facilities', href: '/about/facilities/medical-facilities' },
+                        { name: 'Counseling', href: '/about/facilities/counselling' },
+                    ]
+                },
+                { name: 'Award', href: '/about/award' },
+                { name: 'Parents', href: '/about/parents' },
+                {
+                    name: 'Teachers & Staff',
+                    href: '#',
+                    hasSub: true,
+                    subItems: [
+                        { name: 'Administrative Staff', href: '/about/administrative-staff' },
+                        { name: 'English Medium Teachers', href: '/about/english-medium-teachers' },
+                    ]
+                },
+                { name: 'Career Opportunity', href: '/about/career-opportunity' },
+            ]
+        },
+        {
+            name: t('Students') || 'Students',
+            href: '#',
+            dropdown: [
+                { name: 'Semester & Timings', href: '/students/semester-timings' },
+                { name: 'Syllabus', href: '/students/syllabus' },
+                { name: 'Booklist', href: '/students/booklist' },
+                { name: 'Uniform', href: '/students/uniform' },
+                { name: 'Class routine', href: '/students/class-routine' },
+                { name: 'Notes', href: '/students/notes' },
+                { name: 'Events', href: '/students/events' },
+                { name: 'Video gallery', href: '/students/video-gallery' },
+                { name: 'Photo Gallery', href: '/students/photo-gallery' },
+            ]
+        },
+        { name: t('Notices') || 'Notices', href: '/notices' },
+        { name: t('nav.contact') || 'Contact Us', href: '/contact' },
+    ], [t]);
 
-    const userNavLinks = (() => {
+    const userNavLinks = useMemo(() => {
         if (!user) return baseLinks;
         const roleLink =
-            user.role === 'admin' ? { name: t('nav.adminDashboard'), href: '/dashboard', icon: <LayoutDashboard size={15} /> } :
-            user.role === 'teacher' ? { name: t('nav.teacherboard'), href: '/teacherboard', icon: <BookOpen size={15} /> } :
-            user.role === 'student' ? { name: t('nav.portal'), href: '/portal', icon: <GraduationCap size={15} /> } : null;
-        return roleLink ? [roleLink, ...baseLinks] : baseLinks;
-    })();
+            user.role === 'admin' ? { name: t('nav.adminDashboard') || 'Dashboard', href: '/dashboard', icon: <LayoutDashboard size={15} /> } :
+            user.role === 'teacher' ? { name: t('nav.teacherboard') || 'Teacherboard', href: '/teacherboard', icon: <BookOpen size={15} /> } :
+            user.role === 'student' ? { name: t('nav.portal') || 'Portal', href: '/portal', icon: <GraduationCap size={15} /> } : null;
+        return roleLink ? [baseLinks[0], roleLink, ...baseLinks.slice(1)] : baseLinks;
+    }, [user, baseLinks, t]);
 
-    /* ── user initials for avatar ── */
-    const initials = user?.name
-        ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-        : '?';
+    /* ── User initials for avatar ── */
+    const initials = useMemo(() => {
+        return user?.name
+            ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+            : '?';
+    }, [user?.name]);
 
     return (
-        <>
-            <motion.nav
-                initial={{ y: -80, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className={`sticky top-0 z-50 transition-all duration-300 ${
-                    scrolled
-                        ? 'bg-[#132348] border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
-                        : 'bg-[#1a2e5a]/95 backdrop-blur-md border-b border-white/5'
-                }`}
-            >
-                <div className="container mx-auto px-4 sm:px-6">
-                    <div className="flex items-center justify-between h-16 lg:h-20">
+        <header ref={headerRef} className="sticky top-0 z-50 shadow-md w-full font-sans">
+            {/* ──────────────── TOP ROW: WHITE BACKGROUND (#FFFFFF) ──────────────── */}
+            <div className="bg-white border-b border-gray-100 text-[#0B0F28]">
+                <div className="container mx-auto px-4 sm:px-8 py-3.5 sm:py-4.5 flex items-center justify-between">
+                    
+                    {/* LOGO */}
+                    <Link
+                        href="/"
+                        onClick={(e) => {
+                            setActiveDropdown(null);
+                            setActiveSubDropdown(null);
+                            if (pathname === '/') {
+                                e.preventDefault();
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                        }}
+                        className="flex items-center gap-3 shrink-0 min-w-0 max-w-[75%] sm:max-w-none"
+                    >
+                        {!imgError ? (
+                            <img
+                                src="/demoschoollogo.png"
+                                alt={t('common.schoolName') || 'Salmela International School'}
+                                className="h-10 sm:h-14 lg:h-16 w-auto object-contain max-w-[200px] sm:max-w-none"
+                                onError={() => setImgError(true)}
+                            />
+                        ) : (
+                            <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded flex items-center justify-center bg-[#FF5500] text-white shrink-0">
+                                    <GraduationCap size={24} />
+                                </div>
+                                <span className="font-extrabold text-sm sm:text-lg md:text-xl lg:text-2xl tracking-tight text-[#0B0F28] truncate">
+                                    {t('common.schoolName') || 'SALMELA INTERNATIONAL SCHOOL'}
+                                </span>
+                            </div>
+                        )}
+                    </Link>
 
-                        {/* ── LOGO ── */}
-                        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-                            <motion.div
-                                whileHover={{ scale: 1.05, rotate: 3 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#f5a623] to-[#fdb94e] text-[#1a2e5a] shadow-md shrink-0"
-                            >
-                                <GraduationCap size={22} className="stroke-[2.5]" />
-                            </motion.div>
+                    {/* DESKTOP TOP RIGHT: PHONE + LOGIN + APPLY NOW */}
+                    <div className="hidden lg:flex items-center gap-5 xl:gap-8">
+                        
+                        {/* Phone Block */}
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 xl:w-11 xl:h-11 rounded-full border-2 border-[#FF5500] flex items-center justify-center text-[#FF5500] shrink-0">
+                                <Phone className="w-4.5 h-4.5 xl:w-5 xl:h-5 fill-current" />
+                            </div>
                             <div className="leading-tight">
-                                <h1 className="text-base sm:text-lg font-bold text-white tracking-tight leading-none">
-                                    {t('common.schoolName')}
-                                </h1>
-                                <p className="text-[10px] text-[#fdb94e] font-semibold tracking-wider uppercase mt-1 hidden sm:block">
-                                    {t('common.tagline')}
+                                <p className="text-xs xl:text-base font-extrabold text-[#0B0F28] tracking-wide">
+                                    {t('nav.phone') || 'Phone'}
+                                </p>
+                                <p className="text-xs xl:text-base font-bold text-gray-600">
+                                    +8801321-749596
                                 </p>
                             </div>
-                        </Link>
-
-                        {/* ── DESKTOP NAV LINKS ── */}
-                        <div className="hidden lg:flex items-center gap-6">
-                            {userNavLinks.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="relative group py-2 text-[15px] font-semibold text-white/85 hover:text-white transition-colors duration-200"
-                                >
-                                    <span className="flex items-center gap-1.5">
-                                        {link.icon && <span className="text-[#fdb94e]">{link.icon}</span>}
-                                        {link.name}
-                                    </span>
-                                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#f5a623] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
-                                </Link>
-                            ))}
                         </div>
 
-                        {/* ── RIGHT ACTIONS ── */}
-                        <div className="hidden lg:flex items-center gap-4">
-                            {/* Language Button */}
-                            <button
-                                onClick={toggleLanguage}
-                                className="px-3 py-1.5 text-white/90 border border-white/25 hover:border-[#f5a623] hover:text-[#f5a623] bg-white/5 hover:bg-white/10 rounded-lg text-xs font-bold transition-all duration-200 tracking-wide flex items-center gap-1.5"
-                                title={language === 'en' ? 'বাংলা তে পরিবর্তন করুন' : 'Switch to English'}
-                            >
-                                <Globe size={13} />
-                                <span>{language === 'en' ? 'বাং' : 'EN'}</span>
-                            </button>
-
-                            {/* Authentication / Profile */}
+                        {/* Action Buttons Group */}
+                        <div className="flex items-center gap-3">
+                            
+                            {/* LOGIN / PROFILE BUTTON */}
                             {user ? (
                                 <div className="relative" ref={profileRef}>
                                     <button
-                                        onClick={() => setShowProfile(!showProfile)}
-                                        className="flex items-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/25 rounded-xl transition-all duration-200 text-white font-medium text-sm"
+                                        onClick={() => setShowProfile(prev => !prev)}
+                                        aria-expanded={showProfile}
+                                        aria-haspopup="true"
+                                        className="h-11 xl:h-12 flex items-stretch bg-[#FF5500] hover:bg-[#e04b00] active:scale-[0.98] text-white font-extrabold text-xs xl:text-sm uppercase tracking-wider transition-all overflow-hidden shadow-sm hover:brightness-105"
                                     >
-                                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#f5a623] to-[#fdb94e] text-[#1a2e5a] flex items-center justify-center font-bold text-xs">
-                                            {initials}
-                                        </div>
-                                        <span className="max-w-[100px] truncate">{user.name}</span>
-                                        <ChevronDown size={14} className={`opacity-60 transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} />
+                                        <span className="px-4 xl:px-6 flex items-center gap-2.5 font-bold">
+                                            <span className="w-5.5 h-5.5 rounded-full bg-white/25 text-white flex items-center justify-center text-[11px]">
+                                                {initials}
+                                            </span>
+                                            <span className="max-w-[100px] xl:max-w-[120px] truncate">{user.name}</span>
+                                        </span>
+                                        <span className="w-10 xl:w-12 bg-[#D94800] flex items-center justify-center border-l border-white/15">
+                                            <ChevronDown size={16} className={`transition-transform duration-200 ${showProfile ? 'rotate-180' : ''}`} />
+                                        </span>
                                     </button>
 
                                     <AnimatePresence>
@@ -176,11 +342,11 @@ const Navbar = ({ onOpenLogin }) => {
                                                 initial="hidden"
                                                 animate="show"
                                                 exit="hidden"
-                                                className="absolute right-0 mt-2 w-56 bg-[#132348] border border-white/10 rounded-2xl shadow-xl overflow-hidden py-1.5"
+                                                className="absolute right-0 mt-2 w-56 bg-[#0B0F28] border border-white/10 shadow-2xl overflow-hidden py-1.5 z-50 text-white"
                                             >
-                                                <div className="px-4 py-2.5 border-b border-white/5">
-                                                    <p className="text-xs text-[#fdb94e] font-semibold uppercase tracking-wider">{user.role}</p>
-                                                    <p className="text-sm font-bold text-white truncate mt-0.5">{user.name}</p>
+                                                <div className="px-4 py-2.5 border-b border-white/10">
+                                                    <p className="text-xs text-[#FF5500] font-bold uppercase tracking-wider">{user.role}</p>
+                                                    <p className="text-sm font-bold truncate mt-0.5">{user.name}</p>
                                                 </div>
                                                 <button
                                                     onClick={handleLogout}
@@ -194,45 +360,202 @@ const Navbar = ({ onOpenLogin }) => {
                                     </AnimatePresence>
                                 </div>
                             ) : (
-                                <button
-                                    onClick={onOpenLogin}
-                                    className="px-4 py-2 text-sm font-semibold text-white/90 hover:text-white border border-white/20 hover:border-white/50 hover:bg-white/5 rounded-xl transition-all duration-200"
+                                <Link
+                                    href="/login"
+                                    className="h-11 xl:h-12 flex items-stretch bg-[#FF5500] hover:bg-[#e04b00] active:scale-[0.98] text-white font-extrabold text-xs xl:text-sm uppercase tracking-wider transition-all overflow-hidden shadow-sm hover:brightness-105"
                                 >
-                                    {t('common.login')}
-                                </button>
+                                    <span className="px-5 xl:px-7 flex items-center justify-center">
+                                        {t('common.login') || 'LOGIN'}
+                                    </span>
+                                    <span className="w-10 xl:w-12 bg-[#D94800] flex items-center justify-center border-l border-white/15">
+                                        <Lock size={16} />
+                                    </span>
+                                </Link>
                             )}
 
-                            {/* Admissions / Apply Now CTA */}
+                            {/* APPLY NOW BUTTON */}
                             <Link
                                 href="/admission"
-                                className="px-5 py-2.5 text-sm font-bold text-[#132348] bg-gradient-to-r from-[#f5a623] to-[#fdb94e] hover:from-[#e6961a] hover:to-[#f5a623] rounded-full shadow-[0_4px_14px_rgba(245,166,35,0.3)] hover:shadow-[0_6px_20px_rgba(245,166,35,0.4)] transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                                className="h-11 xl:h-12 flex items-stretch bg-[#FF5500] hover:bg-[#e04b00] active:scale-[0.98] text-white font-extrabold text-xs xl:text-sm uppercase tracking-wider transition-all overflow-hidden shadow-sm hover:brightness-105"
                             >
-                                {t('nav.applyNow')}
-                            </Link>
-                        </div>
-
-                        {/* ── MOBILE ACTIONS (Hamburger & Apply) ── */}
-                        <div className="flex lg:hidden items-center gap-3">
-                            <Link
-                                href="/admission"
-                                className="px-3.5 py-1.5 text-xs font-bold text-[#132348] bg-gradient-to-r from-[#f5a623] to-[#fdb94e] rounded-full shadow-md"
-                            >
-                                {t('nav.applyNow')}
+                                <span className="px-5 xl:px-7 flex items-center justify-center gap-1">
+                                    {t('nav.applyNow') || 'APPLY NOW'}
+                                    <span className="text-base font-normal ml-0.5">›</span>
+                                </span>
+                                <span className="w-10 xl:w-12 bg-[#D94800] flex items-center justify-center border-l border-white/15">
+                                    <FileText size={16} />
+                                </span>
                             </Link>
 
-                            <button
-                                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
-                                aria-label="Toggle menu"
-                            >
-                                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                            </button>
                         </div>
-
                     </div>
+
+                    {/* MOBILE HAMBURGER BUTTON */}
+                    <div className="flex lg:hidden items-center gap-2">
+                        <button
+                            onClick={() => setIsMenuOpen(prev => !prev)}
+                            className="p-2 text-[#0B0F28] hover:bg-black/5 rounded transition-colors"
+                            aria-label="Toggle menu"
+                            aria-expanded={isMenuOpen}
+                        >
+                            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* ──────────────── BOTTOM ROW: DARK NAVY BACKGROUND (#0B0F28) ──────────────── */}
+            <nav className="bg-[#0B0F28] text-white relative">
+                <div className="container mx-auto px-4 sm:px-8 flex items-center justify-between h-14 sm:h-16">
+                    
+                    {/* DESKTOP NAV LINKS WITH HOVER / CLICK DROPDOWN */}
+                    <div className="hidden lg:flex items-center h-full">
+                        {userNavLinks.map((link, idx) => {
+                            const isHovered = activeDropdown === link.name;
+                            const hasDropdown = Boolean(link.dropdown?.length);
+                            const isRightAligned = idx >= userNavLinks.length - 2;
+
+                            return (
+                                <div
+                                    key={`${link.name}-${link.href}-${idx}`}
+                                    className="relative h-full flex items-center shrink-0"
+                                    onMouseEnter={() => hasDropdown && setActiveDropdown(link.name)}
+                                    onMouseLeave={() => {
+                                        if (hasDropdown) {
+                                            setActiveDropdown(null);
+                                            setActiveSubDropdown(null);
+                                        }
+                                    }}
+                                >
+                                    <Link
+                                        href={link.href}
+                                        onClick={(e) => handleNavClick(e, link)}
+                                        aria-haspopup={hasDropdown ? "true" : undefined}
+                                        aria-expanded={hasDropdown ? isHovered : undefined}
+                                        className={`h-full px-3 xl:px-4.5 2xl:px-5 flex items-center gap-1.5 text-xs xl:text-sm 2xl:text-[15px] font-bold transition-all duration-150 whitespace-nowrap ${
+                                            isHovered
+                                                ? 'bg-[#FF5500] text-white'
+                                                : 'text-white hover:text-[#FF5500]'
+                                        }`}
+                                    >
+                                        {link.icon && <span className={isHovered ? 'text-white' : 'text-[#FF5500]'}>{link.icon}</span>}
+                                        <span>{link.name}</span>
+                                        {hasDropdown && (
+                                            <ChevronDown
+                                                size={14}
+                                                className={`transition-transform duration-200 ${isHovered ? 'rotate-180 text-white' : 'opacity-80'}`}
+                                            />
+                                        )}
+                                    </Link>
+
+                                    {/* DROPDOWN MENU */}
+                                    {hasDropdown && (
+                                        <AnimatePresence>
+                                            {isHovered && (
+                                                <motion.div
+                                                    variants={dropdownVariant}
+                                                    initial="hidden"
+                                                    animate="show"
+                                                    exit="hidden"
+                                                    className={`absolute top-full min-w-[260px] w-max bg-[#0B0F28] shadow-2xl py-2.5 z-50 border-t-2 border-[#FF5500] ${
+                                                        isRightAligned ? 'right-0 left-auto' : 'left-0'
+                                                    }`}
+                                                >
+                                                    {link.dropdown.map((subItem) => {
+                                                        const isSubHovered = activeSubDropdown === subItem.name;
+                                                        const hasSubItems = Boolean(subItem.subItems?.length);
+
+                                                        return (
+                                                            <div
+                                                                key={subItem.name}
+                                                                className="relative"
+                                                                onMouseEnter={() => setActiveSubDropdown(hasSubItems ? subItem.name : null)}
+                                                                onMouseLeave={(e) => {
+                                                                    const relatedTarget = e.relatedTarget;
+                                                                    if (!e.currentTarget.contains(relatedTarget)) {
+                                                                        setActiveSubDropdown(null);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Link
+                                                                    href={subItem.href}
+                                                                    onClick={(e) => handleSubItemClick(e, subItem)}
+                                                                    className={`px-6 py-3.5 text-sm font-semibold transition-colors flex items-center justify-between group ${
+                                                                        isSubHovered
+                                                                            ? 'bg-[#FF5500] text-white'
+                                                                            : 'text-white/95 hover:text-white hover:bg-[#FF5500]'
+                                                                    }`}
+                                                                >
+                                                                    <span>{subItem.name}</span>
+                                                                    {(subItem.hasSub || hasSubItems) && (
+                                                                        <ChevronRight
+                                                                            size={14}
+                                                                            className={`transition-transform ${isSubHovered ? 'text-white translate-x-0.5' : 'opacity-70 group-hover:text-white'}`}
+                                                                        />
+                                                                    )}
+                                                                </Link>
+
+                                                                {/* NESTED SIDE SUB-DROPDOWN FLYOUT */}
+                                                                {hasSubItems && (
+                                                                    <AnimatePresence>
+                                                                        {isSubHovered && (
+                                                                            <motion.div
+                                                                                variants={dropdownVariant}
+                                                                                initial="hidden"
+                                                                                animate="show"
+                                                                                exit="hidden"
+                                                                                className={`absolute top-0 min-w-[240px] w-max bg-[#0B0F28] shadow-2xl py-2.5 z-50 ${
+                                                                                    isRightAligned
+                                                                                        ? 'right-full left-auto border-r border-white/10'
+                                                                                        : 'left-full border-l border-white/10'
+                                                                                }`}
+                                                                            >
+                                                                                {subItem.subItems.map((child) => (
+                                                                                    <Link
+                                                                                        key={child.name}
+                                                                                        href={child.href}
+                                                                                        onClick={() => {
+                                                                                            setActiveDropdown(null);
+                                                                                            setActiveSubDropdown(null);
+                                                                                        }}
+                                                                                        className="px-6 py-3.5 text-sm font-semibold text-white/95 hover:text-white hover:bg-[#FF5500] transition-colors block"
+                                                                                    >
+                                                                                        {child.name}
+                                                                                    </Link>
+                                                                                ))}
+                                                                            </motion.div>
+                                                                        )}
+                                                                    </AnimatePresence>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* RIGHT: LANGUAGE TOGGLE / FLAG ICON */}
+                    <div className="hidden lg:flex items-center shrink-0 pl-2">
+                        <button
+                            onClick={toggleLanguage}
+                            className="flex items-center gap-2 hover:opacity-80 transition-opacity p-1"
+                            title={language === 'en' ? 'Switch to Bangla' : 'Switch to English'}
+                        >
+                            <span className="text-2xl leading-none select-none">
+                                {language === 'en' ? '🇺🇸' : '🇧🇩'}
+                            </span>
+                        </button>
+                    </div>
+
                 </div>
 
-                {/* ── MOBILE MENU DRAWER ── */}
+                {/* ──────────────── MOBILE MENU DRAWER ──────────────── */}
                 <AnimatePresence>
                     {isMenuOpen && (
                         <motion.div
@@ -240,86 +563,137 @@ const Navbar = ({ onOpenLogin }) => {
                             initial="hidden"
                             animate="show"
                             exit="hidden"
-                            className="lg:hidden overflow-hidden border-t border-white/10 bg-[#132348] shadow-inner"
+                            className="lg:hidden border-t border-white/10 bg-[#0B0F28] overflow-y-auto max-h-[82vh] shadow-2xl"
                         >
-                            <motion.div
-                                variants={{
-                                    show: { transition: { staggerChildren: 0.05, delayChildren: 0.05 } }
-                                }}
-                                className="px-4 pt-3 pb-6 space-y-1"
-                            >
-                                {/* Nav Links */}
-                                {userNavLinks.map((link) => (
-                                    <motion.div key={link.href} variants={mobileItemVariant}>
-                                        <Link
-                                            href={link.href}
-                                            onClick={() => setIsMenuOpen(false)}
-                                            className="flex items-center gap-2.5 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/5 transition-all duration-200 font-semibold text-sm"
+                            <div className="px-5 py-5 space-y-4">
+                                
+                                {/* Phone Info */}
+                                <div className="flex items-center gap-3 bg-white/5 p-3 rounded border border-white/10">
+                                    <Phone className="w-5 h-5 text-[#FF5500] shrink-0" />
+                                    <div>
+                                        <p className="text-[11px] font-bold text-white/70 uppercase">Phone</p>
+                                        <p className="text-xs font-bold text-white">+8801321-749596</p>
+                                    </div>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="grid grid-cols-2 gap-3">
+                                    {user ? (
+                                        <button
+                                            onClick={handleLogout}
+                                            className="flex items-center justify-center gap-2 py-2.5 bg-red-600/20 text-red-400 border border-red-500/30 rounded text-xs font-bold"
                                         >
-                                            {link.icon && <span className="text-[#fdb94e]">{link.icon}</span>}
-                                            <span>{link.name}</span>
+                                            <LogOut size={14} />
+                                            {t('common.logout')}
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href="/login"
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className="h-10 flex items-stretch bg-[#FF5500] text-white rounded text-xs font-extrabold uppercase tracking-wider overflow-hidden"
+                                        >
+                                            <span className="flex-1 flex items-center justify-center">{t('common.login') || 'LOGIN'}</span>
+                                            <span className="w-9 bg-[#D94800] flex items-center justify-center shrink-0"><Lock size={13} /></span>
                                         </Link>
-                                    </motion.div>
-                                ))}
+                                    )}
 
-                                <div className="h-px bg-white/10 my-2" />
+                                    <Link
+                                        href="/admission"
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="h-10 flex items-stretch bg-[#FF5500] text-white rounded text-xs font-extrabold uppercase tracking-wider overflow-hidden"
+                                    >
+                                        <span className="flex-1 flex items-center justify-center">{t('nav.applyNow') || 'APPLY NOW'}</span>
+                                        <span className="w-9 bg-[#D94800] flex items-center justify-center shrink-0"><FileText size={13} /></span>
+                                    </Link>
+                                </div>
 
-                                {/* Language Toggle */}
-                                <motion.div variants={mobileItemVariant}>
+                                {/* Nav Links */}
+                                <div className="space-y-1 pt-2 border-t border-white/10">
+                                    {userNavLinks.map((link, idx) => {
+                                        const hasDropdown = Boolean(link.dropdown?.length);
+                                        const isExpanded = activeDropdown === link.name;
+
+                                        return (
+                                            <div key={`${link.name}-${link.href}-${idx}`} className="space-y-1">
+                                                <div className="flex items-center justify-between px-3 py-2.5 rounded text-white font-bold text-sm">
+                                                    <Link
+                                                        href={link.href}
+                                                        onClick={(e) => handleMobileNavClick(e, link)}
+                                                        className="flex items-center gap-2.5 hover:text-[#FF5500] flex-1"
+                                                    >
+                                                        {link.icon && <span className="text-[#FF5500]">{link.icon}</span>}
+                                                        <span>{link.name}</span>
+                                                    </Link>
+                                                    {hasDropdown && (
+                                                        <button
+                                                            onClick={() => setActiveDropdown(isExpanded ? null : link.name)}
+                                                            className="p-1 text-white/70 hover:text-white"
+                                                            aria-label={`Toggle ${link.name} dropdown`}
+                                                            aria-expanded={isExpanded}
+                                                        >
+                                                            <ChevronDown size={16} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                                {/* Mobile Dropdown Sublinks */}
+                                                {hasDropdown && isExpanded && (
+                                                    <div className="pl-6 space-y-1 border-l-2 border-[#FF5500] ml-3 py-1">
+                                                        {link.dropdown.map((subItem) => (
+                                                            <React.Fragment key={subItem.name}>
+                                                                <Link
+                                                                    href={subItem.href}
+                                                                    onClick={(e) => {
+                                                                        if (subItem.href === '#') {
+                                                                            e.preventDefault();
+                                                                            setActiveSubDropdown(prev => prev === subItem.name ? null : subItem.name);
+                                                                        } else {
+                                                                            setIsMenuOpen(false);
+                                                                        }
+                                                                    }}
+                                                                    className="block py-2 text-xs font-semibold text-white/80 hover:text-[#FF5500]"
+                                                                >
+                                                                    {subItem.name}
+                                                                </Link>
+                                                                {subItem.subItems?.map((child) => (
+                                                                    <Link
+                                                                        key={child.name}
+                                                                        href={child.href}
+                                                                        onClick={() => setIsMenuOpen(false)}
+                                                                        className="block pl-4 py-1 text-[11px] font-medium text-white/60 hover:text-[#FF5500]"
+                                                                    >
+                                                                        └ {child.name}
+                                                                    </Link>
+                                                                ))}
+                                                            </React.Fragment>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Language Switcher */}
+                                <div className="pt-2 border-t border-white/10">
                                     <button
                                         onClick={() => { toggleLanguage(); setIsMenuOpen(false); }}
-                                        className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/5 transition-all duration-200"
-                                        aria-label={language === 'en' ? 'Switch to Bangla' : 'Switch to English'}
+                                        className="w-full flex items-center justify-between px-3 py-2.5 bg-white/5 hover:bg-white/10 rounded text-xs font-bold text-white transition-colors"
                                     >
-                                        <div className="flex items-center gap-2.5">
-                                            <Globe size={15} className="text-white/60" />
-                                            <span className="font-semibold text-sm">
-                                                {language === 'en' ? 'Switch to Bangla' : 'ইংরেজিতে পরিবর্তন করুন'}
-                                            </span>
+                                        <div className="flex items-center gap-2">
+                                            <Globe size={14} className="text-[#FF5500]" />
+                                            <span>{language === 'en' ? 'Switch to Bangla' : 'Switch to English'}</span>
                                         </div>
-                                        <span className="px-2 py-0.5 text-[11px] font-bold border border-white/20 text-[#fdb94e] bg-white/5 rounded-full tracking-wide">
-                                            {language === 'en' ? 'বাং' : 'EN'}
-                                        </span>
+                                        <span className="text-xl">{language === 'en' ? '🇺🇸' : '🇧🇩'}</span>
                                     </button>
-                                </motion.div>
+                                </div>
 
-                                {/* Auth Section */}
-                                <motion.div variants={mobileItemVariant} className="pt-2">
-                                    {user ? (
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-3 bg-white/5 rounded-xl border border-white/5 p-3">
-                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#f5a623] to-[#fdb94e] text-[#1a2e5a] flex items-center justify-center font-bold text-sm shrink-0">
-                                                    {initials}
-                                                </div>
-                                                <div className="min-w-0">
-                                                    <p className="text-sm font-bold text-white truncate">{user.name}</p>
-                                                    <p className="text-[11px] text-[#fdb94e] capitalize font-medium">{user.role}</p>
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={handleLogout}
-                                                className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-300 rounded-xl font-semibold text-sm transition-all duration-200 border border-red-500/25"
-                                            >
-                                                <LogOut size={15} />
-                                                {t('common.logout')}
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={() => { onOpenLogin(); setIsMenuOpen(false); }}
-                                            className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white/10 hover:bg-white/15 text-white border border-white/15 rounded-xl font-bold text-sm transition-all duration-200 shadow-sm"
-                                        >
-                                            <User size={15} />
-                                            {t('common.login')}
-                                        </button>
-                                    )}
-                                </motion.div>
-                            </motion.div>
+                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </motion.nav>
-        </>
+            </nav>
+        </header>
     );
 };
 

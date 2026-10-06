@@ -663,12 +663,12 @@ const SalaryManagementPage = () => {
     // Get status color
     const getStatusColor = (status) => {
         switch (status) {
-            case 'Paid': return 'bg-gray-100 text-gray-800';
-            case 'Approved': return 'bg-gray-100 text-gray-800';
-            case 'Pending': return 'bg-gray-100 text-gray-800';
+            case 'Paid': return 'bg-slate-100 text-slate-800';
+            case 'Approved': return 'bg-slate-100 text-slate-800';
+            case 'Pending': return 'bg-slate-100 text-slate-800';
             case 'Rejected': return 'bg-red-100 text-red-800';
-            case 'Hold': return 'bg-gray-100 text-gray-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'Hold': return 'bg-slate-100 text-slate-800';
+            default: return 'bg-slate-100 text-slate-800';
         }
     };
 
@@ -687,161 +687,95 @@ const SalaryManagementPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-2 sm:p-4 lg:p-6">
+        <div className="min-h-screen bg-slate-50 p-2 sm:p-4 lg:p-6 font-[family-name:var(--font-poppins)]">
             <div className="container mx-auto">
-                {/* Professional Header */}
-                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
-                    <div className="flex items-center justify-between flex-wrap gap-3 sm:gap-4">
-                        <div className="flex items-center gap-3 sm:gap-4">
-                            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-[#1a202c] rounded-lg flex items-center justify-center">
-                                <span className="text-white text-lg sm:text-xl">💰</span>
-                            </div>
-                            <div>
-                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">
-                                    Salary Management System
-                                </h1>
-                                <p className="text-gray-600 mt-1 text-xs sm:text-sm">Professional payroll processing and employee compensation management</p>
-                            </div>
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-[#1a2e5a] rounded-xl flex items-center justify-center shadow-sm">
+                            <span className="text-2xl">💰</span>
                         </div>
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-extrabold text-[#1a2e5a] tracking-tight">
+                                Salary Management
+                            </h1>
+                            <p className="text-sm text-slate-500 font-medium mt-1">Professional payroll processing & compensation</p>
+                        </div>
+                    </div>
 
-                        {/* Professional View Mode Buttons */}
-                        <div className="flex gap-2 sm:gap-3 flex-wrap">
-                            <button
-                                onClick={() => setViewMode('list')}
-                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
-                                    viewMode === 'list'
-                                        ? 'bg-blue-900 text-white'
-                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                                }`}
-                            >
-                                📋 List View
-                            </button>
-                            <button
-                                onClick={() => setViewMode('cards')}
-                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
-                                    viewMode === 'cards'
-                                        ? 'bg-blue-900 text-white'
-                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                                }`}
-                            >
-                                🎴 Cards View
-                            </button>
-                            <button
-                                onClick={() => setViewMode('analytics')}
-                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
-                                    viewMode === 'analytics'
-                                        ? 'bg-blue-900 text-white'
-                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                                }`}
-                            >
-                                📊 Analytics
-                            </button>
-                            <button
-                                onClick={() => setViewMode('slips')}
-                                className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
-                                    viewMode === 'slips'
-                                        ? 'bg-blue-900 text-white'
-                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                                }`}
-                            >
-                                📄 Salary Slips
-                            </button>
-                        </div>
+                    {/* View Mode Buttons */}
+                    <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
+                        <button onClick={() => setViewMode('list')} className={`whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'list' ? 'bg-[#1a2e5a] text-white shadow-sm hover:shadow-md transition-all duration-300' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-slate-300'}`}>
+                            📋 List
+                        </button>
+                        <button onClick={() => setViewMode('cards')} className={`whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'cards' ? 'bg-[#1a2e5a] text-white shadow-sm hover:shadow-md transition-all duration-300' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-slate-300'}`}>
+                            🎴 Cards
+                        </button>
+                        <button onClick={() => setViewMode('analytics')} className={`whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'analytics' ? 'bg-[#1a2e5a] text-white shadow-sm hover:shadow-md transition-all duration-300' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-slate-300'}`}>
+                            📊 Analytics
+                        </button>
+                        <button onClick={() => setViewMode('slips')} className={`whitespace-nowrap px-4 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'slips' ? 'bg-[#1a2e5a] text-white shadow-sm hover:shadow-md transition-all duration-300' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:border-slate-300'}`}>
+                            📄 Slips
+                        </button>
                     </div>
                 </div>
 
-                {/* Professional Statistics Cards */}
+                {/* Summary Stats Row */}
                 {statistics && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-3 sm:mb-4 lg:mb-6">
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-2">
-                                    <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Salaries</p>
-                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">{statistics.totalRecords || 0}</p>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
-                                        <span className="text-xs text-gray-500 font-medium">Active Records</span>
-                                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        {[
+                            { label: 'Total Salaries', value: statistics.totalRecords || 0, sub: 'Active Records', icon: '👥', accent: 'indigo' },
+                            { label: 'Total Gross Salary', value: `৳${(statistics.totalGrossSalary || 0).toLocaleString()}`, sub: 'Before Deductions', icon: '💰', accent: 'amber' },
+                            { label: 'Total Net Salary', value: `৳${(statistics.totalNetSalary || 0).toLocaleString()}`, sub: 'After Deductions', icon: '💵', accent: 'emerald' },
+                            { label: 'Total Deductions', value: `৳${(statistics.totalDeductions || 0).toLocaleString()}`, sub: 'Tax & Contributions', icon: '📉', accent: 'rose' }
+                        ].map((stat, idx) => (
+                            <div key={idx} className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-100 shadow-sm flex items-center justify-between group hover:shadow-sm hover:shadow-md transition-all duration-300 transition-all duration-300">
+                                <div className="space-y-1 min-w-0">
+                                    <p className="text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider truncate">{stat.label}</p>
+                                    <p className={`text-xl sm:text-2xl font-extrabold ${
+                                        stat.accent==='emerald'?'text-emerald-600':
+                                        stat.accent==='indigo' ?'text-[#1a2e5a]':
+                                        stat.accent==='rose'   ?'text-rose-600':
+                                                           'text-amber-500'
+                                    }`}>{stat.value}</p>
+                                    <span className="text-[10px] text-slate-400 font-medium hidden sm:block">{stat.sub}</span>
                                 </div>
-                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
-                                    <span className="text-lg sm:text-xl lg:text-2xl">👥</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-2">
-                                    <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Gross Salary</p>
-                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">৳{(statistics.totalGrossSalary || 0).toLocaleString()}</p>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
-                                        <span className="text-xs text-gray-500 font-medium">Before Deductions</span>
-                                    </div>
-                                </div>
-                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
-                                    <span className="text-lg sm:text-xl lg:text-2xl">💰</span>
+                                <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-lg sm:text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${
+                                    stat.accent==='emerald'?'bg-emerald-50':
+                                    stat.accent==='indigo' ?'bg-indigo-50':
+                                    stat.accent==='rose'   ?'bg-rose-50':
+                                                       'bg-amber-50'
+                                }`}>
+                                    {stat.icon}
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-2">
-                                    <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Net Salary</p>
-                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">৳{(statistics.totalNetSalary || 0).toLocaleString()}</p>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
-                                        <span className="text-xs text-gray-500 font-medium">After Deductions</span>
-                                    </div>
-                                </div>
-                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
-                                    <span className="text-lg sm:text-xl lg:text-2xl">💵</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-all duration-200">
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-2">
-                                    <p className="text-gray-500 text-xs sm:text-sm font-semibold uppercase tracking-wide">Total Deductions</p>
-                                    <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#1a202c]">৳{(statistics.totalDeductions || 0).toLocaleString()}</p>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-[#1a202c] rounded-full"></div>
-                                        <span className="text-xs text-gray-500 font-medium">Tax & Contributions</span>
-                                    </div>
-                                </div>
-                                <div className="w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#1a202c] rounded-lg flex items-center justify-center">
-                                    <span className="text-lg sm:text-xl lg:text-2xl">📉</span>
-                                </div>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 )}
 
                 {/* Professional Filters Section */}
-                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
+                <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
                     <div className="flex items-center justify-between mb-4 sm:mb-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a2e5a] rounded-xl flex items-center justify-center">
                                 <span className="text-white text-sm sm:text-lg">🔍</span>
                             </div>
                             <div>
-                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Advanced Filters</h2>
-                                <p className="text-gray-600 text-xs sm:text-sm">Filter and search salary records efficiently</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a2e5a]">Advanced Filters</h2>
+                                <p className="text-slate-600 text-xs sm:text-sm">Filter and search salary records efficiently</p>
                             </div>
                         </div>
                         <div className="flex gap-2 sm:gap-3">
                             <button
                                 onClick={applyFilters}
-                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>🔍</span>
                                 <span className="hidden sm:inline">Apply Filters</span>
                             </button>
                             <button
                                 onClick={clearFilters}
-                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>🗑️</span>
                                 <span className="hidden sm:inline">Clear All</span>
@@ -852,16 +786,16 @@ const SalaryManagementPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                         {/* Professional Search Input */}
                         <div className="space-y-2">
-                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">🔍 Search Employees</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-slate-700">🔍 Search Employees</label>
                             <div className="relative">
                                 <input
                                     type="text"
                                     value={filters.search}
                                     onChange={(e) => handleFilterChange('search', e.target.value)}
                                     placeholder="Search by name, ID, or designation..."
-                                    className="w-full pl-10 pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700 placeholder-gray-400"
+                                    className="w-full pl-10 pr-4 py-2 sm:py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1a2e5a]/20 focus:border-[#1a2e5a] outline-none transition-all duration-200 bg-white text-slate-700 placeholder-gray-400"
                                 />
-                                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
                                     <span className="text-sm">🔍</span>
                                 </div>
                             </div>
@@ -869,11 +803,11 @@ const SalaryManagementPage = () => {
 
                         {/* Employee Type */}
                         <div className="space-y-2">
-                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">👤 Employee Type</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-slate-700">👤 Employee Type</label>
                             <select
                                 value={filters.employeeType}
                                 onChange={(e) => handleFilterChange('employeeType', e.target.value)}
-                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1a2e5a]/20 focus:border-[#1a2e5a] outline-none transition-all duration-200 bg-white text-slate-700"
                             >
                                 <option value="">All Employee Types</option>
                                 {employeeTypes.map((type, index) => (
@@ -884,11 +818,11 @@ const SalaryManagementPage = () => {
 
                         {/* Department */}
                         <div className="space-y-2">
-                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">🏢 Department</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-slate-700">🏢 Department</label>
                             <select
                                 value={filters.department}
                                 onChange={(e) => handleFilterChange('department', e.target.value)}
-                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1a2e5a]/20 focus:border-[#1a2e5a] outline-none transition-all duration-200 bg-white text-slate-700"
                             >
                                 <option value="">All Departments</option>
                                 {departments.map((dept, index) => (
@@ -899,11 +833,11 @@ const SalaryManagementPage = () => {
 
                         {/* Status */}
                         <div className="space-y-2">
-                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">📊 Status</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-slate-700">📊 Status</label>
                             <select
                                 value={filters.status}
                                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1a2e5a]/20 focus:border-[#1a2e5a] outline-none transition-all duration-200 bg-white text-slate-700"
                             >
                                 <option value="">All Status</option>
                                 <option value="Draft">📝 Draft</option>
@@ -917,48 +851,48 @@ const SalaryManagementPage = () => {
 
                         {/* Salary Month */}
                         <div className="space-y-2">
-                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">📅 Salary Month</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-slate-700">📅 Salary Month</label>
                             <input
                                 type="month"
                                 value={filters.salaryMonth}
                                 onChange={(e) => handleFilterChange('salaryMonth', e.target.value)}
-                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1a2e5a]/20 focus:border-[#1a2e5a] outline-none transition-all duration-200 bg-white text-slate-700"
                             />
                         </div>
 
                         {/* Salary Year */}
                         <div className="space-y-2">
-                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">📆 Salary Year</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-slate-700">📆 Salary Year</label>
                             <input
                                 type="number"
                                 value={filters.salaryYear}
                                 onChange={(e) => handleFilterChange('salaryYear', e.target.value)}
                                 placeholder="2026"
-                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1a2e5a]/20 focus:border-[#1a2e5a] outline-none transition-all duration-200 bg-white text-slate-700"
                             />
                         </div>
 
                         {/* Academic Year */}
                         <div className="space-y-2">
-                            <label className="block text-xs sm:text-sm font-semibold text-gray-700">🎓 Academic Year</label>
+                            <label className="block text-xs sm:text-sm font-semibold text-slate-700">🎓 Academic Year</label>
                             <input
                                 type="text"
                                 value={filters.academicYear}
                                 onChange={(e) => handleFilterChange('academicYear', e.target.value)}
                                 placeholder="2025-2026"
-                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a202c] focus:border-transparent transition-all duration-200 bg-white text-gray-700"
+                                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#1a2e5a]/20 focus:border-[#1a2e5a] outline-none transition-all duration-200 bg-white text-slate-700"
                             />
                         </div>
                     </div>
                 </div>
 
                 {/* Professional Action Buttons */}
-                <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
+                <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 p-3 sm:p-4 lg:p-6 mb-3 sm:mb-4 lg:mb-6">
                     <div className="flex flex-wrap gap-3 sm:gap-4 justify-between items-center">
                         <div className="flex gap-2 sm:gap-3 flex-wrap">
                             <button
                                 onClick={() => setShowForm(true)}
-                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>➕</span>
                                 <span>Add Salary</span>
@@ -968,7 +902,7 @@ const SalaryManagementPage = () => {
                                 <>
                                     <button
                                         onClick={() => setShowBulkActions(!showBulkActions)}
-                                        className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                        className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                                     >
                                         <span>⚡</span>
                                         <span>Bulk Actions ({selectedSalaries.length})</span>
@@ -978,14 +912,14 @@ const SalaryManagementPage = () => {
                                         <div className="flex gap-2 sm:gap-3 flex-wrap">
                                             <button
                                                 onClick={bulkApprove}
-                                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                                             >
                                                 <span>✅</span>
                                                 <span>Approve All</span>
                                             </button>
                                             <button
                                                 onClick={bulkDelete}
-                                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-all duration-200 flex items-center gap-2"
+                                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-all duration-200 flex items-center gap-2"
                                             >
                                                 <span>🗑️</span>
                                                 <span>Delete All</span>
@@ -999,7 +933,7 @@ const SalaryManagementPage = () => {
                         <div className="flex gap-2 sm:gap-3 flex-wrap">
                             <button
                                 onClick={exportToExcel}
-                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                             >
                                 <span>📊</span>
                                 <span>Export Excel</span>
@@ -1007,7 +941,7 @@ const SalaryManagementPage = () => {
                             {selectedSlip && (
                                 <button
                                     onClick={exportSalarySlipToPDF}
-                                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
+                                    className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200 flex items-center gap-2"
                                 >
                                     <span>📄</span>
                                     <span>Export Salary Slip PDF</span>
@@ -1020,20 +954,20 @@ const SalaryManagementPage = () => {
                 {/* Professional Add/Edit Form Modal */}
                 {showForm && (
                     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md bg-black/20">
-                        <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto border border-gray-200">
+                        <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto border border-slate-200">
                             <div className="p-3 sm:p-4 lg:p-6">
                                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                        <div className="w-10 sm:w-12 h-10 sm:h-12 bg-[#1a2e5a] rounded-xl flex items-center justify-center">
                                             <span className="text-white text-lg sm:text-xl">
                                                 {editingSalary ? '✏️' : '➕'}
                                             </span>
                                         </div>
                                         <div>
-                                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">
+                                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a2e5a]">
                                                 {editingSalary ? 'Edit Salary Record' : 'Add New Salary'}
                                             </h2>
-                                            <p className="text-gray-600 mt-1 text-xs sm:text-sm">
+                                            <p className="text-slate-600 mt-1 text-xs sm:text-sm">
                                                 {editingSalary ? 'Update employee salary details' : 'Create a new salary entry for an employee'}
                                             </p>
                                         </div>
@@ -1044,7 +978,7 @@ const SalaryManagementPage = () => {
                                             setEditingSalary(null);
                                             resetForm();
                                         }}
-                                        className="w-8 sm:w-10 h-8 sm:h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center text-gray-600 hover:text-gray-800 transition-all duration-200"
+                                        className="w-8 sm:w-10 h-8 sm:h-10 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center text-slate-600 hover:text-slate-800 transition-all duration-200"
                                     >
                                         <span className="text-lg sm:text-xl">×</span>
                                     </button>
@@ -1054,13 +988,13 @@ const SalaryManagementPage = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {/* Employee Selection */}
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                 Employee *
                                             </label>
                                             <select
                                                 value={formData.employeeId}
                                                 onChange={(e) => handleEmployeeChange(e.target.value)}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all bg-white text-gray-700"
+                                                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all bg-white text-slate-700"
                                                 required
                                             >
                                                 <option value="">Select Employee</option>
@@ -1074,13 +1008,13 @@ const SalaryManagementPage = () => {
 
                                         {/* Employee Type */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                 Employee Type
                                             </label>
                                             <select
                                                 value={formData.employeeType}
                                                 onChange={(e) => setFormData({...formData, employeeType: e.target.value})}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all bg-white text-gray-700"
+                                                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all bg-white text-slate-700"
                                             >
                                                 {employeeTypeOptions.map((type, index) => (
                                                     <option key={index} value={type}>{type}</option>
@@ -1090,13 +1024,13 @@ const SalaryManagementPage = () => {
 
                                         {/* Department */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                 Department
                                             </label>
                                             <select
                                                 value={formData.department}
                                                 onChange={(e) => setFormData({...formData, department: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                             >
                                                 {departmentOptions.map((dept, index) => (
                                                     <option key={index} value={dept}>{dept}</option>
@@ -1106,13 +1040,13 @@ const SalaryManagementPage = () => {
 
                                         {/* Designation */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                 Designation
                                             </label>
                                             <select
                                                 value={formData.designation}
                                                 onChange={(e) => setFormData({...formData, designation: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                             >
                                                 <option value="">Select Designation</option>
                                                 {designations.map((desig, index) => (
@@ -1123,46 +1057,46 @@ const SalaryManagementPage = () => {
 
                                         {/* Salary Month */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                 Salary Month
                                             </label>
                                             <input
                                                 type="month"
                                                 value={formData.salaryMonth}
                                                 onChange={(e) => setFormData({...formData, salaryMonth: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                             />
                                         </div>
 
                                         {/* Academic Year */}
                                         <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                            <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                 Academic Year
                                             </label>
                                             <input
                                                 type="text"
                                                 value={formData.academicYear}
                                                 onChange={(e) => setFormData({...formData, academicYear: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                 placeholder="2025-2026"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Salary Structure */}
-                                    <div className="bg-blue-50 rounded-lg p-6">
-                                        <h3 className="text-lg font-bold text-gray-800 mb-4">💰 Salary Structure</h3>
+                                    <div className="bg-blue-50 rounded-xl p-6">
+                                        <h3 className="text-lg font-bold text-slate-800 mb-4">💰 Salary Structure</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                             {/* Basic Salary */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Basic Salary (৳) *
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.basicSalary || ''}
                                                     onChange={(e) => setFormData({...formData, basicSalary: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1172,14 +1106,14 @@ const SalaryManagementPage = () => {
 
                                             {/* House Rent Allowance */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     House Rent Allowance (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.houseRentAllowance || ''}
                                                     onChange={(e) => setFormData({...formData, houseRentAllowance: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1188,14 +1122,14 @@ const SalaryManagementPage = () => {
 
                                             {/* Conveyance Allowance */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Conveyance Allowance (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.conveyanceAllowance || ''}
                                                     onChange={(e) => setFormData({...formData, conveyanceAllowance: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1204,14 +1138,14 @@ const SalaryManagementPage = () => {
 
                                             {/* Medical Allowance */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Medical Allowance (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.medicalAllowance || ''}
                                                     onChange={(e) => setFormData({...formData, medicalAllowance: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1220,14 +1154,14 @@ const SalaryManagementPage = () => {
 
                                             {/* Special Allowance */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Special Allowance (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.specialAllowance || ''}
                                                     onChange={(e) => setFormData({...formData, specialAllowance: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1236,14 +1170,14 @@ const SalaryManagementPage = () => {
 
                                             {/* Performance Bonus */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Performance Bonus (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.performanceBonus || ''}
                                                     onChange={(e) => setFormData({...formData, performanceBonus: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1253,19 +1187,19 @@ const SalaryManagementPage = () => {
                                     </div>
 
                                     {/* Deductions */}
-                                    <div className="bg-red-50 rounded-lg p-6">
-                                        <h3 className="text-lg font-bold text-gray-800 mb-4">📉 Deductions</h3>
+                                    <div className="bg-red-50 rounded-xl p-6">
+                                        <h3 className="text-lg font-bold text-slate-800 mb-4">📉 Deductions</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                             {/* Provident Fund */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Provident Fund (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.providentFund || ''}
                                                     onChange={(e) => setFormData({...formData, providentFund: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1274,14 +1208,14 @@ const SalaryManagementPage = () => {
 
                                             {/* Professional Tax */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Professional Tax (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.professionalTax || ''}
                                                     onChange={(e) => setFormData({...formData, professionalTax: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1290,14 +1224,14 @@ const SalaryManagementPage = () => {
 
                                             {/* Income Tax */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Income Tax (৳)
                                                 </label>
                                                 <input
                                                     type="number"
                                                     value={formData.incomeTax || ''}
                                                     onChange={(e) => setFormData({...formData, incomeTax: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="0.00"
                                                     step="0.01"
                                                     min="0"
@@ -1307,12 +1241,12 @@ const SalaryManagementPage = () => {
                                     </div>
 
                                     {/* Attendance & Overtime */}
-                                    <div className="bg-green-50 rounded-lg p-6">
-                                        <h3 className="text-lg font-bold text-gray-800 mb-4">📅 Attendance & Overtime</h3>
+                                    <div className="bg-green-50 rounded-xl p-6">
+                                        <h3 className="text-lg font-bold text-slate-800 mb-4">📅 Attendance & Overtime</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                             {/* Working Days */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Working Days
                                                 </label>
                                                 <input
@@ -1322,7 +1256,7 @@ const SalaryManagementPage = () => {
                                                         const value = e.target.value;
                                                         setFormData({...formData, workingDays: value === '' ? 30 : parseInt(value) || 30});
                                                     }}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     min="1"
                                                     max="31"
                                                 />
@@ -1330,7 +1264,7 @@ const SalaryManagementPage = () => {
 
                                             {/* Present Days */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Present Days
                                                 </label>
                                                 <input
@@ -1340,7 +1274,7 @@ const SalaryManagementPage = () => {
                                                         const value = e.target.value;
                                                         setFormData({...formData, presentDays: value === '' ? 30 : parseInt(value) || 30});
                                                     }}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     min="0"
                                                     max={formData.workingDays}
                                                 />
@@ -1348,7 +1282,7 @@ const SalaryManagementPage = () => {
 
                                             {/* Overtime Hours */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Overtime Hours
                                                 </label>
                                                 <input
@@ -1358,7 +1292,7 @@ const SalaryManagementPage = () => {
                                                         const value = e.target.value;
                                                         setFormData({...formData, overtimeHours: value === '' ? 0 : parseFloat(value) || 0});
                                                     }}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     step="0.5"
                                                     min="0"
                                                 />
@@ -1366,7 +1300,7 @@ const SalaryManagementPage = () => {
 
                                             {/* Overtime Rate */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Overtime Rate (৳/hour)
                                                 </label>
                                                 <input
@@ -1376,7 +1310,7 @@ const SalaryManagementPage = () => {
                                                         const value = e.target.value;
                                                         setFormData({...formData, overtimeRate: value === '' ? 0 : parseFloat(value) || 0});
                                                     }}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     step="0.01"
                                                     min="0"
                                                 />
@@ -1385,18 +1319,18 @@ const SalaryManagementPage = () => {
                                     </div>
 
                                     {/* Payment Information */}
-                                    <div className="bg-purple-50 rounded-lg p-6">
-                                        <h3 className="text-lg font-bold text-gray-800 mb-4">💳 Payment Information</h3>
+                                    <div className="bg-purple-50 rounded-xl p-6">
+                                        <h3 className="text-lg font-bold text-slate-800 mb-4">💳 Payment Information</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                             {/* Payment Method */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Payment Method
                                                 </label>
                                                 <select
                                                     value={formData.paymentMethod}
                                                     onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                 >
                                                     {paymentMethods.map((method, index) => (
                                                         <option key={index} value={method}>{method}</option>
@@ -1406,7 +1340,7 @@ const SalaryManagementPage = () => {
 
                                             {/* Bank Account Number */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Account Number
                                                 </label>
                                                 <input
@@ -1416,14 +1350,14 @@ const SalaryManagementPage = () => {
                                                         ...formData,
                                                         bankAccount: {...formData.bankAccount, accountNumber: e.target.value}
                                                     })}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="Bank account number"
                                                 />
                                             </div>
 
                                             {/* Bank Name */}
                                             <div>
-                                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">
                                                     Bank Name
                                                 </label>
                                                 <input
@@ -1433,7 +1367,7 @@ const SalaryManagementPage = () => {
                                                         ...formData,
                                                         bankAccount: {...formData.bankAccount, bankName: e.target.value}
                                                     })}
-                                                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                                     placeholder="Bank name"
                                                 />
                                             </div>
@@ -1442,20 +1376,20 @@ const SalaryManagementPage = () => {
 
                                     {/* Notes */}
                                     <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                        <label className="block text-sm font-semibold text-slate-700 mb-2">
                                             Notes
                                         </label>
                                         <textarea
                                             value={formData.notes}
                                             onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
+                                            className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-gray-800 focus:border-transparent transition-all"
                                             rows="3"
                                             placeholder="Additional notes..."
                                         ></textarea>
                                     </div>
 
                                     {/* Professional Submit Buttons */}
-                                    <div className="flex gap-4 justify-end pt-6 border-t border-gray-200">
+                                    <div className="flex gap-4 justify-end pt-6 border-t border-slate-200">
                                         <button
                                             type="button"
                                             onClick={() => {
@@ -1463,14 +1397,14 @@ const SalaryManagementPage = () => {
                                                 setEditingSalary(null);
                                                 resetForm();
                                             }}
-                                            className="px-6 py-2 sm:px-8 sm:py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200"
+                                            className="px-6 py-2 sm:px-8 sm:py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-all duration-200"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={loading}
-                                            className="px-6 py-2 sm:px-8 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200 disabled:opacity-50 flex items-center gap-2"
+                                            className="px-6 py-2 sm:px-8 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200 disabled:opacity-50 flex items-center gap-2"
                                         >
                                             {loading && (
                                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -1486,15 +1420,15 @@ const SalaryManagementPage = () => {
 
                 {/* Professional Salaries List View */}
                 {viewMode === 'list' && (
-                    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
-                        <div className="p-3 sm:p-4 lg:p-6 border-b border-gray-200">
+                    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 overflow-hidden">
+                        <div className="p-3 sm:p-4 lg:p-6 border-b border-slate-200">
                             <div className="flex items-center gap-3">
-                                <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a2e5a] rounded-xl flex items-center justify-center">
                                     <span className="text-white text-sm sm:text-lg">📋</span>
                                 </div>
                                 <div>
-                                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Salary Records</h2>
-                                    <p className="text-gray-600 text-xs sm:text-sm">{salaries.length} total salary entries</p>
+                                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a2e5a]">Salary Records</h2>
+                                    <p className="text-slate-600 text-xs sm:text-sm">{salaries.length} total salary entries</p>
                                 </div>
                             </div>
                         </div>
@@ -1502,9 +1436,9 @@ const SalaryManagementPage = () => {
                         {salaries.length > 0 ? (
                             <div className="overflow-x-auto">
                                 <table className="w-full">
-                                    <thead className="bg-gray-50 border-b border-gray-200">
+                                    <thead className="bg-[#1a2e5a] text-white text-xs font-semibold">
                                         <tr>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left">
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 px-4 py-3.5 whitespace-nowrap text-left">
                                                 <input
                                                     type="checkbox"
                                                     onChange={(e) => {
@@ -1515,22 +1449,22 @@ const SalaryManagementPage = () => {
                                                         }
                                                     }}
                                                     checked={selectedSalaries.length === salaries.length && salaries.length > 0}
-                                                    className="w-3 sm:w-4 h-3 sm:h-4 rounded border-gray-300 text-[#1a202c] focus:ring-[#1a202c]"
+                                                    className="w-3 sm:w-4 h-3 sm:h-4 rounded border-slate-300 text-[#1a2e5a] focus:ring-[#1a2e5a]"
                                                 />
                                             </th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Salary ID</th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Employee</th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Department</th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Month/Year</th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right font-semibold text-gray-700 text-xs sm:text-sm">Basic Salary</th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right font-semibold text-gray-700 text-xs sm:text-sm">Net Salary</th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center font-semibold text-gray-700 text-xs sm:text-sm">Status</th>
-                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center font-semibold text-gray-700 text-xs sm:text-sm">Actions</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4  font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Salary ID</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4  font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Employee</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4  font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Department</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4  font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Month/Year</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Basic Salary</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Net Salary</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Status</th>
+                                            <th className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center font-semibold   sm:text-sm px-4 py-3.5 whitespace-nowrap text-left">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {salaries.map((salary, index) => (
-                                            <tr key={salary._id} className="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
+                                            <tr key={salary._id} className="border-b border-slate-100 hover:bg-slate-50 transition-all duration-200">
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
                                                     <input
                                                         type="checkbox"
@@ -1542,40 +1476,38 @@ const SalaryManagementPage = () => {
                                                                 setSelectedSalaries(selectedSalaries.filter(id => id !== salary._id));
                                                             }
                                                         }}
-                                                        className="w-3 sm:w-4 h-3 sm:h-4 rounded border-gray-300 text-[#1a202c] focus:ring-[#1a202c]"
+                                                        className="w-3 sm:w-4 h-3 sm:h-4 rounded border-slate-300 text-[#1a2e5a] focus:ring-[#1a2e5a]"
                                                     />
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
-                                                    <span className="font-mono text-xs sm:text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">{salary.salaryId}</span>
+                                                    <span className="font-mono text-xs sm:text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded">{salary.salaryId}</span>
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
                                                     <div className="space-y-1">
-                                                        <div className="font-semibold text-[#1a202c] text-sm sm:text-base">{salary.employeeName}</div>
-                                                        <div className="text-xs sm:text-sm text-gray-500">{salary.designation}</div>
+                                                        <div className="font-semibold text-[#1a2e5a] text-sm sm:text-base">{salary.employeeName}</div>
+                                                        <div className="text-xs sm:text-sm text-slate-500">{salary.designation}</div>
                                                     </div>
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4">
-                                                    <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs sm:text-sm font-medium">{salary.department}</span>
+                                                    <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded-full text-xs sm:text-sm font-medium">{salary.department}</span>
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center">
-                                                    <span className="font-medium text-[#1a202c] text-xs sm:text-sm">{salary.salaryMonth}/{salary.salaryYear}</span>
+                                                    <span className="font-medium text-[#1a2e5a] text-xs sm:text-sm">{salary.salaryMonth}/{salary.salaryYear}</span>
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right">
-                                                    <span className="font-semibold text-[#1a202c] text-sm sm:text-base">৳{(salary.basicSalary || 0).toFixed(2)}</span>
+                                                    <span className="font-semibold text-[#1a2e5a] text-sm sm:text-base">৳{(salary.basicSalary || 0).toFixed(2)}</span>
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-right">
-                                                    <span className="font-semibold text-[#1a202c] text-sm sm:text-base">৳{(salary.netSalary || 0).toFixed(2)}</span>
+                                                    <span className="font-semibold text-[#1a2e5a] text-sm sm:text-base">৳{(salary.netSalary || 0).toFixed(2)}</span>
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center">
-                                                    <span className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(salary.status)}`}>
-                                                        {salary.status}
-                                                    </span>
+                                                    <StatusBadge status={salary.status} />
                                                 </td>
                                                 <td className="px-2 sm:px-3 lg:px-6 py-2 sm:py-3 lg:py-4 text-center">
                                                     <div className="flex gap-1 sm:gap-2 justify-center">
                                                         <button
                                                             onClick={() => editSalary(salary)}
-                                                            className="p-1 sm:p-2 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 transition-all duration-200"
+                                                            className="p-1 sm:p-2 bg-[#1a2e5a] text-white rounded text-sm hover:bg-blue-800 transition-all duration-200"
                                                             title="Edit Salary"
                                                         >
                                                             ✏️
@@ -1583,7 +1515,7 @@ const SalaryManagementPage = () => {
 
                                                         <button
                                                             onClick={() => generateSalarySlip(salary._id)}
-                                                            className="p-1 sm:p-2 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 transition-all duration-200"
+                                                            className="p-1 sm:p-2 bg-[#1a2e5a] text-white rounded text-sm hover:bg-blue-800 transition-all duration-200"
                                                             title="Generate Salary Slip"
                                                         >
                                                             📄
@@ -1623,7 +1555,7 @@ const SalaryManagementPage = () => {
                                                             <button
                                                                 onClick={() => markAsPaid(salary._id)}
                                                                 disabled={markAsPaidMutation.isPending}
-                                                                className="p-1 sm:p-2 bg-blue-900 text-white rounded text-sm hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                                                className="p-1 sm:p-2 bg-[#1a2e5a] text-white rounded text-sm hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                                 title="Mark as Paid"
                                                             >
                                                                 {markAsPaidMutation.isPending ? '⏳' : '💰'}
@@ -1638,18 +1570,18 @@ const SalaryManagementPage = () => {
                             </div>
                         ) : (
                             <div className="text-center py-12 sm:py-16">
-                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <span className="text-3xl sm:text-4xl">📋</span>
                                 </div>
-                                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">No Salary Records Found</h3>
-                                <p className="text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-base">
+                                <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2">No Salary Records Found</h3>
+                                <p className="text-slate-600 mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-base">
                                     {Object.values(filters).some(filter => filter !== '' && filter !== new Date().getFullYear().toString())
                                         ? "No salary records match your current filters. Try adjusting your search criteria."
                                         : "Start by adding your first salary record to track employee compensation."}
                                 </p>
                                 <button
                                     onClick={() => setShowForm(true)}
-                                    className="px-6 py-2 sm:px-8 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200"
+                                    className="px-6 py-2 sm:px-8 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200"
                                 >
                                     ➕ Add First Salary
                                 </button>
@@ -1662,67 +1594,65 @@ const SalaryManagementPage = () => {
                 {viewMode === 'cards' && (
                     <div className="space-y-4 sm:space-y-6">
                         <div className="flex items-center gap-3 sm:gap-4">
-                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a2e5a] rounded-xl flex items-center justify-center">
                                 <span className="text-white text-sm sm:text-lg">🎴</span>
                             </div>
                             <div>
-                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Salary Cards</h2>
-                                <p className="text-gray-600 text-xs sm:text-sm">{salaries.length} salary records in card view</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a2e5a]">Salary Cards</h2>
+                                <p className="text-slate-600 text-xs sm:text-sm">{salaries.length} salary records in card view</p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             {salaries.map((salary) => (
-                                <div key={salary._id} className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all duration-200">
+                                <div key={salary._id} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 hover:shadow-lg transition-all duration-200">
                                     <div className="p-4 sm:p-6">
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="space-y-2">
-                                                <h3 className="font-semibold text-base sm:text-lg text-gray-800 line-clamp-1">{salary.employeeName}</h3>
-                                                <p className="text-xs sm:text-sm text-gray-500">{salary.designation}</p>
-                                                <p className="text-xs text-gray-400 font-mono bg-gray-100 px-2 py-1 rounded inline-block">{salary.salaryId}</p>
+                                                <h3 className="font-semibold text-base sm:text-lg text-slate-800 line-clamp-1">{salary.employeeName}</h3>
+                                                <p className="text-xs sm:text-sm text-slate-500">{salary.designation}</p>
+                                                <p className="text-xs text-slate-400 font-mono bg-slate-100 px-2 py-1 rounded inline-block">{salary.salaryId}</p>
                                             </div>
                                             <div className="flex flex-col items-end gap-2">
-                                                <span className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(salary.status)}`}>
-                                                    {salary.status}
-                                                </span>
-                                                <span className="text-xs sm:text-sm text-gray-600 font-medium">{salary.salaryMonth}/{salary.salaryYear}</span>
+                                                <StatusBadge status={salary.status} />
+                                                <span className="text-xs sm:text-sm text-slate-600 font-medium">{salary.salaryMonth}/{salary.salaryYear}</span>
                                             </div>
                                         </div>
 
                                         <div className="space-y-3 mb-4 sm:mb-6">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-gray-600 font-medium text-sm">Department:</span>
-                                                <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs sm:text-sm font-medium">{salary.department}</span>
+                                                <span className="text-slate-600 font-medium text-sm">Department:</span>
+                                                <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded-full text-xs sm:text-sm font-medium">{salary.department}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-gray-600 font-medium text-sm">Basic Salary:</span>
-                                                <span className="font-semibold text-gray-800 text-sm">৳{(salary.basicSalary || 0).toFixed(2)}</span>
+                                                <span className="text-slate-600 font-medium text-sm">Basic Salary:</span>
+                                                <span className="font-semibold text-slate-800 text-sm">৳{(salary.basicSalary || 0).toFixed(2)}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-gray-600 font-medium text-sm">Gross Salary:</span>
-                                                <span className="font-semibold text-gray-800 text-sm">৳{(salary.grossSalary || 0).toFixed(2)}</span>
+                                                <span className="text-slate-600 font-medium text-sm">Gross Salary:</span>
+                                                <span className="font-semibold text-slate-800 text-sm">৳{(salary.grossSalary || 0).toFixed(2)}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-gray-600 font-medium text-sm">Net Salary:</span>
-                                                <span className="font-semibold text-gray-800 text-sm">৳{(salary.netSalary || 0).toFixed(2)}</span>
+                                                <span className="text-slate-600 font-medium text-sm">Net Salary:</span>
+                                                <span className="font-semibold text-slate-800 text-sm">৳{(salary.netSalary || 0).toFixed(2)}</span>
                                             </div>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-gray-600 font-medium text-sm">Deductions:</span>
-                                                <span className="font-semibold text-gray-800 text-sm">৳{(salary.totalDeductions || 0).toFixed(2)}</span>
+                                                <span className="text-slate-600 font-medium text-sm">Deductions:</span>
+                                                <span className="font-semibold text-slate-800 text-sm">৳{(salary.totalDeductions || 0).toFixed(2)}</span>
                                             </div>
                                         </div>
 
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => editSalary(salary)}
-                                                className="flex-1 px-3 py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all duration-200"
+                                                className="flex-1 px-3 py-2 bg-[#1a2e5a] text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all duration-200"
                                             >
                                                 ✏️ Edit
                                             </button>
 
                                             <button
                                                 onClick={() => generateSalarySlip(salary._id)}
-                                                className="flex-1 px-3 py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all duration-200"
+                                                className="flex-1 px-3 py-2 bg-[#1a2e5a] text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 transition-all duration-200"
                                             >
                                                 📄 Slip
                                             </button>
@@ -1750,7 +1680,7 @@ const SalaryManagementPage = () => {
                                                 <button
                                                     onClick={() => markAsPaid(salary._id)}
                                                     disabled={markAsPaidMutation.isPending}
-                                                    className="flex-1 px-3 py-2 bg-blue-900 text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                                    className="flex-1 px-3 py-2 bg-[#1a2e5a] text-white rounded text-xs sm:text-sm font-semibold hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                                 >
                                                     {markAsPaidMutation.isPending ? '⏳ Marking Paid...' : '💰 Mark Paid'}
                                                 </button>
@@ -1762,18 +1692,18 @@ const SalaryManagementPage = () => {
 
                         {salaries.length === 0 && (
                             <div className="col-span-full text-center py-12 sm:py-16">
-                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <span className="text-3xl sm:text-4xl">🎴</span>
                                 </div>
-                                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">No Salary Records Found</h3>
-                                <p className="text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-base">
+                                <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2">No Salary Records Found</h3>
+                                <p className="text-slate-600 mb-6 sm:mb-8 max-w-md mx-auto text-sm sm:text-base">
                                     {Object.values(filters).some(filter => filter !== '' && filter !== new Date().getFullYear().toString())
                                         ? "No salary records match your current filters. Try adjusting your search criteria."
                                         : "Start by adding your first salary record to track employee compensation."}
                                 </p>
                                 <button
                                     onClick={() => setShowForm(true)}
-                                    className="px-6 py-2 sm:px-8 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all duration-200"
+                                    className="px-6 py-2 sm:px-8 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all duration-200"
                                 >
                                     ➕ Add First Salary
                                 </button>
@@ -1788,23 +1718,23 @@ const SalaryManagementPage = () => {
                     <div className="space-y-4 sm:space-y-6">
                         {/* Analytics Header */}
                         <div className="flex items-center gap-3">
-                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-[#1a2e5a] rounded-xl flex items-center justify-center">
                                 <span className="text-white text-sm sm:text-lg">📊</span>
                             </div>
                             <div>
-                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">Salary Analytics</h2>
-                                <p className="text-gray-600 text-xs sm:text-sm">Comprehensive insights into salary distribution and trends</p>
+                                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a2e5a]">Salary Analytics</h2>
+                                <p className="text-slate-600 text-xs sm:text-sm">Comprehensive insights into salary distribution and trends</p>
                             </div>
                         </div>
 
                         {/* Status Breakdown */}
-                        <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                        <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 overflow-hidden">
                             <div className="p-3 sm:p-4 lg:p-6">
                                 <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                                    <div className="w-6 sm:w-8 h-6 sm:h-8 bg-[#1a202c] rounded-lg flex items-center justify-center">
+                                    <div className="w-6 sm:w-8 h-6 sm:h-8 bg-[#1a2e5a] rounded-xl flex items-center justify-center">
                                         <span className="text-white text-xs sm:text-sm">📈</span>
                                     </div>
-                                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#1a202c]">Status Breakdown</h3>
+                                    <h3 className="text-base sm:text-lg lg:text-xl font-bold text-[#1a2e5a]">Status Breakdown</h3>
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                                     <div className="text-center p-6 bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl border border-slate-200 hover:shadow-lg transition-all duration-300">
@@ -1893,70 +1823,70 @@ const SalaryManagementPage = () => {
 
                 {/* Salary Slip View */}
                 {viewMode === 'slips' && selectedSlip && (
-                    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3 sm:p-4 lg:p-8">
+                    <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-slate-200 p-3 sm:p-4 lg:p-8">
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
-                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a202c]">📄 Salary Slip</h2>
+                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#1a2e5a]">📄 Salary Slip</h2>
                             <button
                                 onClick={exportSalarySlipToPDF}
-                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition-all"
+                                className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-[#1a2e5a] text-white rounded-xl font-semibold hover:bg-blue-800 transition-all"
                             >
                                 📄 Export PDF
                             </button>
                         </div>
 
-                        <div id="salary-slip" className="bg-gray-50 rounded-lg p-4 sm:p-6 lg:p-8 border-2 border-gray-300">
+                        <div id="salary-slip" className="bg-slate-50 rounded-xl p-4 sm:p-6 lg:p-8 border-2 border-slate-300">
                             {/* Header */}
                             <div className="text-center mb-8">
-                                <h1 className="text-3xl font-bold text-gray-800 mb-2">Sunlight School</h1>
-                                <p className="text-gray-600">Salary Slip for {selectedSlip.salaryDetails.month}/{selectedSlip.salaryDetails.year}</p>
-                                <p className="text-sm text-gray-500">Salary ID: {selectedSlip.salaryId}</p>
+                                <h1 className="text-3xl font-bold text-slate-800 mb-2">Sunlight School</h1>
+                                <p className="text-slate-600">Salary Slip for {selectedSlip.salaryDetails.month}/{selectedSlip.salaryDetails.year}</p>
+                                <p className="text-sm text-slate-500">Salary ID: {selectedSlip.salaryId}</p>
                             </div>
 
                             {/* Employee Information */}
                             <div className="grid grid-cols-2 gap-8 mb-8">
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-800 mb-4">Employee Details</h3>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4">Employee Details</h3>
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Name:</span>
+                                            <span className="text-slate-600">Name:</span>
                                             <span className="font-semibold">{selectedSlip.employee.name}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Employee ID:</span>
+                                            <span className="text-slate-600">Employee ID:</span>
                                             <span className="font-semibold">{selectedSlip.employee.id}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Designation:</span>
+                                            <span className="text-slate-600">Designation:</span>
                                             <span className="font-semibold">{selectedSlip.employee.designation}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Department:</span>
+                                            <span className="text-slate-600">Department:</span>
                                             <span className="font-semibold">{selectedSlip.employee.department}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Employee Type:</span>
+                                            <span className="text-slate-600">Employee Type:</span>
                                             <span className="font-semibold">{selectedSlip.employee.type}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-800 mb-4">Salary Period</h3>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4">Salary Period</h3>
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Month/Year:</span>
+                                            <span className="text-slate-600">Month/Year:</span>
                                             <span className="font-semibold">{selectedSlip.salaryDetails.month}/{selectedSlip.salaryDetails.year}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Working Days:</span>
+                                            <span className="text-slate-600">Working Days:</span>
                                             <span className="font-semibold">{selectedSlip.salaryDetails.workingDays}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Present Days:</span>
+                                            <span className="text-slate-600">Present Days:</span>
                                             <span className="font-semibold">{selectedSlip.salaryDetails.presentDays}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Payment Date:</span>
+                                            <span className="text-slate-600">Payment Date:</span>
                                             <span className="font-semibold">
                                                 {selectedSlip.payment.paymentDate
                                                     ? new Date(selectedSlip.payment.paymentDate).toLocaleDateString()
@@ -1965,10 +1895,8 @@ const SalaryManagementPage = () => {
                                             </span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Status:</span>
-                                            <span className={`font-semibold px-2 py-1 rounded ${getStatusColor(selectedSlip.payment.status)}`}>
-                                                {selectedSlip.payment.status}
-                                            </span>
+                                            <span className="text-slate-600">Status:</span>
+                                            <StatusBadge status={salary.status} />
                                         </div>
                                     </div>
                                 </div>
@@ -1978,59 +1906,59 @@ const SalaryManagementPage = () => {
                             <div className="mb-8">
                                 <h3 className="text-lg font-bold text-green-800 mb-4 bg-green-100 p-3 rounded">💰 Earnings</h3>
                                 <div className="overflow-x-auto">
-                                    <table className="w-full border-collapse border border-gray-300">
+                                    <table className="w-full border-collapse border border-slate-300">
                                         <thead>
                                             <tr className="bg-green-100">
-                                                <th className="border border-gray-300 px-4 py-2 text-left">Description</th>
-                                                <th className="border border-gray-300 px-4 py-2 text-right">Amount (৳)</th>
+                                                <th className="border border-slate-300 px-4 py-2 px-4 py-3.5 whitespace-nowrap text-left">Description</th>
+                                                <th className="border border-slate-300 px-4 py-2 text-right px-4 py-3.5 whitespace-nowrap text-left">Amount (৳)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Basic Salary</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right font-semibold">
+                                                <td className="border border-slate-300 px-4 py-2">Basic Salary</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right font-semibold">
                                                     {(selectedSlip.earnings.basicSalary || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">House Rent Allowance</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">House Rent Allowance</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.earnings.houseRentAllowance || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Conveyance Allowance</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Conveyance Allowance</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.earnings.conveyanceAllowance || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Medical Allowance</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Medical Allowance</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.earnings.medicalAllowance || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Special Allowance</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Special Allowance</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.earnings.specialAllowance || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Performance Bonus</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Performance Bonus</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.earnings.performanceBonus || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Overtime Amount</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Overtime Amount</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.earnings.overtimeAmount || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr className="bg-green-50 font-bold">
-                                                <td className="border border-gray-300 px-4 py-2">Gross Salary</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Gross Salary</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.totals.grossSalary || 0).toFixed(2)}
                                                 </td>
                                             </tr>
@@ -2043,41 +1971,41 @@ const SalaryManagementPage = () => {
                             <div className="mb-8">
                                 <h3 className="text-lg font-bold text-red-800 mb-4 bg-red-100 p-3 rounded">📉 Deductions</h3>
                                 <div className="overflow-x-auto">
-                                    <table className="w-full border-collapse border border-gray-300">
+                                    <table className="w-full border-collapse border border-slate-300">
                                         <thead>
                                             <tr className="bg-red-100">
-                                                <th className="border border-gray-300 px-4 py-2 text-left">Description</th>
-                                                <th className="border border-gray-300 px-4 py-2 text-right">Amount (৳)</th>
+                                                <th className="border border-slate-300 px-4 py-2 px-4 py-3.5 whitespace-nowrap text-left">Description</th>
+                                                <th className="border border-slate-300 px-4 py-2 text-right px-4 py-3.5 whitespace-nowrap text-left">Amount (৳)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Provident Fund</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Provident Fund</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.deductions.providentFund || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Professional Tax</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Professional Tax</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.deductions.professionalTax || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Income Tax</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Income Tax</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.deductions.incomeTax || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td className="border border-gray-300 px-4 py-2">Loan Deduction</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Loan Deduction</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.deductions.loanDeduction || 0).toFixed(2)}
                                                 </td>
                                             </tr>
                                             <tr className="bg-red-50 font-bold">
-                                                <td className="border border-gray-300 px-4 py-2">Total Deductions</td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right">
+                                                <td className="border border-slate-300 px-4 py-2">Total Deductions</td>
+                                                <td className="border border-slate-300 px-4 py-2 text-right">
                                                     {(selectedSlip.totals.totalDeductions || 0).toFixed(2)}
                                                 </td>
                                             </tr>
@@ -2087,16 +2015,16 @@ const SalaryManagementPage = () => {
                             </div>
 
                             {/* Net Salary */}
-                            <div className="bg-blue-100 p-6 rounded-lg text-center">
+                            <div className="bg-blue-100 p-6 rounded-xl text-center">
                                 <h3 className="text-2xl font-bold text-blue-800 mb-2">Net Salary</h3>
                                 <p className="text-4xl font-bold text-green-600">৳{(selectedSlip.totals.netSalary || 0).toFixed(2)}</p>
-                                <p className="text-sm text-gray-600 mt-2">
+                                <p className="text-sm text-slate-600 mt-2">
                                     Amount in Words: {numberToWords(selectedSlip.totals.netSalary || 0)} Taka Only
                                 </p>
                             </div>
 
                             {/* Footer */}
-                            <div className="mt-8 text-center text-sm text-gray-600">
+                            <div className="mt-8 text-center text-sm text-slate-600">
                                 <p>This is a computer-generated salary slip and does not require signature.</p>
                                 <p>Generated on: {new Date().toLocaleDateString()}</p>
                             </div>

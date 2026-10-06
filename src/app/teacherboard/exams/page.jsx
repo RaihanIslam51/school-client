@@ -7,11 +7,10 @@ export default function TeacherExams() {
     const [teachers, setTeachers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentTeacher, setCurrentTeacher] = useState(null);
-    const [activeFilter, setActiveFilter] = useState('all'); // all | mine | published
+    const [activeFilter, setActiveFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedExam, setSelectedExam] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const printRef = useRef(null);
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -21,7 +20,6 @@ export default function TeacherExams() {
         }
         fetchData();
     }, []);
-
 
     const fetchData = async () => {
         try {
@@ -52,7 +50,6 @@ export default function TeacherExams() {
         return teachers.find(t => t._id === id || t._id?.toString() === id?.toString()) || null;
     };
 
-    // Find which exams/subjects the current teacher is assigned as invigilator
     const getMyInvigilatorDuties = () => {
         if (!currentTeacher) return [];
         const duties = [];
@@ -62,7 +59,6 @@ export default function TeacherExams() {
                 if (!subject.invigilator) return;
                 const t = getTeacherById(subject.invigilator);
                 if (!t) return;
-                // match by name or _id
                 const matchById = t._id?.toString() === currentTeacher._id?.toString();
                 const matchByName = t.name?.toLowerCase() === currentTeacher.name?.toLowerCase();
                 if (matchById || matchByName) {
@@ -104,18 +100,8 @@ export default function TeacherExams() {
         return `${h12}:${m} ${ampm}`;
     };
 
-    const statusColor = (status) => {
-        switch (status) {
-            case 'Published': return 'bg-green-100 text-green-800 border-green-200';
-            case 'Ongoing': return 'bg-blue-100 text-blue-800 border-blue-200';
-            case 'Completed': return 'bg-gray-100 text-gray-700 border-gray-200';
-            default: return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-        }
-    };
-
-    // --- PDF Download for a single exam ---
     const downloadExamPDF = (exam) => {
-        const jsPDFModule = import('jspdf').then(({ default: jsPDF }) => {
+        import('jspdf').then(({ default: jsPDF }) => {
             import('html2canvas').then(({ default: html2canvas }) => {
                 const el = document.getElementById(`exam-pdf-${exam._id}`);
                 if (!el) return;
@@ -131,7 +117,6 @@ export default function TeacherExams() {
         });
     };
 
-    // --- PDF Download for invigilator duty card ---
     const downloadDutyCardPDF = () => {
         import('jspdf').then(({ default: jsPDF }) => {
             import('html2canvas').then(({ default: html2canvas }) => {
@@ -153,66 +138,62 @@ export default function TeacherExams() {
 
     if (loading) {
         return (
-            <div className="p-6 sm:p-8">
-                <div className="animate-pulse space-y-4">
-                    <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-                    {[1, 2, 3].map(i => (
-                        <div key={i} className="h-40 bg-gray-200 rounded-xl"></div>
-                    ))}
-                </div>
+            <div className="flex flex-col items-center justify-center py-20 bg-[#F4F5F8]">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#FF5500]"></div>
+                <p className="mt-3 text-xs text-[#0B0F28] font-bold">Loading exams...</p>
             </div>
         );
     }
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+        <div className="animate-fade-in font-sans space-y-4 sm:space-y-5">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-blue-900">📋 Exam Schedule</h1>
-                    <p className="text-gray-500 text-sm mt-1">View all published exams and your invigilator duties</p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/80 shadow-sm">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#FF5500]/10 text-[#FF5500] rounded-xl flex items-center justify-center shrink-0">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 className="text-base sm:text-xl font-extrabold text-[#0B0F28] tracking-tight">Exam Schedule</h1>
+                        <p className="text-gray-500 text-xs">View published exams and your invigilator duties</p>
+                    </div>
                 </div>
                 <button
                     onClick={fetchData}
-                    className="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition-all"
+                    className="px-4 py-2 bg-[#FF5500] text-white rounded-xl text-xs font-bold hover:bg-[#e04b00] transition-colors shadow-sm flex items-center gap-2"
                 >
-                    🔄 Refresh
+                    Refresh
                 </button>
             </div>
 
-            {/* ====== MY INVIGILATOR DUTY CARD ====== */}
+            {/* My Duties Card */}
             {myDuties.length > 0 && (
-                <div className="bg-linear-to-br from-blue-900 to-blue-800 rounded-2xl p-6 text-white shadow-xl">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">👮</div>
-                            <div>
-                                <h2 className="text-xl font-bold">My Invigilator Duties</h2>
-                                <p className="text-gray-300 text-sm">{myDuties.length} duty assignment{myDuties.length > 1 ? 's' : ''} found</p>
-                            </div>
+                <div className="bg-[#0B0F28] text-white rounded-2xl p-4 sm:p-5 shadow-md border border-[#0B0F28]">
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                        <div>
+                            <h2 className="text-base sm:text-lg font-extrabold">My Invigilator Duties</h2>
+                            <p className="text-gray-300 text-xs font-medium">{myDuties.length} duty assignment{myDuties.length > 1 ? 's' : ''}</p>
                         </div>
                         <button
                             onClick={downloadDutyCardPDF}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-900 rounded-xl font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
+                            className="px-3.5 py-1.5 bg-[#FF5500] text-white rounded-xl font-bold text-xs hover:bg-[#e04b00] transition-colors shadow-sm"
                         >
-                            📥 Download Duty Card PDF
+                            Download Duty Card
                         </button>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {myDuties.map(({ exam, subject }, idx) => (
-                            <div key={idx} className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4 hover:bg-white/15 transition-all">
-                                <div className="flex items-start justify-between mb-2">
-                                    <span className="text-xs font-bold bg-white/20 rounded-full px-2 py-0.5">{exam.examType}</span>
-                                    <span className="text-xs text-green-300 font-semibold">● ACTIVE</span>
-                                </div>
-                                <h3 className="font-bold text-base mb-1">{subject.subjectName}</h3>
-                                <p className="text-gray-300 text-xs mb-3">{exam.examName} — {exam.class} {exam.section}</p>
-                                <div className="space-y-1 text-xs">
-                                    <div className="flex items-center gap-1.5"><span>📅</span><span className="text-gray-200 font-medium">{formatDate(subject.examDate)}</span></div>
-                                    <div className="flex items-center gap-1.5"><span>⏰</span><span className="text-gray-200 font-medium">{formatTime(subject.startTime)} — {formatTime(subject.endTime)}</span></div>
-                                    <div className="flex items-center gap-1.5"><span>🏛️</span><span className="text-gray-200 font-medium">{subject.room || 'Room TBD'}</span></div>
-                                    <div className="flex items-center gap-1.5"><span>⏱️</span><span className="text-gray-200 font-medium">{subject.duration} minutes</span></div>
+                            <div key={idx} className="bg-white/10 border border-white/15 rounded-xl p-3.5 text-xs">
+                                <span className="font-bold text-[#FF5500] uppercase text-[10px] bg-white px-2 py-0.5 rounded">{exam.examType}</span>
+                                <h3 className="font-extrabold text-sm text-white mt-2">{subject.subjectName}</h3>
+                                <p className="text-gray-300 text-[11px] mb-2">{exam.examName} — {exam.class} {exam.section}</p>
+                                <div className="space-y-1 bg-black/20 rounded-lg p-2 font-medium">
+                                    <p>📅 {formatDate(subject.examDate)}</p>
+                                    <p>⏰ {formatTime(subject.startTime)} – {formatTime(subject.endTime)}</p>
+                                    <p>🚪 Room: <strong>{subject.room || 'TBD'}</strong></p>
                                 </div>
                             </div>
                         ))}
@@ -220,168 +201,73 @@ export default function TeacherExams() {
                 </div>
             )}
 
-            {/* Hidden PDF render for Duty Card */}
-            <div id="duty-card-pdf" style={{ position: 'fixed', left: '-9999px', top: 0, width: '794px', padding: '40px', fontFamily: 'Arial, sans-serif', background: '#fff' }}>
-                <div style={{ borderBottom: '3px solid #1e40af', paddingBottom: '20px', marginBottom: '24px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                            <h1 style={{ fontSize: '22px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 4px 0' }}>INVIGILATOR DUTY CARD</h1>
-                            <p style={{ fontSize: '13px', color: '#555', margin: 0 }}>Sunlight School — Official Assignment</p>
-                        </div>
-                        <div style={{ textAlign: 'right' }}>
-                            <p style={{ fontSize: '12px', color: '#555', margin: 0 }}>Printed: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px' }}>
-                    <h2 style={{ fontSize: '14px', color: '#555', margin: '0 0 8px 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Assigned Invigilator</h2>
-                    <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 4px 0' }}>{currentTeacher?.name || '—'}</p>
-                    <p style={{ fontSize: '13px', color: '#666', margin: 0 }}>{currentTeacher?.email || ''}</p>
-                </div>
-
-                <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1e40af', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Duty Schedule</h2>
-
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-                    <thead>
-                        <tr style={{ background: '#1e40af', color: '#fff' }}>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>#</th>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Exam</th>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Class</th>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Subject</th>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Date</th>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Time</th>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Room</th>
-                            <th style={{ padding: '10px 12px', textAlign: 'left', fontWeight: '600' }}>Duration</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {myDuties.map(({ exam, subject }, idx) => (
-                            <tr key={idx} style={{ background: idx % 2 === 0 ? '#fff' : '#f8fafc' }}>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', fontWeight: 'bold' }}>{idx + 1}</td>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', fontWeight: '600' }}>{exam.examName}</td>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0' }}>{exam.class} — {exam.section}</td>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0', fontWeight: '600' }}>{subject.subjectName}</td>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0' }}>{formatDate(subject.examDate)}</td>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0' }}>{formatTime(subject.startTime)} – {formatTime(subject.endTime)}</td>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0' }}>{subject.room || 'TBD'}</td>
-                                <td style={{ padding: '10px 12px', borderBottom: '1px solid #e2e8f0' }}>{subject.duration} min</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                <div style={{ marginTop: '40px', display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ width: '160px', borderTop: '2px solid #1e40af', paddingTop: '6px', fontSize: '12px', color: '#555' }}>Invigilator Signature</div>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ width: '160px', borderTop: '2px solid #1e40af', paddingTop: '6px', fontSize: '12px', color: '#555' }}>Principal Signature</div>
-                    </div>
+            {/* Filter Bar */}
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-3.5 shadow-sm flex flex-col md:flex-row gap-3 items-center">
+                <input
+                    type="text"
+                    placeholder="Search exams or class..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="w-full md:flex-1 px-3 py-2 bg-[#F4F5F8] border border-gray-200 rounded-xl text-xs font-bold text-[#0B0F28] outline-none"
+                />
+                <div className="flex gap-2 w-full md:w-auto">
+                    {['all', 'published', 'mine'].map(f => (
+                        <button
+                            key={f}
+                            onClick={() => setActiveFilter(f)}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-colors ${
+                                activeFilter === f
+                                ? 'bg-[#FF5500] text-white shadow-sm'
+                                : 'bg-gray-100 text-[#0B0F28] hover:bg-gray-200'
+                            }`}
+                        >
+                            {f === 'mine' ? 'My Duties' : f === 'published' ? 'Published' : 'All Exams'}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* ====== FILTER BAR ====== */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex-1 relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                        <input
-                            type="text"
-                            placeholder="Search exams or class..."
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none"
-                        />
-                    </div>
-                    <div className="flex gap-2 flex-wrap">
-                        {['all', 'published', 'mine'].map(f => (
-                            <button
-                                key={f}
-                                onClick={() => setActiveFilter(f)}
-                                className={`px-4 py-2 rounded-lg text-sm font-semibold capitalize transition-all ${activeFilter === f ? 'bg-blue-900 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                            >
-                                {f === 'mine' ? '👮 My Duties' : f === 'published' ? '✅ Published' : '📋 All Exams'}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* ====== EXAM CARDS ====== */}
+            {/* Exams List */}
             {filteredExams.length === 0 ? (
-                <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
-                    <div className="text-5xl mb-4">📭</div>
-                    <h3 className="text-xl font-bold text-gray-700 mb-2">No Exams Found</h3>
-                    <p className="text-gray-400 text-sm">
-                        {activeFilter === 'mine' ? 'You are not assigned as invigilator in any published exam.' : 'No exams match your search.'}
-                    </p>
+                <div className="py-16 text-center bg-white rounded-2xl border border-gray-200/80">
+                    <p className="text-sm font-bold text-[#0B0F28]">No exams found</p>
                 </div>
             ) : (
-                <div className="space-y-6">
+                <div className="space-y-4">
                     {filteredExams.map(exam => (
-                        <div key={exam._id} className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden">
-                            {/* Exam Header */}
-                            <div className="bg-blue-900 px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div key={exam._id} className="bg-white border border-gray-200/80 rounded-2xl shadow-sm overflow-hidden">
+                            <div className="bg-[#0B0F28] text-white px-5 py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                 <div>
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                        <h3 className="text-lg font-bold text-white">{exam.examName}</h3>
-                                        <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border ${statusColor(exam.status)}`}>
-                                            {exam.status}
-                                        </span>
-                                    </div>
-                                    <p className="text-gray-300 text-sm mt-1">
-                                        {exam.examType} • {exam.class} — Section {exam.section} • {exam.academicYear}
-                                    </p>
+                                    <h3 className="text-base font-extrabold text-white">{exam.examName}</h3>
+                                    <p className="text-gray-300 text-xs font-medium">{exam.examType} • {exam.class} {exam.section} • {exam.academicYear}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => { setSelectedExam(exam); setShowModal(true); }}
-                                        className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-semibold transition-all border border-white/20"
+                                        className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-colors"
                                     >
-                                        👁 View Detail
+                                        Details
                                     </button>
                                     <button
                                         onClick={() => downloadExamPDF(exam)}
-                                        className="px-4 py-2 bg-white text-blue-900 rounded-lg text-sm font-bold hover:bg-gray-100 transition-all shadow"
+                                        className="px-3 py-1.5 bg-[#FF5500] text-white rounded-xl text-xs font-bold hover:bg-[#e04b00] transition-colors"
                                     >
-                                        📥 PDF
+                                        PDF
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Stats Row */}
-                            <div className="px-6 py-3 bg-gray-50 border-b border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-                                <div>
-                                    <span className="text-gray-500">Total Marks</span>
-                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{exam.totalMarks}</p>
-                                </div>
-                                <div>
-                                    <span className="text-gray-500">Pass Marks</span>
-                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{exam.passMarks}</p>
-                                </div>
-                                <div>
-                                    <span className="text-gray-500">Start Date</span>
-                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{formatDate(exam.startDate)}</p>
-                                </div>
-                                <div>
-                                    <span className="text-gray-500">End Date</span>
-                                    <p className="font-bold text-blue-900 text-sm mt-0.5">{formatDate(exam.endDate)}</p>
-                                </div>
-                            </div>
-
-                            {/* Subject Schedule Table */}
-                            {exam.subjects && exam.subjects.length > 0 ? (
+                            {/* Schedule Table */}
+                            {exam.subjects && exam.subjects.length > 0 && (
                                 <div className="overflow-x-auto">
-                                    <table className="w-full text-sm">
+                                    <table className="w-full text-xs text-left border-collapse">
                                         <thead>
-                                            <tr className="bg-gray-50 border-b border-gray-100">
-                                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Subject</th>
-                                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Time</th>
-                                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Duration</th>
-                                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Room</th>
-                                                <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Invigilator</th>
+                                            <tr className="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
+                                                <th className="px-4 py-2.5">Subject</th>
+                                                <th className="px-4 py-2.5">Date</th>
+                                                <th className="px-4 py-2.5">Time</th>
+                                                <th className="px-4 py-2.5">Room</th>
+                                                <th className="px-4 py-2.5">Invigilator</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-100">
@@ -392,31 +278,17 @@ export default function TeacherExams() {
                                                     invTeacher.name?.toLowerCase() === currentTeacher.name?.toLowerCase()
                                                 );
                                                 return (
-                                                    <tr key={idx} className={`hover:bg-gray-50 transition-colors ${isMe ? 'bg-amber-50 border-l-4 border-amber-400' : ''}`}>
-                                                        <td className="px-4 sm:px-6 py-3.5 font-semibold text-blue-900">
-                                                            {subject.subjectName}
-                                                        </td>
-                                                        <td className="px-4 sm:px-6 py-3.5 text-gray-700">
-                                                            {formatDate(subject.examDate)}
-                                                        </td>
-                                                        <td className="px-4 sm:px-6 py-3.5 text-gray-700">
-                                                            {formatTime(subject.startTime)} — {formatTime(subject.endTime)}
-                                                        </td>
-                                                        <td className="px-4 sm:px-6 py-3.5 text-gray-700">
-                                                            {subject.duration} min
-                                                        </td>
-                                                        <td className="px-4 sm:px-6 py-3.5 text-gray-700">
-                                                            {subject.room || <span className="text-gray-400 text-xs">TBD</span>}
-                                                        </td>
-                                                        <td className="px-4 sm:px-6 py-3.5">
+                                                    <tr key={idx} className={`hover:bg-gray-50 ${isMe ? 'bg-[#FF5500]/10 font-bold' : ''}`}>
+                                                        <td className="px-4 py-2.5 font-bold text-[#0B0F28]">{subject.subjectName}</td>
+                                                        <td className="px-4 py-2.5 text-gray-600 font-medium">{formatDate(subject.examDate)}</td>
+                                                        <td className="px-4 py-2.5 text-gray-600 font-medium">{formatTime(subject.startTime)} – {formatTime(subject.endTime)}</td>
+                                                        <td className="px-4 py-2.5 text-gray-600">{subject.room || 'TBD'}</td>
+                                                        <td className="px-4 py-2.5">
                                                             {invTeacher ? (
-                                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${isMe ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-gray-100 text-gray-700'}`}>
-                                                                    {isMe && '👮 '}{invTeacher.name}
-                                                                    {isMe && <span className="text-amber-600 font-bold">(You)</span>}
+                                                                <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${isMe ? 'bg-[#FF5500] text-white' : 'bg-gray-200 text-gray-700'}`}>
+                                                                    {invTeacher.name} {isMe ? '(You)' : ''}
                                                                 </span>
-                                                            ) : (
-                                                                <span className="text-gray-400 text-xs">Not assigned</span>
-                                                            )}
+                                                            ) : '—'}
                                                         </td>
                                                     </tr>
                                                 );
@@ -424,161 +296,9 @@ export default function TeacherExams() {
                                         </tbody>
                                     </table>
                                 </div>
-                            ) : (
-                                <div className="px-6 py-8 text-center text-gray-400 text-sm">
-                                    No subjects scheduled yet for this exam
-                                </div>
                             )}
-
-                            {/* Hidden PDF canvas for this exam */}
-                            <div id={`exam-pdf-${exam._id}`} style={{ position: 'fixed', left: '-9999px', top: 0, width: '794px', padding: '36px', fontFamily: 'Arial, sans-serif', background: '#fff' }}>
-                                <div style={{ borderBottom: '3px solid #1e40af', paddingBottom: '16px', marginBottom: '20px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                                        <div>
-                                            <h1 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 4px 0' }}>EXAM SCHEDULE</h1>
-                                            <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>Sunlight School — Official Exam Timetable</p>
-                                        </div>
-                                        <div style={{ textAlign: 'right' }}>
-                                            <p style={{ fontSize: '11px', color: '#888', margin: 0 }}>Printed: {new Date().toLocaleDateString('en-GB')}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Exam info box */}
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
-                                    {[
-                                        ['Exam Name', exam.examName],
-                                        ['Exam Type', exam.examType],
-                                        ['Class & Section', `${exam.class} — Section ${exam.section}`],
-                                        ['Academic Year', exam.academicYear],
-                                        ['Total Marks', exam.totalMarks],
-                                        ['Pass Marks', exam.passMarks],
-                                        ['Start Date', formatDate(exam.startDate)],
-                                        ['End Date', formatDate(exam.endDate)],
-                                        ['Status', exam.status],
-                                        ['Category', exam.examCategory],
-                                    ].map(([label, value], i) => (
-                                        <div key={i} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '10px 14px' }}>
-                                            <p style={{ fontSize: '10px', color: '#888', margin: '0 0 3px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</p>
-                                            <p style={{ fontSize: '13px', fontWeight: 'bold', color: '#1e40af', margin: 0 }}>{value || '—'}</p>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Subjects table */}
-                                {exam.subjects && exam.subjects.length > 0 && (
-                                    <>
-                                        <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#1e40af', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Subject Schedule</h2>
-                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
-                                            <thead>
-                                                <tr style={{ background: '#1e40af', color: '#fff' }}>
-                                                    {['#', 'Subject', 'Date', 'Time', 'Duration', 'Room', 'Invigilator'].map(h => (
-                                                        <th key={h} style={{ padding: '9px 10px', textAlign: 'left', fontWeight: '600' }}>{h}</th>
-                                                    ))}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {exam.subjects.map((s, i) => (
-                                                    <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#f8fafc' }}>
-                                                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #e2e8f0' }}>{i + 1}</td>
-                                                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #e2e8f0', fontWeight: '600' }}>{s.subjectName}</td>
-                                                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #e2e8f0' }}>{formatDate(s.examDate)}</td>
-                                                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #e2e8f0' }}>{formatTime(s.startTime)} – {formatTime(s.endTime)}</td>
-                                                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #e2e8f0' }}>{s.duration} min</td>
-                                                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #e2e8f0' }}>{s.room || 'TBD'}</td>
-                                                        <td style={{ padding: '8px 10px', borderBottom: '1px solid #e2e8f0' }}>{getTeacherName(s.invigilator)}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </>
-                                )}
-                            </div>
                         </div>
                     ))}
-                </div>
-            )}
-
-            {/* ====== DETAIL MODAL ====== */}
-            {showModal && selectedExam && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowModal(false)}>
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                        {/* Modal Header */}
-                        <div className="bg-blue-900 text-white px-6 py-5 rounded-t-2xl flex items-start justify-between">
-                            <div>
-                                <h2 className="text-xl font-bold">{selectedExam.examName}</h2>
-                                <p className="text-gray-300 text-sm mt-1">
-                                    {selectedExam.examType} • {selectedExam.class} — Section {selectedExam.section} • {selectedExam.academicYear}
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => downloadExamPDF(selectedExam)}
-                                    className="px-4 py-2 bg-white text-blue-900 rounded-lg text-sm font-bold hover:bg-gray-100 transition-all"
-                                >
-                                    📥 Download PDF
-                                </button>
-                                <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white p-1 transition-colors">
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="p-6 space-y-6">
-                            {/* Exam Details Grid */}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                {[
-                                    { label: 'Status', value: selectedExam.status },
-                                    { label: 'Category', value: selectedExam.examCategory },
-                                    { label: 'Total Marks', value: selectedExam.totalMarks },
-                                    { label: 'Pass Marks', value: selectedExam.passMarks },
-                                    { label: 'Start Date', value: formatDate(selectedExam.startDate) },
-                                    { label: 'End Date', value: formatDate(selectedExam.endDate) },
-                                ].map(({ label, value }) => (
-                                    <div key={label} className="bg-gray-50 rounded-xl p-3.5 border border-gray-100">
-                                        <p className="text-xs text-gray-500 font-medium mb-1">{label}</p>
-                                        <p className="text-sm font-bold text-blue-900">{value}</p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Subjects in modal */}
-                            {selectedExam.subjects?.length > 0 && (
-                                <div>
-                                    <h3 className="text-base font-bold text-blue-900 mb-3">Subject Schedule</h3>
-                                    <div className="space-y-3">
-                                        {selectedExam.subjects.map((s, i) => {
-                                            const inv = getTeacherById(s.invigilator);
-                                            const isMe = inv && currentTeacher && (
-                                                inv._id?.toString() === currentTeacher._id?.toString() ||
-                                                inv.name?.toLowerCase() === currentTeacher.name?.toLowerCase()
-                                            );
-                                            return (
-                                                <div key={i} className={`rounded-xl border p-4 ${isMe ? 'bg-amber-50 border-amber-200' : 'bg-white border-gray-200'}`}>
-                                                    <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
-                                                        <h4 className="font-bold text-blue-900 text-base">{s.subjectName}</h4>
-                                                        {inv && (
-                                                            <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${isMe ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-700'}`}>
-                                                                👮 {inv.name}{isMe && ' (You)'}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                                                        <div><span className="text-gray-500">Date</span><p className="font-semibold mt-0.5">{formatDate(s.examDate)}</p></div>
-                                                        <div><span className="text-gray-500">Time</span><p className="font-semibold mt-0.5">{formatTime(s.startTime)} – {formatTime(s.endTime)}</p></div>
-                                                        <div><span className="text-gray-500">Duration</span><p className="font-semibold mt-0.5">{s.duration} min</p></div>
-                                                        <div><span className="text-gray-500">Room</span><p className="font-semibold mt-0.5">{s.room || 'TBD'}</p></div>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
                 </div>
             )}
         </div>

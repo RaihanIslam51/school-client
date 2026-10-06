@@ -395,7 +395,7 @@ export default function AttendanceManagement() {
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="animate-fade-in font-sans space-y-4 sm:space-y-5">
             <style jsx global>{`
                 @media print {
                     @page {
@@ -423,81 +423,29 @@ export default function AttendanceManagement() {
                     .no-print {
                         display: none !important;
                     }
-                    
-                    .print\\:block {
-                        display: block !important;
-                    }
-                    
-                    .print\\:inline-block {
-                        display: inline-block !important;
-                    }
-                    
-                    .print\\:hidden {
-                        display: none !important;
-                    }
-                    
-                    table {
-                        page-break-inside: auto;
-                        border-collapse: collapse !important;
-                        width: 100% !important;
-                        font-size: 9px !important;
-                    }
-                    
-                    tr {
-                        page-break-inside: avoid;
-                        page-break-after: auto;
-                    }
-                    
-                    thead {
-                        display: table-header-group;
-                    }
-                    
-                    th, td {
-                        border: 1px solid #333 !important;
-                        padding: 3px 2px !important;
-                        position: static !important;
-                        left: auto !important;
-                    }
-                    
-                    th {
-                        background-color: #e5e7eb !important;
-                        font-weight: bold !important;
-                        font-size: 8px !important;
-                    }
-                    
-                    td {
-                        font-size: 9px !important;
-                    }
                 }
             `}</style>
-            <div className="container mx-auto p-0">
-                <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-0">
+
+            <div className="bg-white border border-gray-200/80 rounded-2xl shadow-sm p-4 sm:p-5">
                 {/* Header */}
-                <div className="mb-6 no-print">
-                    <h2 className="text-2xl font-bold text-blue-900 mb-2 flex items-center">
-                        <svg className="w-6 h-6 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                        Attendance Management System
-                    </h2>
-                    <p className="text-black">Professional Excel-style attendance tracking</p>
+                <div className="mb-4 no-print flex items-center justify-between">
+                    <div>
+                        <h2 className="text-base sm:text-xl font-extrabold text-[#0B0F28] tracking-tight flex items-center gap-2">
+                            <span className="text-[#FF5500]">📅</span> Attendance Management System
+                        </h2>
+                        <p className="text-gray-500 text-xs">Excel-style attendance tracking for your classes</p>
+                    </div>
                 </div>
 
                 {/* Selection Form */}
-                <div className="bg-white border border-gray-200 p-2 rounded-lg mb-6 no-print">
-                    <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
-                        <svg className="w-5 h-5 mr-2 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                        </svg>
-                        Select Class Details
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-[#F4F5F8] border border-gray-200/80 p-3.5 rounded-xl mb-4 no-print">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div>
-                            <label className="block text-sm font-medium text-black mb-2">Class *</label>
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Class *</label>
                             <select
                                 value={selectedClass}
                                 onChange={(e) => setSelectedClass(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
                             >
                                 <option value="">Select Class</option>
                                 <option value="Play">Play</option>
@@ -517,11 +465,11 @@ export default function AttendanceManagement() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-black mb-2">Section *</label>
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Section *</label>
                             <select
                                 value={selectedSection}
                                 onChange={(e) => setSelectedSection(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
                             >
                                 <option value="">Select Section</option>
                                 <option value="A">A</option>
@@ -532,12 +480,12 @@ export default function AttendanceManagement() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-black mb-2">Month *</label>
+                            <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1">Month *</label>
                             <input
                                 type="month"
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl outline-none text-xs font-bold text-[#0B0F28]"
                             />
                         </div>
 
@@ -545,19 +493,9 @@ export default function AttendanceManagement() {
                             <button
                                 onClick={fetchStudents}
                                 disabled={loading}
-                                className="w-full bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors disabled:opacity-50 font-medium"
+                                className="w-full bg-[#FF5500] hover:bg-[#e04b00] text-white px-4 py-2 rounded-xl transition-colors disabled:opacity-50 text-xs font-bold shadow-sm"
                             >
-                                {loading ? (
-                                    <span className="flex items-center justify-center">
-                                        <svg className="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                        Loading...
-                                    </span>
-                                ) : (
-                                    'Load Attendance Sheet'
-                                )}
+                                {loading ? 'Loading...' : 'Load Attendance Sheet'}
                             </button>
                         </div>
                     </div>
@@ -603,13 +541,13 @@ export default function AttendanceManagement() {
                                     <div className="flex bg-gray-100 rounded-lg p-1">
                                         <button
                                             onClick={() => setViewMode('table')}
-                                            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === 'table' ? 'bg-white text-blue-900 shadow-sm' : 'text-black hover:bg-gray-200'}`}
+                                            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === 'table' ? 'bg-white text-[#1E3A5F] shadow-sm' : 'text-gray-600 hover:bg-gray-200'}`}
                                         >
                                             Table
                                         </button>
                                         <button
                                             onClick={() => setViewMode('card')}
-                                            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === 'card' ? 'bg-white text-blue-900 shadow-sm' : 'text-black hover:bg-gray-200'}`}
+                                            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${viewMode === 'card' ? 'bg-white text-[#1E3A5F] shadow-sm' : 'text-gray-600 hover:bg-gray-200'}`}
                                         >
                                             Card
                                         </button>
@@ -618,7 +556,7 @@ export default function AttendanceManagement() {
                                 <div className="flex flex-col sm:flex-row gap-2">
                                     <button
                                         onClick={printSheet}
-                                        className="px-5 py-2.5 bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-all duration-200 font-semibold flex items-center justify-center gap-2 w-full sm:w-auto"
+                                        className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium flex items-center justify-center gap-2 w-full sm:w-auto"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -627,7 +565,7 @@ export default function AttendanceManagement() {
                                     </button>
                                     <button
                                         onClick={downloadCSV}
-                                        className="px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800 transition-colors font-medium flex items-center justify-center gap-2 w-full sm:w-auto"
+                                        className="px-4 py-2 bg-[#1E3A5F] text-white rounded-xl hover:bg-[#1E3A5F]/90 transition-colors font-medium flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -667,7 +605,7 @@ export default function AttendanceManagement() {
 
                         {/* Attendance Sheet */}
                         <div className="bg-white rounded-xl border-2 border-gray-300 overflow-hidden shadow-xl">
-                            <div className="bg-blue-900 text-white p-4 no-print">
+                            <div className="bg-[#1E3A5F] text-white p-4 no-print">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-xl font-bold">
                                         {selectedClass} - Section {selectedSection} | {new Date(selectedMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
@@ -834,7 +772,7 @@ export default function AttendanceManagement() {
                                             <div key={student._id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                                                 <div className="flex items-center justify-between mb-4">
                                                     <div className="flex items-center gap-3">
-                                                        <span className="text-lg font-bold text-blue-900">{index + 1}</span>
+                                                        <span className="text-lg font-bold text-[#1E3A5F]">{index + 1}</span>
                                                         <div>
                                                             <h4 className="font-semibold text-black">{student.name}</h4>
                                                             <p className="text-sm text-black">Roll: {student.rollNumber}</p>
@@ -927,7 +865,7 @@ export default function AttendanceManagement() {
                                 </button>
                                 <button
                                     onClick={submitAttendance}
-                                    className="px-8 py-3 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-200 font-semibold flex items-center justify-center space-x-2 w-full sm:w-auto"
+                                    className="px-8 py-3 bg-[#1E3A5F] text-white rounded-xl hover:bg-[#1E3A5F]/90 transition-all duration-200 font-semibold flex items-center justify-center space-x-2 w-full sm:w-auto"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
@@ -944,7 +882,7 @@ export default function AttendanceManagement() {
                     <div className="mt-8 no-print">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-2xl font-bold text-black flex items-center gap-3">
-                                <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-7 h-7 text-[#1E3A5F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Attendance History
@@ -969,7 +907,7 @@ export default function AttendanceManagement() {
                                     >
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex-1">
-                                                <h4 className="text-xl font-bold text-black mb-1 group-hover:text-blue-600 transition-colors">
+                                                <h4 className="text-xl font-bold text-black mb-1 group-hover:text-[#F59E0B] transition-colors">
                                                     {sheet.className} - Section {sheet.section}
                                                 </h4>
                                                 <p className="text-sm text-black font-medium">
@@ -977,7 +915,7 @@ export default function AttendanceManagement() {
                                                 </p>
                                             </div>
                                             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                                                <svg className="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-7 h-7 text-[#1E3A5F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
                                             </div>
@@ -1006,7 +944,7 @@ export default function AttendanceManagement() {
                                                     year: 'numeric'
                                                 })}
                                             </span>
-                                            <button className="text-sm font-bold text-blue-600 group-hover:text-blue-700 flex items-center gap-1 group-hover:gap-2 transition-all">
+                                            <button className="text-sm font-bold text-[#1E3A5F] group-hover:text-[#F59E0B] flex items-center gap-1 group-hover:gap-2 transition-all">
                                                 View & Edit
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -1049,7 +987,6 @@ export default function AttendanceManagement() {
                         <p className="text-black mb-6">Start by creating your first attendance sheet above</p>
                     </div>
                 )}
-                </div>
             </div>
         </div>
     );

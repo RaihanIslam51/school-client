@@ -287,23 +287,23 @@ export default function MessagesPage() {
 
   /* ── sidebar JSX ──────────────────────────────────────────── */
   const sidebar = (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full font-sans">
       {/* Tab bar */}
       <div className="flex border-b border-gray-100">
         <button
           onClick={() => setTab('conversations')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors ${tab === 'conversations' ? 'text-blue-900 border-b-2 border-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === 'conversations' ? 'text-[#FF5500] border-b-2 border-[#FF5500]' : 'text-gray-500 hover:text-gray-700'}`}
         >
           Chats
           {conversations.filter(c => c.unreadCount > 0).length > 0 && (
-            <span className="ml-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+            <span className="ml-1.5 bg-[#FF5500] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
               {conversations.filter(c => c.unreadCount > 0).length}
             </span>
           )}
         </button>
         <button
           onClick={() => setTab('new')}
-          className={`flex-1 py-3 text-sm font-medium transition-colors ${tab === 'new' ? 'text-blue-900 border-b-2 border-blue-900' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`flex-1 py-3.5 text-sm font-semibold transition-colors ${tab === 'new' ? 'text-[#FF5500] border-b-2 border-[#FF5500]' : 'text-gray-500 hover:text-gray-700'}`}
         >
           + New
         </button>
@@ -316,8 +316,8 @@ export default function MessagesPage() {
               <svg className="w-10 h-10 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
-              <span className="text-sm">No conversations yet</span>
-              <button onClick={() => setTab('new')} className="mt-2 text-xs text-blue-900 underline">Message a teacher</button>
+              <span className="text-sm font-medium">No conversations yet</span>
+              <button onClick={() => setTab('new')} className="mt-2 text-xs text-[#FF5500] underline font-bold">Message a teacher</button>
             </div>
           ) : (
             <ul>
@@ -326,19 +326,19 @@ export default function MessagesPage() {
                   <button
                     onClick={() => setActiveConv(c)}
                     className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors border-b border-gray-50 hover:bg-gray-50
-                      ${activeConv?.conversationId === c.conversationId ? 'bg-blue-50 border-l-[3px] border-l-blue-800' : ''}`}
+                      ${activeConv?.conversationId === c.conversationId ? 'bg-[#FF5500]/5 border-l-[3px] border-l-[#FF5500]' : ''}`}
                   >
-                    <div className="w-10 h-10 rounded-full bg-blue-900 text-white flex items-center justify-center font-semibold text-sm shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-[#0B0F28] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
                       {initial(c.other?.name)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium text-sm text-gray-800 truncate">{c.other?.name || 'Teacher'}</span>
+                        <span className="font-bold text-sm text-[#0B0F28] truncate">{c.other?.name || 'Teacher'}</span>
                         {c.unreadCount > 0 && (
-                          <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0">{c.unreadCount}</span>
+                          <span className="bg-[#FF5500] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 shadow-sm">{c.unreadCount}</span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-400 truncate mt-0.5">{c.lastMessage?.text || 'No messages yet'}</p>
+                      <p className="text-xs text-gray-500 truncate mt-0.5 font-medium">{c.lastMessage?.text || 'No messages yet'}</p>
                     </div>
                   </button>
                 </li>
@@ -357,7 +357,7 @@ export default function MessagesPage() {
                 onChange={e => setQuery(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 placeholder="Search by name or subject…"
-                className="w-full border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900"
+                className="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5500]/20 focus:border-[#FF5500] transition-shadow shadow-sm"
                 aria-label="Search teachers"
               />
             </div>
@@ -373,15 +373,15 @@ export default function MessagesPage() {
                     onMouseEnter={() => setHighlightedIndex(idx)}
                     onMouseLeave={() => setHighlightedIndex(-1)}
                     onClick={() => { openChatWith(t); setQuery(''); setTab('conversations'); }}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors
-                      ${activeConv?.other?.userId === t._id ? 'bg-blue-50' : highlightedIndex === idx ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-colors mb-1
+                      ${activeConv?.other?.userId === t._id ? 'bg-[#FF5500]/5' : highlightedIndex === idx ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
                   >
-                    <div className="w-9 h-9 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-semibold text-sm shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold text-sm shrink-0">
                       {initial(t.name)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm text-gray-800 truncate">{t.name}</div>
-                      <div className="text-xs text-gray-400 truncate">{t.subject || t.email}</div>
+                      <div className="font-bold text-sm text-gray-800 truncate">{t.name}</div>
+                      <div className="text-xs text-gray-500 font-medium truncate">{t.subject || t.email}</div>
                     </div>
                   </li>
                 ))}
@@ -395,9 +395,9 @@ export default function MessagesPage() {
 
   /* ── chat panel JSX ───────────────────────────────────────── */
   const chat = activeConv ? (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full font-sans">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3 bg-white">
+      <div className="px-4 py-3.5 border-b border-gray-100 flex items-center gap-3 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)] z-10">
         <button
           onClick={() => setActiveConv(null)}
           className="md:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
@@ -407,33 +407,33 @@ export default function MessagesPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <div className="w-9 h-9 rounded-full bg-blue-900 text-white flex items-center justify-center font-semibold text-sm shrink-0">
+        <div className="w-9 h-9 rounded-full bg-[#0B0F28] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
           {initial(activeConv.other?.name)}
         </div>
         <div>
-          <div className="font-semibold text-sm text-gray-800">{activeConv.other?.name}</div>
-          <div className="text-xs text-gray-400 capitalize">{activeConv.other?.role}</div>
+          <div className="font-bold text-sm text-[#0B0F28]">{activeConv.other?.name}</div>
+          <div className="text-xs text-gray-500 font-medium capitalize">{activeConv.other?.role}</div>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 bg-gray-50 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 py-4 bg-[#F4F5F8] space-y-3">
         {loadingMsgs ? (
           <div className="flex items-center justify-center h-full">
-            <div className="w-6 h-6 border-2 border-blue-900 border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[#FF5500] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-400 text-sm">No messages yet — say hello!</div>
+          <div className="flex items-center justify-center h-full text-gray-400 text-sm font-medium">No messages yet — say hello!</div>
         ) : messages.map(m => {
           const mine = String(m.senderId) === String(user._id);
           return (
             <div key={m._id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
               <div className={`flex flex-col gap-0.5 max-w-[80%] sm:max-w-[65%] ${mine ? 'items-end' : 'items-start'}`}>
-                <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed wrap-break-word
-                  ${mine ? 'bg-blue-900 text-white rounded-br-sm' : 'bg-white text-gray-800 border border-gray-200 shadow-sm rounded-bl-sm'}`}>
+                <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed wrap-break-word shadow-sm
+                  ${mine ? 'bg-[#FF5500] text-white rounded-br-sm font-medium' : 'bg-white text-[#0B0F28] border border-gray-200/80 rounded-bl-sm font-medium'}`}>
                   {m.text}
                 </div>
-                <span className="text-[10px] text-gray-400 px-1">{fmt(m.createdAt)}</span>
+                <span className="text-[10px] text-gray-400 px-1 font-medium">{fmt(m.createdAt)}</span>
               </div>
             </div>
           );
@@ -449,15 +449,15 @@ export default function MessagesPage() {
             onChange={e => setText(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
             rows={1}
-            className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-colors"
-            style={{ minHeight: '42px', maxHeight: '120px' }}
+            className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#FF5500]/20 focus:border-[#FF5500] transition-shadow shadow-sm font-medium text-[#0B0F28]"
+            style={{ minHeight: '44px', maxHeight: '120px' }}
             placeholder="Write a message… (Enter to send)"
             aria-label="Write a message"
           />
           <button
             onClick={sendMessage}
             disabled={sending || !text.trim()}
-            className="shrink-0 w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center hover:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="shrink-0 w-11 h-11 rounded-xl bg-[#FF5500] text-white flex items-center justify-center hover:bg-[#e04b00] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
             aria-label={sending ? 'Sending' : 'Send'}
           >
             {sending ? (
@@ -472,25 +472,25 @@ export default function MessagesPage() {
       </div>
     </div>
   ) : (
-    <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-8">
+    <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-8 font-sans">
       <svg className="w-14 h-14 mb-3 opacity-25" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
       </svg>
-      <p className="text-sm font-medium">No conversation selected</p>
-      <p className="text-xs mt-1 opacity-60">Choose a chat or message a new teacher</p>
+      <p className="text-sm font-bold text-gray-500">No conversation selected</p>
+      <p className="text-xs mt-1 text-gray-400 font-medium">Choose a chat or message a new teacher</p>
     </div>
   );
 
   return (
-    <div className="p-3 md:p-6">
-      <div className="container mx-auto h-[calc(100svh-8rem)] md:h-[calc(100svh-7rem)] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex">
+    <div className="p-4 md:p-6 lg:p-8">
+      <div className="container mx-auto h-[calc(100svh-8rem)] md:h-[calc(100svh-7rem)] bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden flex font-sans">
         {/* Sidebar */}
         <div className={`flex-col shrink-0 border-r border-gray-100 w-full md:w-72 lg:w-80
           ${activeConv ? 'hidden md:flex' : 'flex'}`}>
           {sidebar}
         </div>
         {/* Chat */}
-        <div className={`flex-col flex-1 min-w-0
+        <div className={`flex-col flex-1 min-w-0 bg-[#F8FAFC]
           ${activeConv ? 'flex' : 'hidden md:flex'}`}>
           {chat}
         </div>

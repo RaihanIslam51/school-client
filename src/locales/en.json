@@ -521,6 +521,8 @@
   },
   "facilities": {
     "title": "Facilities",
+    "ourClasses": "OUR CLASSES",
+    "popularClasses": "Popular Classes",
     "ourFacilities": "Our Facilities",
     "subtitle": "Experience excellence with our modern facilities designed to provide the best learning environment",
     "loading": "Loading facilities...",
