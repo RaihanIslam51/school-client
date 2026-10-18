@@ -3,7 +3,7 @@ import AdministrativeStaff from '../../../../components/About/AdministrativeStaf
 
 const page = () => {
     return (
-        <div>
+        <div> 
             <AdministrativeStaff />
         </div>
     );
