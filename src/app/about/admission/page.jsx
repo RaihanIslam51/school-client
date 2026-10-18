@@ -118,7 +118,7 @@ const AboutAdmissionPage = () => {
                             rel="noopener noreferrer" 
                             className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#FF5500] text-white font-bold rounded-xl hover:bg-[#e04b00] transition-colors shrink-0 shadow-md"
                         >
-                            <span>Visit www.sis.com.bd</span>
+                            <span>Visit www.nexotech.com.bd</span>
                         </a>
                     </div>
 
